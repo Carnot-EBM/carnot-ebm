@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.649",
+  "generated_at": "2026-09-19T04:20:47Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 39.8,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 11,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure adapter-withheld ARC with durable episode evidence",
+      "duration_minutes": 30.8,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure certified memory independently on sealed synthetic streams",
+      "duration_minutes": 3.3,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Audit synthetic and live proof claims independently",
+      "duration_minutes": 1.73,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify durable ARC episodes across timeout and restart",
+      "duration_minutes": 1.11,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify current-work receipts and the assignment reducer",
+      "duration_minutes": 1.03,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "All 11 completed experiments were compute-bound and occupied 39.8 minutes. Measure adapter-withheld ARC with durable episode evidence was the critical path at 30.8 minutes, but the supplied data does not identify its costly phase; the locked compute-task GPU-idle classification is false.",
+  "bottlenecks_identified": [
+    "Critical-path concentration: Measure adapter-withheld ARC with durable episode evidence took 30.8 of the 39.8 minutes, while the supplied timing data does not identify which internal phase caused the delay.",
+    "The disk-mtime reconstruction lacks per-phase spans, so setup, inference, waiting, validation, and persistence costs cannot be separated.",
+    "The GPU snapshot is not synchronized to individual experiment windows, so sustained compute utilization cannot be graded even though no compute-task GPU-idle fault is recorded.",
+    "Model-count and runner-dispatch receipts are absent, so no eligible parallel-model DualGPURunner miss can be established."
+  ],
+  "improvements_suggested": [
+    "Emit one task-scoped execution receipt that joins phase start and stop times with process, device, periodic GPU-utilization, model-count, and runner-dispatch metadata.",
+    "Add restartable phase checkpoints and explicit wait-state labels to the adapter-withheld ARC durable-episode workflow so its critical path can be resumed and attributed.",
+    "Schedule independent eligible compute work on an available second GPU when concurrency and memory permit, while retaining single-GPU execution for a single-model task.",
+    "Run a measured baseline-versus-instrumented comparison before assigning nonzero time savings to these changes."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the adapter-withheld ARC durable-episode workflow with phase timing, wait-state labels, and restartable checkpoints.",
+    "Join experiment windows to GPU samples and record process, model-count, runner, and device decisions in the same receipt.",
+    "Add a scheduler path for independent eligible work to use an available second GPU without forcing DualGPURunner on single-model tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The timing list identifies the critical path but not its cause, and the closing GPU snapshot cannot substitute for task-window telemetry. With no measured counterfactual for the proposed tooling, the savings estimate remains 0%."
+}
