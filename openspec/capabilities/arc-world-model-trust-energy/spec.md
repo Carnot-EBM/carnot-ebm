@@ -33638,3 +33638,51 @@ value to zero.
 
 Implementation status: specified 2026-09-16. The conductor owns later status,
 changelog, and traceability reconciliation.
+### REQ-ARC-WMTE-7431: Qualify live ARC first-action and callback reachability from current events
+
+The system SHALL run a two-episode, one-seed-per-game development sentinel through
+`make_carnot_agent` and the real `choose_action`/`is_done` path. It SHALL select the
+games with the shipped label-blind rotation before model work. It SHALL withhold all
+per-game adapters, hand solvers, saved engines, lookup routes, and hidden game source.
+
+The sentinel SHALL use `unsloth/Qwen3.8-27B-GGUF` on an owned native CUDA runner with
+a fresh lease. Each episode SHALL permit at most two generation callbacks, 256 new
+tokens per callback, 64 environment actions, and 240 seconds. Aggregate live work
+SHALL stop by 900 seconds. The shared request-budget primitive SHALL reserve each
+generation before dispatch. The current invocation ledger SHALL be the only source
+for model load and generation counts.
+
+The first episode SHALL be the sentinel. The system SHALL persist policy entry,
+permit acquisition, request dispatch, response or error, first action, and first
+observation as those events occur. If the first action is not reached, the second
+episode SHALL remain unstarted. A terminal artifact SHALL preserve every scheduled
+unit, including failed, censored, and unstarted units. It SHALL set
+`live_efficacy_score` and `promotion_score` to zero because two public development
+episodes do not establish a treatment effect or hidden leaderboard performance.
+
+#### SCENARIO-ARC-WMTE-7431-CURRENT-EVENTS: attempted work remains attempted
+
+- **WHEN** a model load or generation has an attempted current event
+- **THEN** the invocation counters include it even if the call fails or is cancelled
+- **AND** archived rows, scripted transport, and projected episode summaries do not
+  change the current counters
+
+#### SCENARIO-ARC-WMTE-7431-SENTINEL: first-action failure stops the panel
+
+- **WHEN** the first scheduled episode does not persist a non-reset first action
+- **THEN** its terminal disposition is failed or censored
+- **AND** the second scheduled episode is present with disposition `unstarted`
+
+#### SCENARIO-ARC-WMTE-7431-BUDGET: permits precede bounded requests
+
+- **WHEN** the policy reaches a generation callback
+- **THEN** `EpisodeRequestBudget` reserves the request before network dispatch
+- **AND** a third callback is rejected before dispatch
+- **AND** every granted permit has one completed, failed, or cancelled terminal state
+
+#### SCENARIO-ARC-WMTE-7431-TERMINAL: reachability is not efficacy
+
+- **WHEN** both scheduled rows have valid terminal dispositions and scoped checks pass
+- **THEN** `arc_sentinel_capture_complete_score` is one
+- **AND** `live_efficacy_score`, `promotion_score`, and solve credit remain zero
+- **AND** the run is described as a public adapter-withheld development proxy
