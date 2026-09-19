@@ -74184,3 +74184,96 @@ durations, and hashed logs SHALL remain in validation receipts.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7409 and SCENARIO-REPORT-7409-* | Implemented: V650 host custody reducer, thin entrypoint, exact contract authority, bundle sidecars, and terminal artifact | Verified: focused spec-linked tests pass with 100 percent changed-module coverage; the declared entrypoint runs the scoped plan, fresh-process replay, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V650 independent static and online decision audit — 2026-09-19
+
+**Status:** Specified. This host aggregation reduces two independent producer
+branches. It does not run a model or retrain either producer.
+
+### REQ-REPORT-7415: Audit static and online evidence independently
+
+Exp7415 SHALL authenticate the exact Exp7413 and Exp7414 paths, byte hashes,
+schemas, milestone, completion scores, eligibility flags, required validation,
+source hashes, and raw sidecars. Each branch SHALL have its own prerequisite
+rows and gate summary. A missing or blocked branch SHALL not stop the other
+branch from producing an audited result.
+
+The static branch SHALL independently recompute proper scores, frozen threshold
+decisions, simultaneous action-risk bounds, source ablations, and paired
+bootstrap contrasts from raw rows and numeric checkpoints. It SHALL test for
+oracle-label features, article overlap, final-test labels exposed to fitting,
+class-prior shortcuts, and omitted unscored examples. It SHALL describe all
+labels as machine annotations, not semantic truth.
+
+The online branch SHALL independently recompute registered feedback masks,
+event order, prediction-before-feedback, one-update semantics, state-hash
+transitions, and stored intervals. It SHALL require shared selected-feedback
+masks across matched arms, delayed label arrival, revoked-label reconstruction,
+and separate no-feedback and erased-update controls. Missing final state or
+inaccessible raw bytes SHALL invalidate online value even when stored aggregate
+metrics are plausible.
+
+The artifact SHALL publish `static_audit_complete_score` and
+`online_audit_complete_score` separately. Each branch row SHALL separate
+availability, validity, completion, and value. A valid null SHALL remain a
+null. An absent external branch SHALL produce a blocked overall verdict while
+retaining the available branch result. Invalid required evidence SHALL produce
+a disqualified verdict. `partial` SHALL apply only to unfinished work owned by
+the current Exp7415 attempt.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+LLM invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Scripted transport and archived model receipts SHALL
+remain in hash-bound sidecars. `promotion_score` SHALL remain zero.
+
+The affected command plan SHALL come from Exp7358 and execute through Exp7303.
+It SHALL contain worktree imports, focused pytest with `-n 0 -o addopts=
+--no-cov`, separate 100 percent changed-module coverage, scoped Ruff check and
+format, changed-module mypy, and exact-test specification coverage. It SHALL
+preserve command-local `COVERAGE_FILE` and SHALL not run `full_python_suite`.
+
+No numbered end-to-end check applies. The declared entrypoint and a
+fresh-process cold replay are the capability end-to-end checks. Independent
+row reduction, the unchanged adversarial verifier, and strict verdict-row
+consistency SHALL pass on the exact candidate before atomic publication.
+
+#### SCENARIO-REPORT-7415-INDEPENDENT: A blocked branch does not hide the other audit
+
+**Given** one eligible producer and one absent or ineligible producer
+**When** Exp7415 authenticates and reduces both branches
+**Then** the eligible branch completes its independent audit
+**And** the overall blocked or disqualified verdict retains both branch dispositions.
+
+#### SCENARIO-REPORT-7415-STATIC: Raw rows reproduce static decisions and attacks
+
+**Given** eligible Exp7413 rows and numeric checkpoints
+**When** the static audit recomputes scores, thresholds, bounds, ablations, and bootstrap contrasts
+**Then** stored values match within the declared numeric tolerance
+**And** every label, split, source, temporal, prior, and unscored-row attack has a row.
+
+#### SCENARIO-REPORT-7415-ONLINE: Feedback authority and state transitions reproduce
+
+**Given** eligible Exp7414 event rows, journals, initial states, and revocations
+**When** the online audit replays masks, order, updates, hashes, and intervals
+**Then** matched arms share masks and each admitted update follows one delayed reveal
+**And** no-feedback, erased-update, and revoked-label controls remain distinct.
+
+#### SCENARIO-REPORT-7415-CLASSIFY: Completion, validity, and value stay separate
+
+**Given** independently reduced branch results and required validation
+**When** Exp7415 classifies the terminal record
+**Then** eligible nulls stay null and cannot promote producer metrics
+**And** absent external evidence is blocked while invalid required evidence is disqualified.
+
+#### SCENARIO-REPORT-7415-ARTIFACT: Scoped checks control atomic publication
+
+**Given** exact producer bytes, audit rows, branch reductions, and a frozen check plan
+**When** fresh processes run replay, independent reduction, adversarial verification, and strict row checks
+**Then** identity, source, score, branch, gate, class, or checksum drift fails
+**And** only a valid terminal JSON is written atomically.
+
+## Implementation Status (REQ-REPORT-7415)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7415 and SCENARIO-REPORT-7415-* | Planned: independent host reducer and thin entrypoint | Planned: spec-linked tests, 100 percent changed-module coverage, scoped checks, entrypoint replay, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
