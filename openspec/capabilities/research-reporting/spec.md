@@ -73379,6 +73379,110 @@ failure SHALL be disqualified. `promotion_score` SHALL remain zero.
 |---|---|---|
 | REQ-REPORT-7400 and SCENARIO-REPORT-7400-* | Planned: fresh bounded Qwen canary, reusable host module, and thin entrypoint | Planned: spec-linked RED tests, 100% changed-module coverage, exact affected checks, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and scoped spec coverage |
 
+## V649 prospective proposal panel capture — 2026-09-18
+
+**Status:** Specified. This phase captures the unchanged panel that V647 and V648 did not run.
+
+### REQ-REPORT-7402: Capture the frozen Qwen proposal panel without post-hoc selection
+
+Exp7402 SHALL authenticate the exact Exp7400 canary and the byte identity of
+the frozen V647 implication-stream manifest before model work. It SHALL require
+`qwen_assignment_transport_ready_score=1`, an eligible verdict class, and
+`flagged_adversarial=false`. A failed structured prerequisite SHALL write a
+terminal `blocked_*` artifact. Its `gate_check_summary` SHALL retain the
+upstream path, check, field, operator, expected value, and observed value.
+
+The experiment SHALL retain all eight disjoint live formula streams, their four
+ordered requests, their warm-up, future, and version-change schedule, and two
+proposals per request. It SHALL make exactly 64 planned calls through one owned
+native CUDA instance of cached `unsloth/Qwen3.8-27B-GGUF`. Each call SHALL use
+the frozen request text and manifest seed schedule with a 256-token output cap.
+It SHALL not rerun the four development calls, change the roster, redesign the
+grammar, repair or retry a response, add a candidate, sweep decoding settings,
+or increase the token budget. Model work SHALL stop after 2,400 seconds and
+leave every unattempted call explicit.
+
+Each candidate row SHALL retain the exact prompt and reply bytes, hashes,
+runtime identity, tokens, latency, parse result, literal fidelity, independent
+formula extendibility, cost, and failed or censored disposition. Request-level
+selection SHALL use the first schema-valid candidate only. Both candidates
+SHALL remain in cost accounting and later comparisons. The reducer SHALL keep
+parse validity, semantic validity, and selection as separate fields.
+
+The artifact SHALL include descriptive complexity rows for source variable and
+clause counts, formula family, query type, measured exact-solver effort, token
+spend, parse outcome, and semantic outcome. These rows are exploratory. Solver
+effort SHALL not be named model hardness, SHALL not replace the frozen
+questions, and SHALL not cause post-hoc filtering.
+
+`candidate_capture_complete_score` SHALL equal one only after all 64 calls have
+authentic terminal dispositions, all 32 request selections have explicit
+dispositions, the inherited source and proposal gates pass, the owned runtime
+evidence is sound, and required validation passes. A complete low-yield panel
+SHALL remain a terminal null with readiness zero. Candidate capture readiness
+SHALL remain separate from downstream proof-memory efficacy. Oracle-defined
+semantic evidence SHALL use `circular_positive`, never `positive`, and
+`promotion_score` SHALL remain zero.
+
+The artifact SHALL declare `inference_substrate_class=model_bounded_generation`,
+`execution_venue=host`, `inference_mode=live_gpu`, and the ten-second authentic
+duration floor without padding. Current invocation counts SHALL come from the
+owned event ledger. Historical canary evidence SHALL remain in an immutable
+hash-bound sidecar and SHALL not count as current work. The sample budget SHALL
+satisfy planned equals completed plus censored plus unstarted and SHALL record
+attempted failures explicitly.
+
+The affected command plan SHALL come from Exp7358 and execute through Exp7303.
+It SHALL contain only the eight scoped checks, preserve command-local coverage
+state, and require 100 percent coverage of the new module. The declared
+entrypoint and a fresh-process cold replay are the capability end-to-end checks.
+The exact measured candidate SHALL also pass independent raw-row reduction,
+the unchanged adversarial verifier, and strict row consistency before atomic
+terminal publication. No numbered end-to-end check applies because this task
+does not change shared runtime, training, sampling, serialization, PyO3, or
+Rust behavior.
+
+#### SCENARIO-REPORT-7402-GATE: Exact canary and protocol identity fail closed
+
+**Given** the completed Exp7400 canary and frozen V647 manifest
+**When** eligibility, byte identity, cache, runner, device, or entrypoint checks fail
+**Then** no dependent generation starts and zero current calls are reported
+**And** the terminal blocked record names every exact failed operand.
+
+#### SCENARIO-REPORT-7402-PANEL: The registered 64-call panel cannot drift
+
+**Given** eight streams with four ordered requests and two candidates per request
+**When** the capture schedule is built
+**Then** it contains exactly 64 unique ordered call identities and 32 request groups
+**And** prompts, versions, splits, families, seeds, settings, and token caps match the manifest.
+
+#### SCENARIO-REPORT-7402-SELECTION: Parsing, semantics, and selection stay separate
+
+**Given** two literal proposal replies for one frozen request
+**When** the reducer parses and independently solves them
+**Then** it selects the first schema-valid proposal without using semantic outcome
+**And** it retains both candidates, their exact bytes, dispositions, and equal later cost charge.
+
+#### SCENARIO-REPORT-7402-COMPLEXITY: Solver effort is descriptive only
+
+**Given** source size, measured solver work, tokens, parse results, and semantic results
+**When** complexity strata are emitted
+**Then** every planned call contributes one unfiltered row
+**And** no solver measurement is promoted to model hardness or changes the frozen panel.
+
+#### SCENARIO-REPORT-7402-VALIDATION: Exact evidence controls terminal capture readiness
+
+**Given** raw call files, owned events, 32 request dispositions, and command receipts
+**When** fresh readers independently reload the candidate
+**Then** counts, selections, complexity rows, gates, score, class, hashes, and checksum reproduce
+**And** any affected, adversarial, strict-reader, or cold-replay failure disqualifies readiness.
+
+## Implementation Status (REQ-REPORT-7402)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7402 and SCENARIO-REPORT-7402-* | Implemented: reusable host capture module and thin entrypoint | Verified by spec-linked tests with 100 percent changed-module coverage; the measured entrypoint runs exact affected checks, cold replay, adversarial verification, strict row consistency, and scoped spec coverage |
+
 ## V649 static calibrated-decision diagnosis — 2026-09-18
 
 **Status:** Specified. This host aggregation audits the completed Exp7385 null without using Exp7386 as a prerequisite.

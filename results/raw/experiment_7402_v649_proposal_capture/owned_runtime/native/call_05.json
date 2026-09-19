@@ -1,0 +1,306 @@
+{
+  "attempted": true,
+  "call_index": 5,
+  "censored": false,
+  "completion_tokens": 34,
+  "decoded_plan": null,
+  "error": null,
+  "finish_reason": "stop",
+  "latency_s": 1.0249774530529976,
+  "max_generated_tokens": 256,
+  "parse_errors": [
+    "top_level_fields"
+  ],
+  "parse_status": "invalid",
+  "prompt": "Request live-contradiction_cycle_balanced-request-2. Formula bytes are referenced by source hash sha256:fd94db2e51690834c336594f630eba1be9dbe9d6ce85b5992380ed86a55bae81. Return one JSON object with key assignments. Assignments must be a list of two to four distinct signed integer literals.",
+  "prompt_sha256": "sha256:f9929b0d69719407f59f5829b206cc133e033ba53fdf7cb1a24c62e53cc3657b",
+  "prompt_tokens": 115,
+  "public_request": {
+    "call_id": "live-contradiction_cycle_balanced-request-2:candidate-1",
+    "call_index": 5,
+    "candidate_index": 1,
+    "family": "contradiction_cycle_balanced",
+    "formula": {
+      "clauses": [
+        {
+          "clause_id": 0,
+          "literals": [
+            1,
+            -8
+          ]
+        },
+        {
+          "clause_id": 1,
+          "literals": [
+            -1,
+            6
+          ]
+        },
+        {
+          "clause_id": 2,
+          "literals": [
+            -1,
+            8
+          ]
+        },
+        {
+          "clause_id": 3,
+          "literals": [
+            2,
+            -7
+          ]
+        },
+        {
+          "clause_id": 4,
+          "literals": [
+            -2,
+            3
+          ]
+        },
+        {
+          "clause_id": 5,
+          "literals": [
+            -3,
+            4
+          ]
+        },
+        {
+          "clause_id": 6,
+          "literals": [
+            -4,
+            5
+          ]
+        },
+        {
+          "clause_id": 7,
+          "literals": [
+            -5,
+            8
+          ]
+        },
+        {
+          "clause_id": 8,
+          "literals": [
+            -6,
+            7
+          ]
+        }
+      ],
+      "n_vars": 8,
+      "raw_clause_order": [
+        [
+          -1,
+          6
+        ],
+        [
+          -6,
+          7
+        ],
+        [
+          -7,
+          2
+        ],
+        [
+          -2,
+          3
+        ],
+        [
+          -3,
+          4
+        ],
+        [
+          -4,
+          5
+        ],
+        [
+          -5,
+          8
+        ],
+        [
+          -8,
+          1
+        ],
+        [
+          8,
+          -1
+        ]
+      ],
+      "rule_provenance": {
+        "family": "contradiction_cycle_balanced",
+        "paper": "arXiv:2602.12665",
+        "seed": 100,
+        "version": 1
+      },
+      "source_hash": "sha256:fd94db2e51690834c336594f630eba1be9dbe9d6ce85b5992380ed86a55bae81",
+      "version": "live-contradiction_cycle_balanced-v1"
+    },
+    "formula_id": "live-contradiction_cycle_balanced",
+    "formula_source_hash": "sha256:fd94db2e51690834c336594f630eba1be9dbe9d6ce85b5992380ed86a55bae81",
+    "formula_version": "live-contradiction_cycle_balanced-v1",
+    "inference_seed": 7371401,
+    "max_new_tokens": 256,
+    "n_vars": 8,
+    "prompt": "Request live-contradiction_cycle_balanced-request-2. Formula bytes are referenced by source hash sha256:fd94db2e51690834c336594f630eba1be9dbe9d6ce85b5992380ed86a55bae81. Return one JSON object with key assignments. Assignments must be a list of two to four distinct signed integer literals.",
+    "query_type": "future",
+    "request_group_index": 2,
+    "request_id": "live-contradiction_cycle_balanced-request-2",
+    "request_index": 2,
+    "split": "future",
+    "stream_id": "live-contradiction_cycle_balanced",
+    "stream_index": 0,
+    "stream_seed": 7371700
+  },
+  "raw_reply": "{\n  \"assignments\": [\n    -12,\n    7,\n    33,\n    -5\n  ]\n}",
+  "raw_reply_sha256": "sha256:e5682e0a9e5ec1b2fba0032d72b82b6ea961177b61edc846cce1504eaabe0dfd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"assignments\": [\n    -12,\n    7,\n    33,\n    -5\n  ]\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789776331,
+    "id": "chatcmpl-ewiVfd09keDhKtTFpuUIinT8rqah3pby",
+    "model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 810.096,
+      "predicted_n": 34,
+      "predicted_per_second": 41.97033438012285,
+      "predicted_per_token_ms": 23.82635294117647,
+      "prompt_ms": 198.537,
+      "prompt_n": 115,
+      "prompt_per_second": 579.2371195293572,
+      "prompt_per_token_ms": 1.726408695652174
+    },
+    "usage": {
+      "completion_tokens": 34,
+      "prompt_tokens": 115,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 149
+    }
+  },
+  "request_id": "live-contradiction_cycle_balanced-request-2",
+  "runtime_identity_receipt": {
+    "comm": "llama-server",
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "55035",
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "none",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "command_hash": "sha256:e98bcf3c7058d45cc5a927609e7616cbd48aff255016041969510d2c639aec82",
+    "cuda_provenance_ok": true,
+    "exists": true,
+    "gpu_index": 1,
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "lease_id": "lease:ef5e6fa5d1fed4310f81d9d35b19f9b10b250a05cf8d665a43db29ab00bc7ee8",
+    "model_bytes": 17106775008,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "owned_by_current_uid": true,
+    "owned_by_task": true,
+    "parent_identity": {
+      "pid": 3513938,
+      "start_time_ticks": 206799823
+    },
+    "pid": 3514009,
+    "ppid": 3513938,
+    "process_group_id": 3514009,
+    "quantization": "Q4_K_M",
+    "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "served_model_response": {
+      "data": [
+        {
+          "aliases": [],
+          "created": 1789776324,
+          "id": "Qwen3.8-27B-Q4_K_M.gguf",
+          "meta": {
+            "n_ctx": 4096,
+            "n_ctx_train": 262144,
+            "n_embd": 5120,
+            "n_params": 27320697856,
+            "n_vocab": 248320,
+            "size": 17095778304,
+            "vocab_type": 2
+          },
+          "object": "model",
+          "owned_by": "llamacpp",
+          "tags": []
+        }
+      ],
+      "models": [
+        {
+          "capabilities": [
+            "completion"
+          ],
+          "description": "",
+          "details": {
+            "families": [
+              ""
+            ],
+            "family": "",
+            "format": "gguf",
+            "parameter_size": "",
+            "parent_model": "",
+            "quantization_level": ""
+          },
+          "digest": "",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "modified_at": "",
+          "name": "Qwen3.8-27B-Q4_K_M.gguf",
+          "parameters": "",
+          "size": "",
+          "tags": [
+            ""
+          ],
+          "type": "model"
+        }
+      ],
+      "object": "list"
+    },
+    "session_id": 3514009,
+    "start_time_ticks": 206799997,
+    "state": "R",
+    "task_owned_vram_mb": 16340,
+    "uid": 1000
+  },
+  "terminal_state": "response"
+}

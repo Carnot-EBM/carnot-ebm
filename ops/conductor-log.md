@@ -18186,3 +18186,11 @@ code |
 | 2026-09-18 20:09 UTC | Requalify bounded Qwen3.8 assignment transport | OK | 91 passed, 1 warning in 8.00s |
 | 2026-09-18 21:04 UTC | JANITOR: conductor auto-start | WARN | conductor PID 2568112 not alive; unit was inactive; started (REQ-CONDUCTOR-RESTART-1) |
 | 2026-09-18 23:16 UTC | Independently audit online learning and its failed | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT — result quarantined, not a clean success, excluded from headline / capstone. 86 passed, 1 warning in 10.16s |
+| 2026-09-19 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7028_v616_active_contract_preflight.json age-week 2: OPEN 14 days: CL |
+| 2026-09-19 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7029_v616_sota_scope_audit.json age-week 2: OPEN 14 days: CLAIM_OVERS |
+| 2026-09-19 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | eval_run_consumer_field_lint.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on e |
+| 2026-09-19 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_declares_deterministic_non_live age-week 1: OP |
+| 2026-09-19 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_current_task_inference_claim age-week 1: OPEN 7 |
+| 2026-09-19 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::duration_floor_for_artifact age-week 1: OPEN 7 days: SILE |
+| 2026-09-19 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7377_v647_ising_law.json age-week 0: OPEN 1 days: CLAIM_OVERSTATED on |
+| 2026-09-19 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_null_delta_descriptor age-week 0: OPEN 1 days:  |
