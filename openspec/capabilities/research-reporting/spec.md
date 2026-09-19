@@ -74734,4 +74734,148 @@ SHALL pass against the exact candidate before atomic publication.
 
 | Requirement | Implementation | Verification |
 |---|---|---|
-| REQ-REPORT-7428 and SCENARIO-REPORT-7428-* | Planned: independent V651 host reducer and thin entrypoint | Planned: spec-linked focused tests, 100 percent changed-module coverage, scoped checks, entrypoint replay, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
+| REQ-REPORT-7428 and SCENARIO-REPORT-7428-* | Implemented: independent V651 host reducer, branch-local replay, and thin entrypoint | Verified by spec-linked focused tests, 100 percent changed-module coverage, scoped checks, entrypoint replay, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V651 thirteen-task capstone — 2026-09-19
+
+**Status:** Specified. This host aggregation performs no model inference,
+training, board operation, scientific promotion, or external publication.
+
+### REQ-REPORT-7433: Reconcile thirteen authorities without promoting invalid or absent science
+
+Exp7433 SHALL parse the active V651 YAML and the single declared Markdown
+Exact Task Contract through the shipped generic contract reader. It SHALL
+account for exactly thirteen ordered tasks from Exp7421 through Exp7433. It
+SHALL preserve a stale or mismatched Markdown authority as a failed current
+check. It SHALL not hide the thirteen active YAML dispositions or treat a
+conductor `OK` line as scientific evidence.
+
+The reducer SHALL read each declared terminal deliverable or its exact
+conductor pre-gate record. It SHALL authenticate byte hashes, experiment and
+milestone identity, terminal classes, original adversarial flags, raw-row
+availability, and explicit required validation checks before reducing science.
+The Exp7430 blocked artifact SHALL remain an unavailable audit, not an
+extraction result. A blocked artifact may omit the full producer schema only
+when its exact structured-gate operands and source hash authenticate the
+pre-gate decision.
+
+The claim matrix SHALL contain separate rows for the human-label protocol,
+spline equivalence, static decisions, online learning, independent decision
+audit, Qwen extraction, extraction audit, ARC reachability, host update cost,
+KV260, GateMate, and PolarFire. Each row SHALL separate authority,
+availability, validity, completion, benefit, limitations, and oracle status.
+Valid completed no-benefit producers SHALL remain `null`. Analytic spline
+parity SHALL remain `circular_positive` and SHALL not establish general EBM
+superiority.
+
+Core required science SHALL be Exp7426, Exp7427, Exp7428, Exp7429, and
+Exp7430. A disqualified, flagged, or required-validation-failing core producer
+SHALL disqualify the overall science before missing science is considered.
+Otherwise, a missing or blocked core producer SHALL make the overall class
+`blocked`, never retryable `partial`. A failed contract authority or affected
+current check SHALL also disqualify the current capstone. Completion accounting
+SHALL remain separate from scientific benefit.
+
+The artifact SHALL report the producer evidence for full-source,
+source-masked, and source-swapped diagnostics; dense fixed-basis equivalence;
+randomized partial-feedback selection bias; `implicit_true` sensitivity;
+per-domain support; and complete-service host costs. It SHALL not infer
+deterministic semantic truth from labels, richer capacity from a fixed basis,
+hardware benefit from host arithmetic, or hidden ARC performance from a
+two-episode sentinel.
+
+Retirement SHALL require an exact prior verdict, the same mechanism scope, and
+`retire_if_same_verdict=true`. A new mechanism or unrelated resource failure
+SHALL continue with its measured cause. Unchanged external absence SHALL wait
+for a named prerequisite. The retired V649 proof-memory dependency chain SHALL
+stay closed. V650 proof-memory optimization SHALL remain deferred until
+profiling names a changed cost mechanism; its 3.7068 upper cost ratio remains
+a valid null.
+
+Exp7433 SHALL run the unchanged publication gate and retain its exact G1 through
+G4 rows, `paper_ready`, and `unmet_gates`. Those gates apply only to their
+existing FoVer headline and SHALL not certify V651. The artifact SHALL give one
+bounded disposition for the ARC, calibrated-decision, self-learning,
+SOTA-ingestion, and hardware standing floors. It SHALL keep publication,
+production defaults, generator weights, roadmap activation, and promotion
+unchanged.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Producer fitting SHALL remain typed as historical
+`small_ebm_training`. Archived and scripted model events SHALL remain
+hash-bound sidecars and SHALL not become current invocation counts.
+
+The terminal artifact SHALL include actual UTC boundaries, monotonic duration,
+phase spans, exact preconditions, source hashes, all thirteen disposition rows,
+all twelve claim rows, sample budgets, categorized gates, exact blockers,
+validation receipts, field principles, and a checksum. `promotion_score` SHALL
+remain zero. `capstone_complete_score` SHALL equal one only when all thirteen
+dispositions and all current capstone checks pass; it SHALL not measure benefit.
+
+The affected command plan SHALL come from Exp7358 and execute through Exp7303.
+It SHALL freeze worktree imports, focused pytest with `-n 0 -o addopts=
+--no-cov` and a private existing base-temp parent, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy, and
+exact-test specification coverage. It SHALL preserve command-local
+`COVERAGE_FILE` and SHALL not launch `full_python_suite` from the experiment.
+
+No numbered end-to-end scenario applies. The declared entrypoint and a
+fresh-process cold replay are the capability end-to-end checks. Independent
+reduction, the unchanged adversarial verifier, and strict verdict-row
+consistency SHALL pass against the exact candidate before atomic publication.
+
+#### SCENARIO-REPORT-7433-DISPOSITIONS: Thirteen exact source slots remain ordered
+
+**Given** the active V651 YAML, declared Markdown authority, twelve predecessor slots, and current checks
+**When** Exp7433 authenticates artifacts and the Exp7430 pre-gate record
+**Then** exactly thirteen ordered dispositions include Exp7433 once
+**And** authority mismatch remains explicit without inventing missing science.
+
+#### SCENARIO-REPORT-7433-CLAIMS: Twelve branch boundaries survive aggregation
+
+**Given** completed protocol, decision, audit, ARC, host-cost, and board evidence
+**When** each claim reduces only its authenticated authority
+**Then** validity, completion, benefit, label limits, compute limits, and oracle status remain separate
+**And** null, circular, blocked, and disqualified producers keep their original boundaries.
+
+#### SCENARIO-REPORT-7433-CLASSIFY: Invalid core evidence precedes absence
+
+**Given** flagged Exp7429 capture and blocked Exp7430 audit evidence
+**When** required science is classified
+**Then** invalid Exp7429 evidence makes the overall science disqualified before Exp7430 absence
+**And** no external absence becomes retryable partial work.
+
+#### SCENARIO-REPORT-7433-DIAGNOSTICS: Required limits stay attached to measurements
+
+**Given** raw static, online, audit, sentinel, update, and board evidence
+**When** the capstone reports diagnostics and service costs
+**Then** source ablations, dense parity, selection bias, implicit-true sensitivity, domain support, and full costs remain visible
+**And** no semantic-truth, general-superiority, hardware-speed, or hidden-performance claim follows.
+
+#### SCENARIO-REPORT-7433-CONTINUATION: Exact causes govern continue, retire, and wait
+
+**Given** declared prior failures, the exclusion manifest, and current verdicts
+**When** each failed scope is compared byte-for-byte and mechanism-for-mechanism
+**Then** only an exact repeated mechanism failure can retire
+**And** changed mechanisms continue while external absence waits for its named prerequisite.
+
+#### SCENARIO-REPORT-7433-PUBLICATION: Stable headline gates do not certify V651
+
+**Given** the unchanged publication-gate script and operator state
+**When** Exp7433 records G1 through G4
+**Then** exact gate rows, `paper_ready`, and `unmet_gates` are retained
+**And** their FoVer headline scope supplies no V651 promotion.
+
+#### SCENARIO-REPORT-7433-ARTIFACT: Exact readers control atomic publication
+
+**Given** source hashes, raw rows, branch decisions, and a frozen affected plan
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** identity, source, order, class, flag, gate, score, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared path.
+
+## Implementation Status (REQ-REPORT-7433)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7433 and SCENARIO-REPORT-7433-* | Implemented: V651 host capstone reducer, exact authority readers, and thin entrypoint | Verified by spec-linked focused tests, 100 percent changed-module coverage, scoped checks, entrypoint replay, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage |
