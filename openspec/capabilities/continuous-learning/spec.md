@@ -17964,3 +17964,101 @@ publication. No numbered E2E test applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7403 and SCENARIO-CL-7403-* | Implemented: `python/carnot/experiment_7403_v649_synthetic_memory.py`, thin entrypoint, reusable replay runner, raw replay evidence, and terminal artifact. | Verified: 29 focused tests, 100 percent changed-module coverage, all eight scoped affected checks, entrypoint E2E, fresh-process cold replay, adversarial verification, strict row consistency, and exact-test specification coverage. |
+
+## REQ-CL-7405: Audit Synthetic and Live Proof Cohorts Independently
+
+Exp7405 SHALL authenticate the exact Exp7403 artifact, the attempted Exp7404
+artifact, the sealed protocol, and the proof evidence used for each available
+cohort. It SHALL inspect each planned cohort separately. A missing or blocked
+live cohort SHALL not stop independent reduction of completed synthetic rows.
+No whole-task structured prerequisite SHALL combine the two cohorts.
+
+The audit SHALL reconstruct each 2-CNF source identity from canonical clauses.
+It SHALL independently decide every request with an audit-local implication
+graph checker. It SHALL not import producer aggregate or truth-check functions.
+It SHALL verify proof edges, feedback order, version isolation, persistent
+incremental state, persistent graph-cache state, restart records, erasure
+witnesses, paid-query denominators, complete-service costs, and the registered
+stream bootstrap gates.
+
+The audit SHALL retain one compact row for every stream, request, and arm. Each
+row SHALL contain its cohort, formula and request identity, seed, condition,
+decision, independent truth, metric contribution, complete cost, state
+continuity observation, and failed or censored disposition. Synthetic and live
+rows SHALL never be pooled to pass a value gate.
+
+Private copies SHALL test a forged proof edge, stale formula version, removed
+feedback, duplicated request, missing cost phase, lost reset, and altered
+headline. Every mutation SHALL produce a named rejecting observation. A fresh
+process SHALL cold-replay the proof record while the original producer artifact
+bytes remain unchanged.
+
+The artifact SHALL emit one `cohort_claim_rows` record for the synthetic cohort
+and one for the live cohort. Each record SHALL keep its own source hashes,
+eligibility, verdict class, safety, efficacy, uncertainty, confirmed value,
+and missing checks. An unchanged absent or blocked external live cohort SHALL
+remain `blocked`, not `partial`. A disqualified producer SHALL remain
+`disqualified`. The top-level `proof_value_confirmed_score` SHALL equal one
+only when all cohorts required by the combined claim pass their original gates.
+Valid synthetic value SHALL remain visible even when that combined score is
+zero. Oracle-defined value SHALL remain `circular_positive`.
+
+`proof_audit_complete_score` SHALL depend on complete independent cohort
+dispositions, mutation controls, cold replay, and required validation. It SHALL
+not depend on the combined value result. `promotion_score` SHALL remain zero.
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+LLM invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. `inference_substrate` SHALL be a string that describes
+the CPU, JAX environment, and exact graph work. Historical model receipts SHALL
+stay in a hash-bound sidecar. Small EBM training SHALL be declared separately.
+
+The affected command list SHALL come from Exp7358 and execute through Exp7303.
+It SHALL contain worktree imports, focused serial pytest with cleared addopts
+and no coverage, separate 100 percent changed-module coverage, scoped Ruff
+check and format, changed-module mypy, and exact-test specification coverage.
+It SHALL preserve command-local `COVERAGE_FILE`, use a private existing
+base-temp parent, and omit the full Python suite. The declared entrypoint and a
+fresh-process cold replay SHALL serve as the capability E2E. The unchanged
+adversarial verifier and strict verdict-row reader SHALL inspect the exact
+candidate before atomic publication. No numbered E2E check applies.
+
+### SCENARIO-CL-7405-COHORTS: Missing live evidence does not hide synthetic evidence
+
+- GIVEN an eligible complete Exp7403 artifact and a blocked attempted Exp7404 artifact
+- WHEN Exp7405 authenticates and reduces each cohort
+- THEN the synthetic cohort keeps its independently confirmed circular-positive result
+- AND the live cohort remains blocked without pooling or a partial verdict.
+
+### SCENARIO-CL-7405-TRUTH: Source clauses control every audited answer
+
+- GIVEN sealed formula versions, requests, arm rows, and proof witnesses
+- WHEN the audit-local graph checker recomputes every request
+- THEN every arm decision agrees with source truth
+- AND proof edges, feedback, versions, persistent state, costs, and erasures agree with their source records.
+
+### SCENARIO-CL-7405-MUTATIONS: Seven private changes fail closed
+
+- GIVEN private copies of otherwise valid audit inputs
+- WHEN an edge, version, feedback record, request, cost phase, reset, or headline changes
+- THEN all seven mutations are rejected by their named independent checks
+- AND no producer or sealed protocol byte is changed.
+
+### SCENARIO-CL-7405-VALUE: Cohort completion and combined value stay separate
+
+- GIVEN a complete synthetic audit and an unchanged blocked live cohort
+- WHEN the top-level disposition is reduced
+- THEN `proof_audit_complete_score` can equal one while `proof_value_confirmed_score` equals zero
+- AND the synthetic cohort's own confirmed value remains one and explicitly circular.
+
+### SCENARIO-CL-7405-ARTIFACT: Fresh readers control atomic publication
+
+- GIVEN compact rows, cohort claims, mutations, source hashes, and scoped receipts
+- WHEN fresh-process replay and unchanged strict readers inspect the candidate
+- THEN changed evidence, reductions, scores, gates, hashes, or validation scope fail
+- AND only a valid terminal artifact is written atomically.
+
+## Implementation Status (REQ-CL-7405)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7405 and SCENARIO-CL-7405-* | Implemented: independent proof-audit module, thin entrypoint, hash-bound source sidecar, compact rows, mutation records, and terminal artifact. | Verified: 31 focused tests, 100 percent changed-module coverage, all eight scoped affected checks, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and scoped specification coverage. |

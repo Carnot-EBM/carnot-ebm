@@ -1,0 +1,90 @@
+{
+  "mutation_rows": [
+    {
+      "all_observations": [
+        "proof_edge_not_in_source",
+        "proof_path_id_mismatch"
+      ],
+      "expected": "reject",
+      "independent_check": "audit_local_forged_edge_check",
+      "mutation": "forged_edge",
+      "observed": "reject",
+      "passed": true,
+      "private_copy_only": true,
+      "rejecting_observation": "proof_edge_not_in_source"
+    },
+    {
+      "all_observations": [
+        "proof_version_mismatch",
+        "proof_path_id_mismatch"
+      ],
+      "expected": "reject",
+      "independent_check": "audit_local_stale_version_check",
+      "mutation": "stale_version",
+      "observed": "reject",
+      "passed": true,
+      "private_copy_only": true,
+      "rejecting_observation": "proof_version_mismatch"
+    },
+    {
+      "all_observations": [
+        "source_proof_feedback_missing"
+      ],
+      "expected": "reject",
+      "independent_check": "audit_local_removed_feedback_check",
+      "mutation": "removed_feedback",
+      "observed": "reject",
+      "passed": true,
+      "private_copy_only": true,
+      "rejecting_observation": "source_proof_feedback_missing"
+    },
+    {
+      "all_observations": [
+        "duplicate_request"
+      ],
+      "expected": "reject",
+      "independent_check": "audit_local_duplicated_request_check",
+      "mutation": "duplicated_request",
+      "observed": "reject",
+      "passed": true,
+      "private_copy_only": true,
+      "rejecting_observation": "duplicate_request"
+    },
+    {
+      "all_observations": [
+        "cost_phase_missing:verification"
+      ],
+      "expected": "reject",
+      "independent_check": "audit_local_missing_cost_phase_check",
+      "mutation": "missing_cost_phase",
+      "observed": "reject",
+      "passed": true,
+      "private_copy_only": true,
+      "rejecting_observation": "cost_phase_missing:verification"
+    },
+    {
+      "all_observations": [
+        "reset_isolation_missing"
+      ],
+      "expected": "reject",
+      "independent_check": "audit_local_lost_reset_check",
+      "mutation": "lost_reset",
+      "observed": "reject",
+      "passed": true,
+      "private_copy_only": true,
+      "rejecting_observation": "reset_isolation_missing"
+    },
+    {
+      "all_observations": [
+        "headline_disagrees_with_independent_efficacy"
+      ],
+      "expected": "reject",
+      "independent_check": "audit_local_altered_headline_check",
+      "mutation": "altered_headline",
+      "observed": "reject",
+      "passed": true,
+      "private_copy_only": true,
+      "rejecting_observation": "headline_disagrees_with_independent_efficacy"
+    }
+  ]
+}
