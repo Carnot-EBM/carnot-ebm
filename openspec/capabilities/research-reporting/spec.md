@@ -74420,3 +74420,125 @@ consistency SHALL pass on the exact candidate before atomic publication.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7419 and SCENARIO-REPORT-7419-* | Implemented: host precision module, thin entrypoint, hash-bound raw rows, and terminal artifact | Verified by spec-linked tests, exact affected checks, 100 percent changed-module coverage, entrypoint E2E, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V650 twelve-task capstone — 2026-09-19
+
+**Status:** Specified. This host aggregation performs no model inference,
+training, board operation, or scientific promotion.
+
+### REQ-REPORT-7420: Reconcile exact dispositions without promoting unavailable science
+
+Exp7420 SHALL parse the single V650 Exact Task Contract and the active YAML.
+Both authorities SHALL declare milestone `2026.09.650` and exactly twelve
+ordered tasks from Exp7409 through Exp7420. The reducer SHALL authenticate each
+declared artifact or exact conductor pre-gate record. It SHALL preserve source
+hashes, terminal classes, adversarial flags, required checks, and failed gate
+operands before reading scientific metrics. A conductor `OK` line SHALL not
+establish scientific success.
+
+The artifact SHALL contain separate claim rows for corpus authority, static
+calibration, online calibration, ARC callback invariants, Qwen extraction,
+extraction audit, revised proof memory, numeric host cost, and board status.
+Each row SHALL separate availability, validity, completion, benefit, authority,
+sample limits, label limits, compute limits, and oracle status. A valid null
+SHALL remain terminal. An unavailable peer branch SHALL not erase a completed
+audit or another branch's valid result.
+
+Required science SHALL consist of static calibration, online calibration,
+their independent audit, extraction capture, extraction audit, and revised
+proof-memory measurement. Invalid required science SHALL make the overall
+class `disqualified`. Otherwise, unavailable required science SHALL make the
+overall class `blocked`. `partial` SHALL apply only to unfinished retryable work
+owned by Exp7420. The expected GateMate changed-state block SHALL not invalidate
+host numeric science.
+
+Retirement SHALL require an explicitly declared prior scope, an exact repeated
+top-level verdict, and `retire_if_same_verdict=true`. External absence, similar
+wording, or a new mechanism SHALL not authorize retirement. Existing Exp7404
+and Exp7406 retirement receipts SHALL remain closed. V649 missing producer
+artifacts SHALL remain unknown science even when later diagnostics find related
+files.
+
+Each claim SHALL receive exactly one continuation decision:
+`continue-with-measured-cause`, `retire-unchanged-mechanism`, or
+`wait-for-named-external-change`. Enoki, MARGIN, corrupted-feedback, and Memoir
+rows SHALL map only to controls that V650 actually executed. The artifact SHALL
+state whether the corpus, ARC, calibrated-decision, self-learning, and hardware
+standing floors were satisfied. It SHALL retain the deferred outer-loop
+commit-size enforcement gap.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Small Gibbs work SHALL remain in historical
+`small_ebm_training` receipts. Scripted transport and archived model calls SHALL
+remain hash-bound sidecars. `promotion_score` SHALL remain zero. The run SHALL
+not change publication gates, production defaults, generator weights, the
+active roadmap, or the conductor.
+
+The terminal artifact SHALL include actual UTC boundaries, monotonic duration,
+phase spans, exact source hashes, all twelve disposition rows, sample budgets,
+categorized gates, exact branch blockers, validation receipts, field
+principles, and a checksum over the protocol, source bytes, and reduced rows.
+`capstone_complete_score` SHALL equal one only when all twelve honest
+dispositions and current capstone checks pass. This score SHALL remain separate
+from scientific value.
+
+The affected command plan SHALL come from Exp7358 and execute through Exp7303.
+It SHALL freeze worktree imports, focused pytest with `-n 0 -o addopts=
+--no-cov` and a private existing base-temp parent, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy, and
+exact-test specification coverage. It SHALL preserve command-local
+`COVERAGE_FILE` and SHALL not launch `full_python_suite` or an old `main()`.
+
+No numbered end-to-end scenario applies. The declared entrypoint and a
+fresh-process cold replay are the capability end-to-end checks. Independent
+row reduction, the unchanged adversarial verifier, and strict verdict-row
+consistency SHALL pass on the exact candidate before atomic publication.
+
+#### SCENARIO-REPORT-7420-DISPOSITIONS: Twelve exact source slots remain ordered
+
+**Given** the matching V650 authorities and eleven predecessor task slots
+**When** Exp7420 authenticates artifacts and conductor pre-gate records
+**Then** exactly twelve ordered disposition rows include Exp7420 from current checks
+**And** missing Exp7417 bytes remain blocked rather than becoming an audit result.
+
+#### SCENARIO-REPORT-7420-CLAIMS: Nine branch boundaries survive aggregation
+
+**Given** valid nulls, one flagged ARC artifact, one blocked extraction, and one pre-gated audit
+**When** the capstone reduces V650 evidence
+**Then** nine claim rows retain authority, validity, completion, benefit, and limits independently
+**And** annotation agreement, scripted transport, and source-defined proofs stay bounded.
+
+#### SCENARIO-REPORT-7420-CLASSIFY: Required science controls precedence
+
+**Given** authenticated current checks and required science branches
+**When** a required branch is invalid or unavailable
+**Then** invalid required science takes precedence as disqualified
+**And** otherwise unavailable required science produces blocked, never retryable partial.
+
+#### SCENARIO-REPORT-7420-RETIREMENT: Exact prior verdicts are the only retirement authority
+
+**Given** declared prior failures and the current exclusion manifest
+**When** verdicts are compared byte-for-byte
+**Then** retirement needs the same verdict and an active retirement condition
+**And** new mechanisms and external absence receive a non-retirement continuation.
+
+#### SCENARIO-REPORT-7420-CONTROLS: Literature and standing floors stay evidence-bounded
+
+**Given** V650 Enoki, MARGIN, corrupted-feedback, Memoir, ARC, and hardware work
+**When** controls and standing floors are reported
+**Then** only executed local controls receive credit with sample, label, and compute limits
+**And** the deferred commit-size guard, publication gates, defaults, and weights stay unchanged.
+
+#### SCENARIO-REPORT-7420-ARTIFACT: Exact readers control atomic publication
+
+**Given** source hashes, reduced rows, branch decisions, and a frozen check plan
+**When** fresh processes replay, reduce, adversarially verify, and run strict row consistency
+**Then** identity, source, order, class, flag, gate, score, principle, or checksum drift fails
+**And** only a valid terminal JSON is published atomically.
+
+## Implementation Status (REQ-REPORT-7420)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7420 and SCENARIO-REPORT-7420-* | Implemented: V650 host capstone reducer, thin entrypoint, exact twelve-row accounting, and nine branch claims | Verified by spec-linked tests, 100 percent changed-module coverage, exact affected checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage |

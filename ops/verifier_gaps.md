@@ -4888,3 +4888,29 @@ worthless corpus — which is exactly the case layer 1 catches before induction 
   require a new eligible proposal source for live memory; require a new current
   ARC invocation and evidence mechanism. Keep generator weights, production
   defaults, and publication gates unchanged.
+
+### GAP-V650-SOURCE-DECISION-VALUE: source authority did not create calibrated benefit
+
+- **status:** open after the 2026-09-19 V650 static and online audited nulls.
+- **corpus authority:** Exp7410 sealed 3,990 attributed rows. The labels are
+  machine annotations with limited human validation. They are not exact truth.
+- **static result:** Exp7413 completed the registered source-aware calibration
+  panel. Exp7415 reproduced the static reduction. The registered decision
+  benefit stayed zero.
+- **online result:** Exp7414 completed selected-feedback measurement with
+  delayed, revoked, no-feedback, and erased-update controls. Exp7415 reproduced
+  the online reduction. Support was insufficient for registered value.
+- **extraction boundary:** Exp7416 completed zero of 96 planned Qwen calls.
+  Exp7417 was pre-gated. Annotation agreement cannot replace extraction capture
+  or an independent semantic audit.
+- **memory boundary:** Exp7418 passed revision, eviction, erasure, and restart
+  safety. Its total-cost ratios failed. The source-defined proof verifier shares
+  correctness authority and cannot establish general verified reasoning.
+- **ARC boundary:** Exp7411 is flagged and disqualified. Scripted callback
+  invariants do not establish live ARC reasoning or efficiency.
+- **next discriminator:** change the source-aware decision mechanism before a
+  repeated calibration gate. Require an eligible captured extraction panel
+  before semantic audit. Repair ARC provenance without reopening the retired
+  Exp7406 panel mechanism.
+- **outer-loop gap:** commit-time enforcement of the 20 MiB result limit remains
+  deferred. The conductor does not yet supply that guard.

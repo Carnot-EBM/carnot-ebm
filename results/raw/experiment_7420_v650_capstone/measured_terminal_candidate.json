@@ -1,0 +1,3012 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "accounting",
+      "check": "contract_match",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Both task authorities must agree before evidence reduction."
+    },
+    {
+      "category": "accounting",
+      "check": "authenticated_predecessor_slots",
+      "expected": 11,
+      "observed": 11,
+      "operator": "==",
+      "passed": true,
+      "principle": "Each predecessor needs an artifact or exact pre-gate source."
+    },
+    {
+      "category": "completion",
+      "check": "twelve_ordered_dispositions",
+      "expected": [
+        "exp7409-evidence-custody",
+        "exp7410-source-corpus",
+        "exp7411-arc-call-budget",
+        "exp7412-source-features",
+        "exp7413-source-calibration",
+        "exp7414-selected-feedback",
+        "exp7415-decision-audit",
+        "exp7416-anchored-extraction",
+        "exp7417-extraction-audit",
+        "exp7418-revision-memory",
+        "exp7419-precision-placement",
+        "exp7420-capstone"
+      ],
+      "observed": [
+        "exp7409-evidence-custody",
+        "exp7410-source-corpus",
+        "exp7411-arc-call-budget",
+        "exp7412-source-features",
+        "exp7413-source-calibration",
+        "exp7414-selected-feedback",
+        "exp7415-decision-audit",
+        "exp7416-anchored-extraction",
+        "exp7417-extraction-audit",
+        "exp7418-revision-memory",
+        "exp7419-precision-placement",
+        "exp7420-capstone"
+      ],
+      "operator": "==",
+      "passed": true,
+      "principle": "Completion accounts for every task once, independent of value."
+    },
+    {
+      "category": "scientific_validity",
+      "check": "required_science_valid",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Invalid required science disqualifies before unavailable science."
+    },
+    {
+      "category": "scientific_availability",
+      "check": "required_science_available",
+      "expected": true,
+      "observed": false,
+      "operator": "==",
+      "passed": false,
+      "principle": "Unavailable required science remains blocked rather than partial."
+    },
+    {
+      "category": "required_validation",
+      "check": "required_affected_checks",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "The frozen affected plan controls implementation validity."
+    },
+    {
+      "category": "required_validation",
+      "check": "terminal_readers",
+      "expected": true,
+      "observed": false,
+      "operator": "==",
+      "passed": false,
+      "principle": "Cold replay and strict readers must pass before publication."
+    },
+    {
+      "category": "promotion",
+      "check": "automatic_promotion",
+      "expected": 0,
+      "observed": 0,
+      "operator": "==",
+      "passed": true,
+      "principle": "A capstone never changes rollout, publication, or generator weights."
+    }
+  ],
+  "active_research_roadmap_changed": false,
+  "capstone_complete_score": 0,
+  "claim_matrix": {
+    "arc_callback_invariants": {
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 0,
+      "compute_limit": "scripted callback transport; zero current model calls",
+      "flagged_adversarial": true,
+      "sample_limit": {
+        "action_limit_per_scored_episode": 12,
+        "attempted_units": 9,
+        "censored_units": 0,
+        "completed_units": 9,
+        "failed_units": 0,
+        "independent_groups": [
+          "callback_controls",
+          "scored_public_game_plumbing"
+        ],
+        "planned_units": 9,
+        "request_limit_per_episode": 2,
+        "stopping_rule": "run the frozen callback matrix and one episode on each of three games",
+        "unstarted_units": 0
+      },
+      "source_kind": "declared_artifact",
+      "source_tasks": [
+        "exp7411-arc-call-budget"
+      ],
+      "valid": false,
+      "verdict_class": "disqualified",
+      "verifier_is_oracle": false
+    },
+    "board_status": {
+      "available": true,
+      "benefit_score": 0,
+      "boards": {
+        "GateMate": "blocked_changed_physical_state",
+        "KV260": "graduated_preserved",
+        "PolarFire": "graduated_cpu_dispatch_preserved"
+      },
+      "completion_score": 1,
+      "compute_limit": "dated historical board rows; no fresh physical operation",
+      "hardware_ready_score": 0,
+      "host_science_invalidated": false,
+      "source_kind": "declared_artifact",
+      "source_tasks": [
+        "exp7419-precision-placement"
+      ],
+      "valid": true,
+      "verdict_class": "null",
+      "verifier_is_oracle": false
+    },
+    "corpus_authority": {
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 1,
+      "compute_limit": "private attributed cache; no Enoki model stack",
+      "label_authority": "machine_annotations",
+      "sample_limit": {
+        "attempted": 3990,
+        "censored": 1703,
+        "completed": 3990,
+        "failed": 0,
+        "independent_groups": 1075,
+        "planned": 3990,
+        "stop_rule": "read at most the published 3990 rows; never resplit for class balance",
+        "unstarted": 0
+      },
+      "source_kind": "declared_artifact",
+      "source_tasks": [
+        "exp7410-source-corpus"
+      ],
+      "valid": true,
+      "verdict_class": "null",
+      "verifier_is_oracle": false
+    },
+    "extraction_audit": {
+      "available": false,
+      "benefit_score": 0,
+      "completion_score": 0,
+      "compute_limit": "aggregation only after eligible captured spans",
+      "failed_checks": [
+        {
+          "check": "structured_gate:exp7416-anchored-extraction.extraction_capture_complete_score",
+          "expected": 1,
+          "field": "extraction_capture_complete_score",
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "path": "results/experiment_7416_v650_anchored_extraction.json",
+          "upstream": "exp7416-anchored-extraction"
+        },
+        {
+          "check": "structured_gate:exp7416-anchored-extraction.verdict_class",
+          "expected": [
+            "positive",
+            "circular_positive",
+            "null"
+          ],
+          "field": "verdict_class",
+          "observed": "blocked",
+          "operator": "in",
+          "passed": false,
+          "path": "results/experiment_7416_v650_anchored_extraction.json",
+          "upstream": "exp7416-anchored-extraction"
+        }
+      ],
+      "sample_limit": "unstarted because extraction capture was ineligible",
+      "source_kind": "conductor_pre_gate_record",
+      "source_tasks": [
+        "exp7417-extraction-audit"
+      ],
+      "valid": false,
+      "verdict_class": "blocked",
+      "verifier_is_oracle": false
+    },
+    "numeric_host_cost": {
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 1,
+      "compute_limit": "host emulation only; no device kernel",
+      "sample_limit": {
+        "attempted": 6258,
+        "censored": 0,
+        "completed": 6258,
+        "failed": 0,
+        "heldout_rows": 1995,
+        "independent_groups": 266,
+        "planned": 6258,
+        "planned_cold_rows": 3,
+        "planned_precision_rows": 5985,
+        "planned_timing_rows": 270,
+        "stop_rule": "complete every held-out arm, 30 rotated paired blocks per batch, and one cold call per arm",
+        "unstarted": 0
+      },
+      "source_kind": "declared_artifact",
+      "source_tasks": [
+        "exp7419-precision-placement"
+      ],
+      "valid": true,
+      "verdict_class": "null",
+      "verifier_is_oracle": false
+    },
+    "online_calibration": {
+      "audit_complete_score": 1,
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 1,
+      "compute_limit": "selected-feedback host simulation",
+      "label_authority": "delayed and revoked machine annotations",
+      "sample_limit": {
+        "attempted": 200,
+        "censored": 0,
+        "completed": 200,
+        "failed": 0,
+        "independent_groups": 149,
+        "label_counts": {
+          "0": 5,
+          "1": 144
+        },
+        "planned": 200,
+        "stop_rule": "complete every sealed replay condition; do not tune on online labels",
+        "unstarted": 0
+      },
+      "source_tasks": [
+        "exp7414-selected-feedback",
+        "exp7415-decision-audit"
+      ],
+      "valid": true,
+      "verdict_class": "null",
+      "verifier_is_oracle": false
+    },
+    "qwen_extraction": {
+      "available": true,
+      "benefit_score": null,
+      "completion_score": 0,
+      "compute_limit": "96 planned Qwen calls; no owned single-slot capture completed",
+      "sample_limit": {
+        "attempted": 0,
+        "capture_timeout_s": 2400.0,
+        "case_count": 48,
+        "censored": 0,
+        "completed": 0,
+        "constructed_case_count": 24,
+        "development_call_limit": 4,
+        "development_calls_used": 0,
+        "development_token_limit": 64,
+        "failed": 0,
+        "independent_constructed_pair_count": 8,
+        "lease_wait_timeout_s": 180.0,
+        "maximum_new_tokens_per_call": 384,
+        "measured_calls_per_case": 2,
+        "official_case_count": 24,
+        "planned": 96,
+        "stop_rule": "stop_after_96_dispositions_or_capture_deadline_without_replacement",
+        "unstarted": 96,
+        "validation_timeout_s": 900.0
+      },
+      "source_kind": "declared_artifact",
+      "source_tasks": [
+        "exp7416-anchored-extraction"
+      ],
+      "valid": false,
+      "verdict_class": "blocked",
+      "verifier_is_oracle": false
+    },
+    "revised_proof_memory": {
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 1,
+      "compute_limit": "CPU exact solver and simulator; no live-model benefit",
+      "sample_limit": {
+        "attempted": 7680,
+        "censored": 0,
+        "completed": 7680,
+        "failed": 0,
+        "independent_groups": 32,
+        "planned": 7680,
+        "stop_rule": "complete all frozen units; no efficacy stopping",
+        "unstarted": 0
+      },
+      "source_kind": "declared_artifact",
+      "source_tasks": [
+        "exp7418-revision-memory"
+      ],
+      "valid": true,
+      "verdict_class": "null",
+      "verifier_is_oracle": true
+    },
+    "static_calibration": {
+      "audit_complete_score": 1,
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 1,
+      "compute_limit": "small Gibbs heads on host CPU",
+      "label_authority": "machine_annotations",
+      "sample_limit": {
+        "attempted": 30,
+        "censored": 0,
+        "completed": 30,
+        "eligible_scored_rows": 1116,
+        "failed": 0,
+        "independent_groups": 265,
+        "official_rows": 1995,
+        "planned": 30,
+        "planned_ablation_rows": 19950,
+        "planned_paired_rows": 39900,
+        "stop_rule": "complete every registered arm, seed, official row, and fixed ablation without test-label tuning",
+        "unscored_rows_preserved_per_unit": 879,
+        "unstarted": 0
+      },
+      "source_tasks": [
+        "exp7413-source-calibration",
+        "exp7415-decision-audit"
+      ],
+      "valid": true,
+      "verdict_class": "null",
+      "verifier_is_oracle": false
+    }
+  },
+  "continuation_rows": [
+    {
+      "branch": "corpus_authority",
+      "decision": "continue-with-measured-cause",
+      "measured_cause": "The attributed corpus is complete, but labels remain machine annotations.",
+      "required_change": "Add human-reviewed label authority before a semantic-truth claim."
+    },
+    {
+      "branch": "static_calibration",
+      "decision": "continue-with-measured-cause",
+      "measured_cause": "Static calibration completed without registered decision benefit.",
+      "required_change": "Change the source-aware mechanism before another fixed comparison."
+    },
+    {
+      "branch": "online_calibration",
+      "decision": "continue-with-measured-cause",
+      "measured_cause": "Selected-feedback calibration and its audit completed as a valid null.",
+      "required_change": "Change feedback support or policy before repeating the registered gate."
+    },
+    {
+      "branch": "arc_callback_invariants",
+      "decision": "continue-with-measured-cause",
+      "measured_cause": "Callback controls ran, but required validation is flagged and disqualified.",
+      "required_change": "Repair current provenance and validation without reopening Exp7406 panels."
+    },
+    {
+      "branch": "qwen_extraction",
+      "decision": "wait-for-named-external-change",
+      "measured_cause": "The bounded Qwen capture completed zero of 96 planned calls.",
+      "required_change": "Require one task-owned RTX 3090 lease receipt that satisfies the frozen slot check."
+    },
+    {
+      "branch": "extraction_audit",
+      "decision": "wait-for-named-external-change",
+      "measured_cause": "The audit was pre-gated because extraction capture was blocked.",
+      "required_change": "Require an eligible Exp7416 terminal artifact with capture score one."
+    },
+    {
+      "branch": "revised_proof_memory",
+      "decision": "continue-with-measured-cause",
+      "measured_cause": "Revision safety passed, but total-cost ratios failed the registered value gate.",
+      "required_change": "Reduce checking, invalidation, and storage cost before another value claim."
+    },
+    {
+      "branch": "numeric_host_cost",
+      "decision": "continue-with-measured-cause",
+      "measured_cause": "Int8 preserved actions but missed the complete-service speed gate.",
+      "required_change": "Change the complete host service path before repeating the timing gate."
+    },
+    {
+      "branch": "board_status",
+      "decision": "wait-for-named-external-change",
+      "measured_cause": "KV260 and PolarFire history is preserved; GateMate has no changed-state receipt.",
+      "required_change": "Wait for an operator-authored dated GateMate cable, port, power, board, JTAG, or DirtyJTAG change."
+    }
+  ],
+  "contract_comparison": {
+    "advisory_only": true,
+    "contract_rows": [
+      {
+        "fields_match": true,
+        "markdown": {
+          "deliverable": "results/experiment_7409_v650_evidence_custody.json",
+          "gates": [],
+          "id": "exp7409-evidence-custody",
+          "order": 1,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Bind twelve tasks and diagnose missing terminal evidence"
+        },
+        "order": 1,
+        "passed": true,
+        "producer_field_rows": [],
+        "producer_fields_declared": true,
+        "quarantined_input": false,
+        "task_id": "exp7409-evidence-custody",
+        "title": "Bind twelve tasks and diagnose missing terminal evidence",
+        "yaml": {
+          "deliverable": "results/experiment_7409_v650_evidence_custody.json",
+          "gates": [],
+          "id": "exp7409-evidence-custody",
+          "order": 1,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Bind twelve tasks and diagnose missing terminal evidence"
+        }
+      },
+      {
+        "fields_match": true,
+        "markdown": {
+          "deliverable": "results/experiment_7410_v650_source_corpus.json",
+          "gates": [],
+          "id": "exp7410-source-corpus",
+          "order": 2,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Seal an attributed source-context calibration corpus"
+        },
+        "order": 2,
+        "passed": true,
+        "producer_field_rows": [],
+        "producer_fields_declared": true,
+        "quarantined_input": false,
+        "task_id": "exp7410-source-corpus",
+        "title": "Seal an attributed source-context calibration corpus",
+        "yaml": {
+          "deliverable": "results/experiment_7410_v650_source_corpus.json",
+          "gates": [],
+          "id": "exp7410-source-corpus",
+          "order": 2,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Seal an attributed source-context calibration corpus"
+        }
+      },
+      {
+        "fields_match": true,
+        "markdown": {
+          "deliverable": "results/experiment_7411_v650_arc_call_budget.json",
+          "gates": [],
+          "id": "exp7411-arc-call-budget",
+          "order": 3,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Enforce ARC request budgets at the live callback boundary"
+        },
+        "order": 3,
+        "passed": true,
+        "producer_field_rows": [],
+        "producer_fields_declared": true,
+        "quarantined_input": false,
+        "task_id": "exp7411-arc-call-budget",
+        "title": "Enforce ARC request budgets at the live callback boundary",
+        "yaml": {
+          "deliverable": "results/experiment_7411_v650_arc_call_budget.json",
+          "gates": [],
+          "id": "exp7411-arc-call-budget",
+          "order": 3,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Enforce ARC request budgets at the live callback boundary"
+        }
+      },
+      {
+        "fields_match": true,
+        "markdown": {
+          "deliverable": "results/experiment_7412_v650_source_features.json",
+          "gates": [
+            {
+              "artifact_field": "source_corpus_ready_score",
+              "op": "==",
+              "upstream": "exp7410-source-corpus",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7410-source-corpus",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7410-source-corpus",
+              "value": false
+            }
+          ],
+          "id": "exp7412-source-features",
+          "order": 4,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Prototype source-aware energy inputs and freeze decision tests"
+        },
+        "order": 4,
+        "passed": true,
+        "producer_field_rows": [
+          {
+            "artifact_field": "source_corpus_ready_score",
+            "declared": true,
+            "upstream": "exp7410-source-corpus"
+          },
+          {
+            "artifact_field": "verdict_class",
+            "declared": true,
+            "upstream": "exp7410-source-corpus"
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "declared": true,
+            "upstream": "exp7410-source-corpus"
+          }
+        ],
+        "producer_fields_declared": true,
+        "quarantined_input": false,
+        "task_id": "exp7412-source-features",
+        "title": "Prototype source-aware energy inputs and freeze decision tests",
+        "yaml": {
+          "deliverable": "results/experiment_7412_v650_source_features.json",
+          "gates": [
+            {
+              "artifact_field": "source_corpus_ready_score",
+              "op": "==",
+              "upstream": "exp7410-source-corpus",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7410-source-corpus",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7410-source-corpus",
+              "value": false
+            }
+          ],
+          "id": "exp7412-source-features",
+          "order": 4,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Prototype source-aware energy inputs and freeze decision tests"
+        }
+      },
+      {
+        "fields_match": true,
+        "markdown": {
+          "deliverable": "results/experiment_7413_v650_source_calibration.json",
+          "gates": [
+            {
+              "artifact_field": "source_feature_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7412-source-features",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": false
+            }
+          ],
+          "id": "exp7413-source-calibration",
+          "order": 5,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure source-grounded Gibbs calibration against simple controls"
+        },
+        "order": 5,
+        "passed": true,
+        "producer_field_rows": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "declared": true,
+            "upstream": "exp7412-source-features"
+          },
+          {
+            "artifact_field": "verdict_class",
+            "declared": true,
+            "upstream": "exp7412-source-features"
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "declared": true,
+            "upstream": "exp7412-source-features"
+          }
+        ],
+        "producer_fields_declared": true,
+        "quarantined_input": false,
+        "task_id": "exp7413-source-calibration",
+        "title": "Measure source-grounded Gibbs calibration against simple controls",
+        "yaml": {
+          "deliverable": "results/experiment_7413_v650_source_calibration.json",
+          "gates": [
+            {
+              "artifact_field": "source_feature_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7412-source-features",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": false
+            }
+          ],
+          "id": "exp7413-source-calibration",
+          "order": 5,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure source-grounded Gibbs calibration against simple controls"
+        }
+      },
+      {
+        "fields_match": true,
+        "markdown": {
+          "deliverable": "results/experiment_7414_v650_selected_feedback.json",
+          "gates": [
+            {
+              "artifact_field": "source_feature_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7412-source-features",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": false
+            }
+          ],
+          "id": "exp7414-selected-feedback",
+          "order": 6,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure continuous energy calibration under selected feedback"
+        },
+        "order": 6,
+        "passed": true,
+        "producer_field_rows": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "declared": true,
+            "upstream": "exp7412-source-features"
+          },
+          {
+            "artifact_field": "verdict_class",
+            "declared": true,
+            "upstream": "exp7412-source-features"
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "declared": true,
+            "upstream": "exp7412-source-features"
+          }
+        ],
+        "producer_fields_declared": true,
+        "quarantined_input": false,
+        "task_id": "exp7414-selected-feedback",
+        "title": "Measure continuous energy calibration under selected feedback",
+        "yaml": {
+          "deliverable": "results/experiment_7414_v650_selected_feedback.json",
+          "gates": [
+            {
+              "artifact_field": "source_feature_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7412-source-features",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": false
+            }
+          ],
+          "id": "exp7414-selected-feedback",
+          "order": 6,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure continuous energy calibration under selected feedback"
+        }
+      },
+      {
+        "fields_match": true,
+        "markdown": {
+          "deliverable": "results/experiment_7415_v650_decision_audit.json",
+          "gates": [],
+          "id": "exp7415-decision-audit",
+          "order": 7,
+          "phase": 2,
+          "substrate": "aggregation",
+          "title": "Independently audit calibrated decisions and feedback causality"
+        },
+        "order": 7,
+        "passed": true,
+        "producer_field_rows": [],
+        "producer_fields_declared": true,
+        "quarantined_input": false,
+        "task_id": "exp7415-decision-audit",
+        "title": "Independently audit calibrated decisions and feedback causality",
+        "yaml": {
+          "deliverable": "results/experiment_7415_v650_decision_audit.json",
+          "gates": [],
+          "id": "exp7415-decision-audit",
+          "order": 7,
+          "phase": 2,
+          "substrate": "aggregation",
+          "title": "Independently audit calibrated decisions and feedback causality"
+        }
+      },
+      {
+        "fields_match": true,
+        "markdown": {
+          "deliverable": "results/experiment_7416_v650_anchored_extraction.json",
+          "gates": [
+            {
+              "artifact_field": "source_feature_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7412-source-features",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": false
+            }
+          ],
+          "id": "exp7416-anchored-extraction",
+          "order": 8,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Compare bounded Qwen claim extraction with preserved source spans"
+        },
+        "order": 8,
+        "passed": true,
+        "producer_field_rows": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "declared": true,
+            "upstream": "exp7412-source-features"
+          },
+          {
+            "artifact_field": "verdict_class",
+            "declared": true,
+            "upstream": "exp7412-source-features"
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "declared": true,
+            "upstream": "exp7412-source-features"
+          }
+        ],
+        "producer_fields_declared": true,
+        "quarantined_input": false,
+        "task_id": "exp7416-anchored-extraction",
+        "title": "Compare bounded Qwen claim extraction with preserved source spans",
+        "yaml": {
+          "deliverable": "results/experiment_7416_v650_anchored_extraction.json",
+          "gates": [
+            {
+              "artifact_field": "source_feature_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7412-source-features",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": false
+            }
+          ],
+          "id": "exp7416-anchored-extraction",
+          "order": 8,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Compare bounded Qwen claim extraction with preserved source spans"
+        }
+      },
+      {
+        "fields_match": true,
+        "markdown": {
+          "deliverable": "results/experiment_7417_v650_extraction_audit.json",
+          "gates": [
+            {
+              "artifact_field": "extraction_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7416-anchored-extraction",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7416-anchored-extraction",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7416-anchored-extraction",
+              "value": false
+            }
+          ],
+          "id": "exp7417-extraction-audit",
+          "order": 9,
+          "phase": 3,
+          "substrate": "aggregation",
+          "title": "Audit extraction coverage and semantic preservation independently"
+        },
+        "order": 9,
+        "passed": true,
+        "producer_field_rows": [
+          {
+            "artifact_field": "extraction_capture_complete_score",
+            "declared": true,
+            "upstream": "exp7416-anchored-extraction"
+          },
+          {
+            "artifact_field": "verdict_class",
+            "declared": true,
+            "upstream": "exp7416-anchored-extraction"
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "declared": true,
+            "upstream": "exp7416-anchored-extraction"
+          }
+        ],
+        "producer_fields_declared": true,
+        "quarantined_input": false,
+        "task_id": "exp7417-extraction-audit",
+        "title": "Audit extraction coverage and semantic preservation independently",
+        "yaml": {
+          "deliverable": "results/experiment_7417_v650_extraction_audit.json",
+          "gates": [
+            {
+              "artifact_field": "extraction_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7416-anchored-extraction",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7416-anchored-extraction",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7416-anchored-extraction",
+              "value": false
+            }
+          ],
+          "id": "exp7417-extraction-audit",
+          "order": 9,
+          "phase": 3,
+          "substrate": "aggregation",
+          "title": "Audit extraction coverage and semantic preservation independently"
+        }
+      },
+      {
+        "fields_match": true,
+        "markdown": {
+          "deliverable": "results/experiment_7418_v650_revision_memory.json",
+          "gates": [],
+          "id": "exp7418-revision-memory",
+          "order": 10,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Measure certified memory under source revision and eviction"
+        },
+        "order": 10,
+        "passed": true,
+        "producer_field_rows": [],
+        "producer_fields_declared": true,
+        "quarantined_input": false,
+        "task_id": "exp7418-revision-memory",
+        "title": "Measure certified memory under source revision and eviction",
+        "yaml": {
+          "deliverable": "results/experiment_7418_v650_revision_memory.json",
+          "gates": [],
+          "id": "exp7418-revision-memory",
+          "order": 10,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Measure certified memory under source revision and eviction"
+        }
+      },
+      {
+        "fields_match": true,
+        "markdown": {
+          "deliverable": "results/experiment_7419_v650_precision_placement.json",
+          "gates": [],
+          "id": "exp7419-precision-placement",
+          "order": 11,
+          "phase": 4,
+          "substrate": "no_model_load",
+          "title": "Measure decision stability at reduced precision and preserve board states"
+        },
+        "order": 11,
+        "passed": true,
+        "producer_field_rows": [],
+        "producer_fields_declared": true,
+        "quarantined_input": false,
+        "task_id": "exp7419-precision-placement",
+        "title": "Measure decision stability at reduced precision and preserve board states",
+        "yaml": {
+          "deliverable": "results/experiment_7419_v650_precision_placement.json",
+          "gates": [],
+          "id": "exp7419-precision-placement",
+          "order": 11,
+          "phase": 4,
+          "substrate": "no_model_load",
+          "title": "Measure decision stability at reduced precision and preserve board states"
+        }
+      },
+      {
+        "fields_match": true,
+        "markdown": {
+          "deliverable": "results/experiment_7420_v650_capstone.json",
+          "gates": [],
+          "id": "exp7420-capstone",
+          "order": 12,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Reconcile twelve dispositions and decide each research branch"
+        },
+        "order": 12,
+        "passed": true,
+        "producer_field_rows": [],
+        "producer_fields_declared": true,
+        "quarantined_input": false,
+        "task_id": "exp7420-capstone",
+        "title": "Reconcile twelve dispositions and decide each research branch",
+        "yaml": {
+          "deliverable": "results/experiment_7420_v650_capstone.json",
+          "gates": [],
+          "id": "exp7420-capstone",
+          "order": 12,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Reconcile twelve dispositions and decide each research branch"
+        }
+      }
+    ],
+    "errors": [],
+    "markdown_milestone": "2026.09.650",
+    "milestone": "2026.09.650",
+    "passed": true,
+    "yaml_milestone": "2026.09.650"
+  },
+  "duration_s": 56.89752055937424,
+  "ended_at_utc": "2026-09-19T12:44:43.299103+00:00",
+  "execution_venue": "host",
+  "experiment_id": "exp7420-capstone",
+  "external_publication_authorized": false,
+  "field_principles": {
+    "MODEL_SPECS": "Current LLM calls require unsloth/Qwen3.8-27B-GGUF; this aggregation uses none.",
+    "acceptance_gate_results": "Each gate records category, operator, expected, observed, pass state, and principle.",
+    "active_research_roadmap_changed": "Record the measured V650 capstone value for active research roadmap changed.",
+    "capstone_complete_score": "One means twelve dispositions and current checks completed, not scientific benefit.",
+    "claim_matrix": "Nine branches keep authority, validity, completion, benefit, and limits separate.",
+    "continuation_rows": "Each branch names a measured cause or an exact external prerequisite.",
+    "contract_comparison": "Record the measured V650 capstone value for contract comparison.",
+    "duration_s": "Monotonic current duration is separate from producer and validation durations.",
+    "ended_at_utc": "Record the measured V650 capstone value for ended at utc.",
+    "execution_venue": "The closed venue string is host; device details are separate.",
+    "experiment_id": "Record the measured V650 capstone value for experiment id.",
+    "external_publication_authorized": "Record the measured V650 capstone value for external publication authorized.",
+    "field_principles": "Principles are separate from ordinary scalar and collection values.",
+    "flagged_adversarial": "Producer flags remain visible and cannot supply readiness.",
+    "gate_check_summary": "Each block names its upstream, path, check, field, expected, and observed values.",
+    "generator_weights_changed": "Record the measured V650 capstone value for generator weights changed.",
+    "historical_model_receipt_sidecars": "Record the measured V650 capstone value for historical model receipt sidecars.",
+    "honest_verdict": "Completed accounting starts complete_; unavailable required science stays blocked.",
+    "inference_substrate": "This is a truthful string; device and software details are separate.",
+    "inference_substrate_class": "The class describes current aggregation without duration padding.",
+    "inference_substrate_details": "Record the measured V650 capstone value for inference substrate details.",
+    "invocation_counts": "Owned current attempted, completed, failed, cancelled, and in-flight events determine counts.",
+    "literature_control_rows": "Record the measured V650 capstone value for literature control rows.",
+    "milestone": "Record the measured V650 capstone value for milestone.",
+    "model_invoked": "Only an actual current attempted LLM call makes this true.",
+    "north_star_publication_gates_changed": "Record the measured V650 capstone value for north star publication gates changed.",
+    "phase": "Record the measured V650 capstone value for phase.",
+    "phase_spans": "Real phase boundaries retain checkpoints and heartbeat counts.",
+    "preconditions_checked": "Exact paths, hashes, and resource checks precede dependent reduction.",
+    "production_defaults_changed": "Record the measured V650 capstone value for production defaults changed.",
+    "promotion_score": "This remains zero; no rollout, publication, or generator update follows.",
+    "random_seed": "Frozen reduction and validation-order seeds are explicit.",
+    "repository_health": "Record the measured V650 capstone value for repository health.",
+    "reproducibility_checksum": "The checksum binds code, protocol, input bytes, and reduced rows.",
+    "required_checks_passed": "Record the measured V650 capstone value for required checks passed.",
+    "research_conductor_changed": "Record the measured V650 capstone value for research conductor changed.",
+    "retirement_rows": "Record the measured V650 capstone value for retirement rows.",
+    "rows": "Every task disposition, including blocked and current units, remains visible.",
+    "run_date": "The frozen date is 20260919, with actual UTC start and end boundaries.",
+    "sample_size_budget": "Planned, attempted, completed, failed, censored, and unstarted counts are separate.",
+    "schema": "Versioned ordinary fields identify the experiment, milestone, and terminal state.",
+    "scientific_value_score": "Record the measured V650 capstone value for scientific value score.",
+    "scope_reduction_compliance": "Standing floors and deferred obligations remain explicit.",
+    "small_ebm_training": "Record the measured V650 capstone value for small ebm training.",
+    "source_artifact_hashes": "Exact source paths and hashes preserve original flags and classes.",
+    "started_at_utc": "Record the measured V650 capstone value for started at utc.",
+    "status": "Record the measured V650 capstone value for status.",
+    "task_dispositions": "Exactly twelve ordered tasks retain their declared and observed terminal states.",
+    "terminal_validation_passed": "Record the measured V650 capstone value for terminal validation passed.",
+    "title": "Record the measured V650 capstone value for title.",
+    "validation_receipts": "Exact argv, environment, exits, durations, names, and log hashes remain visible.",
+    "verdict_class": "The closed class distinguishes invalid, unavailable, null, circular, and positive results.",
+    "verifier_is_oracle": "Source-defined proof rows are oracle-bound even though the capstone reducer is not."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "current_check_failure_count": 1,
+    "current_check_failures": [
+      {
+        "category": "required_validation",
+        "check": "terminal_validation_passed",
+        "expected": true,
+        "field": "terminal_validation_passed",
+        "observed": false,
+        "operator": "==",
+        "passed": false,
+        "path": "results/experiment_7420_v650_capstone.json",
+        "upstream": "exp7420-capstone"
+      }
+    ],
+    "failed_count": 3,
+    "failures": [
+      {
+        "category": "required_validation",
+        "check": "terminal_validation_passed",
+        "expected": true,
+        "field": "terminal_validation_passed",
+        "observed": false,
+        "operator": "==",
+        "passed": false,
+        "path": "results/experiment_7420_v650_capstone.json",
+        "upstream": "exp7420-capstone"
+      },
+      {
+        "category": "required_science_availability",
+        "check": "required_science_availability",
+        "expected": {
+          "flagged_adversarial": false,
+          "required_validation_passed": "not_false",
+          "verdict_class": [
+            "circular_positive",
+            "null",
+            "positive"
+          ]
+        },
+        "field": "verdict_class/flagged_adversarial/required_validation_passed",
+        "observed": {
+          "available": true,
+          "flagged_adversarial": false,
+          "required_validation_passed": null,
+          "verdict_class": "blocked"
+        },
+        "operator": "eligible_and_unflagged",
+        "passed": false,
+        "path": "results/experiment_7416_v650_anchored_extraction.json",
+        "upstream": "exp7416-anchored-extraction"
+      },
+      {
+        "category": "required_science_availability",
+        "check": "required_science_availability",
+        "expected": {
+          "flagged_adversarial": false,
+          "required_validation_passed": "not_false",
+          "verdict_class": [
+            "circular_positive",
+            "null",
+            "positive"
+          ]
+        },
+        "field": "verdict_class/flagged_adversarial/required_validation_passed",
+        "observed": {
+          "available": false,
+          "flagged_adversarial": false,
+          "required_validation_passed": null,
+          "verdict_class": "blocked"
+        },
+        "operator": "eligible_and_unflagged",
+        "passed": false,
+        "path": "results/experiment_7417_v650_extraction_audit.json",
+        "upstream": "exp7417-extraction-audit"
+      }
+    ],
+    "first_failure": {
+      "category": "required_validation",
+      "check": "terminal_validation_passed",
+      "expected": true,
+      "field": "terminal_validation_passed",
+      "observed": false,
+      "operator": "==",
+      "passed": false,
+      "path": "results/experiment_7420_v650_capstone.json",
+      "upstream": "exp7420-capstone"
+    },
+    "passed": false,
+    "required_invalid_count": 0,
+    "required_invalid_failures": [],
+    "required_unavailable_count": 2,
+    "required_unavailable_failures": [
+      {
+        "category": "required_science_availability",
+        "check": "required_science_availability",
+        "expected": {
+          "flagged_adversarial": false,
+          "required_validation_passed": "not_false",
+          "verdict_class": [
+            "circular_positive",
+            "null",
+            "positive"
+          ]
+        },
+        "field": "verdict_class/flagged_adversarial/required_validation_passed",
+        "observed": {
+          "available": true,
+          "flagged_adversarial": false,
+          "required_validation_passed": null,
+          "verdict_class": "blocked"
+        },
+        "operator": "eligible_and_unflagged",
+        "passed": false,
+        "path": "results/experiment_7416_v650_anchored_extraction.json",
+        "upstream": "exp7416-anchored-extraction"
+      },
+      {
+        "category": "required_science_availability",
+        "check": "required_science_availability",
+        "expected": {
+          "flagged_adversarial": false,
+          "required_validation_passed": "not_false",
+          "verdict_class": [
+            "circular_positive",
+            "null",
+            "positive"
+          ]
+        },
+        "field": "verdict_class/flagged_adversarial/required_validation_passed",
+        "observed": {
+          "available": false,
+          "flagged_adversarial": false,
+          "required_validation_passed": null,
+          "verdict_class": "blocked"
+        },
+        "operator": "eligible_and_unflagged",
+        "passed": false,
+        "path": "results/experiment_7417_v650_extraction_audit.json",
+        "upstream": "exp7417-extraction-audit"
+      }
+    ]
+  },
+  "generator_weights_changed": false,
+  "historical_model_receipt_sidecars": [
+    {
+      "counted_as_current_inference": false,
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7416_v650_anchored_extraction.json",
+      "scope": "historical_producer_only",
+      "sha256": "sha256:a67c9e94f7b3a23d53a5b27dfaa6975912e6f10ae9df5d32ecd1677c1fac98ce",
+      "task_id": "exp7416-anchored-extraction"
+    }
+  ],
+  "honest_verdict": "complete_disqualified_required_v650_evidence: twelve dispositions are retained; invalid required science or current validation prevents promotion",
+  "inference_substrate": "aggregation_from_exact_declared_artifacts",
+  "inference_substrate_class": "aggregation",
+  "inference_substrate_details": {
+    "current_model_or_board_operations": 0,
+    "device": "host CPU",
+    "jax_platform": "cpu",
+    "machine": "x86_64",
+    "python": "3.12.13",
+    "work": "JSON, YAML, and Markdown parsing; SHA-256 identities; exact gate reduction; and scoped subprocess receipts"
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "literature_control_rows": [
+    {
+      "executed_controls": [
+        "attributed source spans",
+        "machine labels excluded from predictor features",
+        "blocked bounded extraction retained"
+      ],
+      "limit": "Machine annotations are not exact semantic truth; extraction did not run.",
+      "local_result_eligible": true,
+      "mapped_tasks": [
+        "exp7410-source-corpus",
+        "exp7416-anchored-extraction"
+      ],
+      "paper_reproduction_claimed": false,
+      "source_id": "arXiv:2609.00581v2",
+      "source_name": "Enoki"
+    },
+    {
+      "executed_controls": [
+        "same-information logistic control",
+        "recent-frequency control",
+        "selected-only feedback arm"
+      ],
+      "limit": "The registered static and online results are valid nulls.",
+      "local_result_eligible": true,
+      "mapped_tasks": [
+        "exp7413-source-calibration",
+        "exp7414-selected-feedback",
+        "exp7415-decision-audit"
+      ],
+      "paper_reproduction_claimed": false,
+      "source_id": "arXiv:2605.22949v3",
+      "source_name": "MARGIN"
+    },
+    {
+      "executed_controls": [
+        "prediction before delayed reveal",
+        "revoked-label replay",
+        "no-feedback and erased-update controls"
+      ],
+      "limit": "Prediction-set guarantees do not transfer to selective actions.",
+      "local_result_eligible": true,
+      "mapped_tasks": [
+        "exp7414-selected-feedback",
+        "exp7415-decision-audit"
+      ],
+      "paper_reproduction_claimed": false,
+      "source_id": "arXiv:2605.20515",
+      "source_name": "corrupted-feedback"
+    },
+    {
+      "executed_controls": [
+        "separate reads and committed writes",
+        "source revision",
+        "eviction and erasure witnesses",
+        "cold restart parity"
+      ],
+      "limit": "Source-defined exact proofs are circular and total cost value is null.",
+      "local_result_eligible": true,
+      "mapped_tasks": [
+        "exp7418-revision-memory"
+      ],
+      "paper_reproduction_claimed": false,
+      "source_id": "arXiv:2607.20792",
+      "source_name": "Memoir"
+    }
+  ],
+  "milestone": "2026.09.650",
+  "model_invoked": false,
+  "north_star_publication_gates_changed": false,
+  "phase": 4,
+  "phase_spans": [
+    {
+      "checkpoint": "eleven_sources_authenticated",
+      "duration_s": 0.5591662307269871,
+      "ended_elapsed_s": 0.5592740741558373,
+      "heartbeat_count": 0,
+      "phase": "preconditions",
+      "started_elapsed_s": 0.00010784342885017395
+    },
+    {
+      "checkpoint": "affected_plan_frozen",
+      "duration_s": 0.0006296020001173019,
+      "ended_elapsed_s": 0.5599310682155192,
+      "heartbeat_count": 0,
+      "phase": "plan",
+      "started_elapsed_s": 0.5593014662154019
+    },
+    {
+      "checkpoint": "no_current_model_load",
+      "duration_s": 2.5248154997825623e-06,
+      "ended_elapsed_s": 0.5599413681775331,
+      "heartbeat_count": 0,
+      "phase": "load",
+      "started_elapsed_s": 0.5599388433620334
+    },
+    {
+      "checkpoint": "no_current_generation",
+      "duration_s": 1.8542632460594177e-06,
+      "ended_elapsed_s": 0.5599455162882805,
+      "heartbeat_count": 0,
+      "phase": "generate",
+      "started_elapsed_s": 0.5599436620250344
+    },
+    {
+      "checkpoint": "affected_checks_complete",
+      "duration_s": 56.33755635796115,
+      "ended_elapsed_s": 56.89750382723287,
+      "heartbeat_count": 0,
+      "phase": "validate",
+      "started_elapsed_s": 0.5599474692717195
+    },
+    {
+      "checkpoint": "nine_claims_reduced",
+      "duration_s": 2.5453045964241028e-06,
+      "ended_elapsed_s": 56.897516722325236,
+      "heartbeat_count": 0,
+      "phase": "reduce",
+      "started_elapsed_s": 56.89751417702064
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "active_milestone",
+      "expected": "2026.09.650",
+      "field": "milestone",
+      "observed": "2026.09.650",
+      "operator": "==",
+      "passed": true,
+      "path": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "check": "twelve_row_contract_match",
+      "expected": true,
+      "field": "comparison.passed",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "available": true,
+      "check": "authenticated_disposition_source",
+      "expected": true,
+      "field": "authenticated",
+      "flagged_adversarial": false,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7409_v650_evidence_custody.json",
+      "required_validation_passed": true,
+      "sha256": "sha256:62a955a477ac0e93b53db87dfa690ede358be2b754a344eaca3b94d939012966",
+      "upstream": "exp7409-evidence-custody",
+      "verdict_class": "null"
+    },
+    {
+      "available": true,
+      "check": "authenticated_disposition_source",
+      "expected": true,
+      "field": "authenticated",
+      "flagged_adversarial": false,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7410_v650_source_corpus.json",
+      "required_validation_passed": true,
+      "sha256": "sha256:f56c1acc842959972ceb425777cda16ba979f6565aa512dbfd3bb0f6db247ffe",
+      "upstream": "exp7410-source-corpus",
+      "verdict_class": "null"
+    },
+    {
+      "available": true,
+      "check": "authenticated_disposition_source",
+      "expected": true,
+      "field": "authenticated",
+      "flagged_adversarial": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7411_v650_arc_call_budget.json",
+      "required_validation_passed": false,
+      "sha256": "sha256:d70d0d0cc589d959fa1e1a164a37bf363cbf90156a88c82e8570236e200fcfa0",
+      "upstream": "exp7411-arc-call-budget",
+      "verdict_class": "disqualified"
+    },
+    {
+      "available": true,
+      "check": "authenticated_disposition_source",
+      "expected": true,
+      "field": "authenticated",
+      "flagged_adversarial": false,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7412_v650_source_features.json",
+      "required_validation_passed": true,
+      "sha256": "sha256:b6ff5100e270646ad98961513956bcdc07073668e034f764d1bd64d20fb17874",
+      "upstream": "exp7412-source-features",
+      "verdict_class": "null"
+    },
+    {
+      "available": true,
+      "check": "authenticated_disposition_source",
+      "expected": true,
+      "field": "authenticated",
+      "flagged_adversarial": false,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7413_v650_source_calibration.json",
+      "required_validation_passed": true,
+      "sha256": "sha256:a32ff491648d1459a2948280d5a662b8a30fb9bb3476d10331d597be150ff647",
+      "upstream": "exp7413-source-calibration",
+      "verdict_class": "null"
+    },
+    {
+      "available": true,
+      "check": "authenticated_disposition_source",
+      "expected": true,
+      "field": "authenticated",
+      "flagged_adversarial": false,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7414_v650_selected_feedback.json",
+      "required_validation_passed": true,
+      "sha256": "sha256:12e57814d34d6ed4cd53a7ecafe56693700e4e94a98dada6cd4ac343c40f7091",
+      "upstream": "exp7414-selected-feedback",
+      "verdict_class": "null"
+    },
+    {
+      "available": true,
+      "check": "authenticated_disposition_source",
+      "expected": true,
+      "field": "authenticated",
+      "flagged_adversarial": false,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7415_v650_decision_audit.json",
+      "required_validation_passed": true,
+      "sha256": "sha256:86925e8f55b83a9a2790392ace1088f1bd1e52293b11c37b6a76bed73beb8f97",
+      "upstream": "exp7415-decision-audit",
+      "verdict_class": "null"
+    },
+    {
+      "available": true,
+      "check": "authenticated_disposition_source",
+      "expected": true,
+      "field": "authenticated",
+      "flagged_adversarial": false,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7416_v650_anchored_extraction.json",
+      "required_validation_passed": null,
+      "sha256": "sha256:a67c9e94f7b3a23d53a5b27dfaa6975912e6f10ae9df5d32ecd1677c1fac98ce",
+      "upstream": "exp7416-anchored-extraction",
+      "verdict_class": "blocked"
+    },
+    {
+      "available": false,
+      "check": "authenticated_disposition_source",
+      "expected": true,
+      "field": "authenticated",
+      "flagged_adversarial": false,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7417_v650_extraction_audit.json",
+      "required_validation_passed": null,
+      "sha256": "sha256:7897820ce3726fae40e80bb421d77af9da554af8e6ad176bfdbe36d743b20c06",
+      "upstream": "exp7417-extraction-audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "available": true,
+      "check": "authenticated_disposition_source",
+      "expected": true,
+      "field": "authenticated",
+      "flagged_adversarial": false,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7418_v650_revision_memory.json",
+      "required_validation_passed": true,
+      "sha256": "sha256:d72e23acee8fac56295aa2991ca6b8481193442b86358b8679450c5b53a4ab88",
+      "upstream": "exp7418-revision-memory",
+      "verdict_class": "null"
+    },
+    {
+      "available": true,
+      "check": "authenticated_disposition_source",
+      "expected": true,
+      "field": "authenticated",
+      "flagged_adversarial": false,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7419_v650_precision_placement.json",
+      "required_validation_passed": true,
+      "sha256": "sha256:bb4c7fb4e041b5a0b454dbcfbe90c069b0243a47ac8712bf7bc9b80eb046529c",
+      "upstream": "exp7419-precision-placement",
+      "verdict_class": "null"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "random_seed": {
+    "branch_reduction": 742065002,
+    "task_order": 742065001,
+    "validation_order": 742065003
+  },
+  "repository_health": {
+    "affects_required_checks": false,
+    "as_of": "20260919",
+    "historical_failures": [],
+    "status": "historical_observations_retained"
+  },
+  "reproducibility_checksum": "sha256:70c496606042dee23a3e1c0afd3f359f9e5b25bcf386c2ad214ff57ab1cf8bf9",
+  "required_checks_passed": true,
+  "research_conductor_changed": false,
+  "retirement_rows": [
+    {
+      "current_verdict": "complete_disqualified_required_v650_evidence: twelve dispositions are retained; invalid required science or current validation prevents promotion",
+      "decision": "continue-with-measured-cause",
+      "previous_verdict": "complete_disqualified_required_science: all fourteen V649 tasks are accounted for; current ARC evidence is disqualified, online and live evidence is unavailable, and the static null, synthetic proof, proof audit, and host cost retain independent scope",
+      "prior_experiment_id": "exp7408-capstone",
+      "reason": "The exact verdict changed; similar scope does not authorize retirement.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7420-capstone"
+    }
+  ],
+  "rows": [
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7409_v650_evidence_custody.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7409_v650_evidence_custody.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_evidence_custody_ready_missing_v649_producers_unavailable",
+      "numeric_experiment_id": 7409,
+      "order": 1,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:62a955a477ac0e93b53db87dfa690ede358be2b754a344eaca3b94d939012966",
+      "status": "complete_evidence_custody_ready",
+      "task_id": "exp7409-evidence-custody",
+      "title": "Bind twelve tasks and diagnose missing terminal evidence",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7410_v650_source_corpus.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7410_v650_source_corpus.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_source_corpus_ready_machine_annotations_not_truth",
+      "numeric_experiment_id": 7410,
+      "order": 2,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:f56c1acc842959972ceb425777cda16ba979f6565aa512dbfd3bb0f6db247ffe",
+      "status": "complete",
+      "task_id": "exp7410-source-corpus",
+      "title": "Seal an attributed source-context calibration corpus",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7411_v650_arc_call_budget.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7411_v650_arc_call_budget.json",
+      "failed_checks": [
+        {
+          "artifact_field": "affected_e2e_and_terminal_checks",
+          "category": "required_validation",
+          "check": "required_validation",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "upstream": "validation_receipts"
+        }
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_disqualified_required_evidence",
+      "numeric_experiment_id": 7411,
+      "order": 3,
+      "required_validation_passed": false,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:d70d0d0cc589d959fa1e1a164a37bf363cbf90156a88c82e8570236e200fcfa0",
+      "status": "complete_disqualified_required_evidence",
+      "task_id": "exp7411-arc-call-budget",
+      "title": "Enforce ARC request budgets at the live callback boundary",
+      "verdict_class": "disqualified"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7412_v650_source_features.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7412_v650_source_features.json",
+      "failed_checks": [
+        {
+          "category": "scientific_support",
+          "check": "real_source_feature_efficacy",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "principle": "Exp7412 seals a protocol and does not measure real efficacy."
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_source_feature_protocol_ready_real_efficacy_unmeasured",
+      "numeric_experiment_id": 7412,
+      "order": 4,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:b6ff5100e270646ad98961513956bcdc07073668e034f764d1bd64d20fb17874",
+      "status": "complete",
+      "task_id": "exp7412-source-features",
+      "title": "Prototype source-aware energy inputs and freeze decision tests",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7413_v650_source_calibration.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7413_v650_source_calibration.json",
+      "failed_checks": [
+        {
+          "category": "scientific_benefit",
+          "check": "registered_scientific_value",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "principle": "Benefit requires all Brier, log-loss, risk, and coverage checks."
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_source_calibration_no_registered_decision_benefit",
+      "numeric_experiment_id": 7413,
+      "order": 5,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:a32ff491648d1459a2948280d5a662b8a30fb9bb3476d10331d597be150ff647",
+      "status": "complete",
+      "task_id": "exp7413-source-calibration",
+      "title": "Measure source-grounded Gibbs calibration against simple controls",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7414_v650_selected_feedback.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7414_v650_selected_feedback.json",
+      "failed_checks": [
+        {
+          "category": "scientific_benefit",
+          "check": "registered_online_value",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "principle": "Value requires simultaneous Brier, log-loss, coverage, and action-risk gates."
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_insufficient_online_support",
+      "numeric_experiment_id": 7414,
+      "order": 6,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:12e57814d34d6ed4cd53a7ecafe56693700e4e94a98dada6cd4ac343c40f7091",
+      "status": "complete",
+      "task_id": "exp7414-selected-feedback",
+      "title": "Measure continuous energy calibration under selected feedback",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7415_v650_decision_audit.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7415_v650_decision_audit.json",
+      "failed_checks": [
+        {
+          "category": "scientific_benefit",
+          "check": "static_value",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "principle": "An eligible null remains a null."
+        },
+        {
+          "category": "scientific_benefit",
+          "check": "online_value",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "principle": "An eligible null remains a null."
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_independent_decision_audits_no_joint_registered_value",
+      "numeric_experiment_id": 7415,
+      "order": 7,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:86925e8f55b83a9a2790392ace1088f1bd1e52293b11c37b6a76bed73beb8f97",
+      "status": "complete",
+      "task_id": "exp7415-decision-audit",
+      "title": "Independently audit calibrated decisions and feedback causality",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7416_v650_anchored_extraction.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7416_v650_anchored_extraction.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_one_owned_rtx3090_slot",
+      "numeric_experiment_id": 7416,
+      "order": 8,
+      "required_validation_passed": null,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:a67c9e94f7b3a23d53a5b27dfaa6975912e6f10ae9df5d32ecd1677c1fac98ce",
+      "status": "blocked_precondition",
+      "task_id": "exp7416-anchored-extraction",
+      "title": "Compare bounded Qwen claim extraction with preserved source spans",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": null,
+      "authenticated": true,
+      "available": false,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7417_v650_extraction_audit.json",
+      "failed_checks": [
+        {
+          "check": "structured_gate:exp7416-anchored-extraction.extraction_capture_complete_score",
+          "expected": 1,
+          "field": "extraction_capture_complete_score",
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "path": "results/experiment_7416_v650_anchored_extraction.json",
+          "upstream": "exp7416-anchored-extraction"
+        },
+        {
+          "check": "structured_gate:exp7416-anchored-extraction.verdict_class",
+          "expected": [
+            "positive",
+            "circular_positive",
+            "null"
+          ],
+          "field": "verdict_class",
+          "observed": "blocked",
+          "operator": "in",
+          "passed": false,
+          "path": "results/experiment_7416_v650_anchored_extraction.json",
+          "upstream": "exp7416-anchored-extraction"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "numeric_experiment_id": 7417,
+      "order": 9,
+      "required_validation_passed": null,
+      "source_kind": "conductor_pre_gate_record",
+      "source_sha256": "sha256:7897820ce3726fae40e80bb421d77af9da554af8e6ad176bfdbe36d743b20c06",
+      "status": "blocked_gate_check_failed",
+      "task_id": "exp7417-extraction-audit",
+      "title": "Audit extraction coverage and semantic preservation independently",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7418_v650_revision_memory.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7418_v650_revision_memory.json",
+      "failed_checks": [
+        {
+          "category": "benefit",
+          "check": "total_cost_ratio_ci95_upper:persistent_incremental_solver",
+          "expected": 1.0,
+          "observed": 3.706797926244237,
+          "operator": "<=",
+          "passed": false,
+          "principle": "Saved exact work must pay for checking, invalidation, and storage."
+        },
+        {
+          "category": "benefit",
+          "check": "total_cost_ratio_ci95_upper:persistent_graph_reachability",
+          "expected": 1.0,
+          "observed": 5.180409718672519,
+          "operator": "<=",
+          "passed": false,
+          "principle": "Saved exact work must pay for checking, invalidation, and storage."
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_memory_revision_capture_no_full_cost_value",
+      "numeric_experiment_id": 7418,
+      "order": 10,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:d72e23acee8fac56295aa2991ca6b8481193442b86358b8679450c5b53a4ab88",
+      "status": "complete_memory_revision_capture_no_full_cost_value",
+      "task_id": "exp7418-revision-memory",
+      "title": "Measure certified memory under source revision and eviction",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7419_v650_precision_placement.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7419_v650_precision_placement.json",
+      "failed_checks": [
+        {
+          "category": "external_prerequisite",
+          "check": "gatemate_changed_physical_state_receipt",
+          "expected": {
+            "changed_field_any_of": [
+              "cable",
+              "port",
+              "power",
+              "board",
+              "jtag",
+              "dirtyjtag"
+            ],
+            "operator_authored": true,
+            "provenance": [
+              "ops/known-issues.md",
+              "research-hardware-wishlist.md",
+              "ops/hardware-bringup-prep.md",
+              "ops/operator-followup.md"
+            ],
+            "receipt_date": ">20260823"
+          },
+          "observed": {
+            "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+            "accepted_receipt_count": 0,
+            "selected_source_path": null
+          },
+          "operator": "matches",
+          "passed": false,
+          "principle": "Only an operator-authored changed physical state can reopen future GateMate work."
+        },
+        {
+          "category": "scientific_benefit",
+          "check": "int8_total_time_ratio_upper_paired_95",
+          "expected": 1.0,
+          "observed": 1.0377982860931962,
+          "operator": "<",
+          "passed": false,
+          "principle": "A kernel claim needs a complete-service paired speed benefit."
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_int8_no_registered_full_service_benefit",
+      "numeric_experiment_id": 7419,
+      "order": 11,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:bb4c7fb4e041b5a0b454dbcfbe90c069b0243a47ac8712bf7bc9b80eb046529c",
+      "status": "complete",
+      "task_id": "exp7419-precision-placement",
+      "title": "Measure decision stability at reduced precision and preserve board states",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7420_v650_capstone.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7420_v650_capstone.json",
+      "failed_checks": [
+        {
+          "category": "required_validation",
+          "check": "terminal_validation_passed",
+          "expected": true,
+          "field": "terminal_validation_passed",
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "path": "results/experiment_7420_v650_capstone.json",
+          "upstream": "exp7420-capstone"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_disqualified_required_v650_evidence: twelve dispositions are retained; invalid required science or current validation prevents promotion",
+      "numeric_experiment_id": 7420,
+      "order": 12,
+      "required_validation_passed": false,
+      "source_kind": "self_current_checks",
+      "source_sha256": null,
+      "status": "complete_disqualified_current_or_required_v650_evidence",
+      "task_id": "exp7420-capstone",
+      "title": "Reconcile twelve dispositions and decide each research branch",
+      "verdict_class": "disqualified"
+    }
+  ],
+  "run_date": "20260919",
+  "sample_size_budget": {
+    "attempted": 12,
+    "censored": 0,
+    "completed": 12,
+    "conductor_pre_gate_sources": 1,
+    "current_check_sources": 1,
+    "declared_artifact_sources": 10,
+    "failed": 0,
+    "independent_groups": [
+      "corpus_authority",
+      "static_calibration",
+      "online_calibration",
+      "arc_callback_invariants",
+      "qwen_extraction",
+      "extraction_audit",
+      "revised_proof_memory",
+      "numeric_host_cost",
+      "board_status"
+    ],
+    "planned": 12,
+    "stop_rule": "account for exactly exp7409 through exp7420 once in contract order",
+    "unstarted": 0
+  },
+  "schema": "carnot.exp7420.v650.capstone.v1",
+  "scientific_value_score": 0,
+  "scope_reduction_compliance": {
+    "deferred_outer_loop_work": [
+      "review and land commit-time enforcement of the 20 MiB result limit"
+    ],
+    "future_milestone_activated": false,
+    "generator_weights_changed": false,
+    "north_star_publication_gates_changed": false,
+    "preserved_retired_scopes": [
+      "exp7404-live-memory",
+      "exp7406-arc-generalization"
+    ],
+    "production_defaults_changed": false,
+    "retired_panel_chains_reopened": false,
+    "standing_floor_limits": {
+      "arc": "not satisfied because the callback artifact is flagged and disqualified",
+      "calibrated_decision": "measured and audited static and online nulls",
+      "corpus": "ready corpus with machine annotations, not exact truth",
+      "hardware": "host precision plus dated board accounting; no new acceleration",
+      "self_learning": "source-defined revised proof memory with no total-cost value"
+    },
+    "standing_floors": {
+      "arc": false,
+      "calibrated_decision": true,
+      "corpus": true,
+      "hardware": true,
+      "self_learning": true
+    },
+    "v649_missing_artifacts_remain_unknown": [
+      "results/experiment_7397_v649_delayed_adapter.json",
+      "results/experiment_7399_v649_online_trial.json"
+    ]
+  },
+  "small_ebm_training": {
+    "counted_as_current_llm_work": false,
+    "historical_producer_tasks": [
+      "exp7413-source-calibration",
+      "exp7414-selected-feedback"
+    ],
+    "performed_by_current_capstone": false,
+    "receipt_class": "small_ebm_training"
+  },
+  "source_artifact_hashes": {
+    "active_roadmap": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:248c423ffa8045a0f6c75449d53b48f854ca03e344815a65da7a38482382fb27",
+      "source_kind": "authority"
+    },
+    "exact_task_contract": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:fe34e919d36a63f5148a0a3e2b501fffe880183b51fef4583a36635993bdb278",
+      "source_kind": "authority"
+    },
+    "exp7409-evidence-custody": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7409_v650_evidence_custody.json",
+      "sha256": "sha256:62a955a477ac0e93b53db87dfa690ede358be2b754a344eaca3b94d939012966",
+      "source_kind": "declared_artifact"
+    },
+    "exp7410-source-corpus": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7410_v650_source_corpus.json",
+      "sha256": "sha256:f56c1acc842959972ceb425777cda16ba979f6565aa512dbfd3bb0f6db247ffe",
+      "source_kind": "declared_artifact"
+    },
+    "exp7411-arc-call-budget": {
+      "original_flagged_adversarial": true,
+      "original_verdict_class": "disqualified",
+      "path": "results/experiment_7411_v650_arc_call_budget.json",
+      "sha256": "sha256:d70d0d0cc589d959fa1e1a164a37bf363cbf90156a88c82e8570236e200fcfa0",
+      "source_kind": "declared_artifact"
+    },
+    "exp7412-source-features": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7412_v650_source_features.json",
+      "sha256": "sha256:b6ff5100e270646ad98961513956bcdc07073668e034f764d1bd64d20fb17874",
+      "source_kind": "declared_artifact"
+    },
+    "exp7413-source-calibration": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7413_v650_source_calibration.json",
+      "sha256": "sha256:a32ff491648d1459a2948280d5a662b8a30fb9bb3476d10331d597be150ff647",
+      "source_kind": "declared_artifact"
+    },
+    "exp7414-selected-feedback": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7414_v650_selected_feedback.json",
+      "sha256": "sha256:12e57814d34d6ed4cd53a7ecafe56693700e4e94a98dada6cd4ac343c40f7091",
+      "source_kind": "declared_artifact"
+    },
+    "exp7415-decision-audit": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7415_v650_decision_audit.json",
+      "sha256": "sha256:86925e8f55b83a9a2790392ace1088f1bd1e52293b11c37b6a76bed73beb8f97",
+      "source_kind": "declared_artifact"
+    },
+    "exp7416-anchored-extraction": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7416_v650_anchored_extraction.json",
+      "sha256": "sha256:a67c9e94f7b3a23d53a5b27dfaa6975912e6f10ae9df5d32ecd1677c1fac98ce",
+      "source_kind": "declared_artifact"
+    },
+    "exp7417-extraction-audit": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "blocked",
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:7897820ce3726fae40e80bb421d77af9da554af8e6ad176bfdbe36d743b20c06",
+      "source_file_sha256": "sha256:eb6dad27d6adb9259f0c45f204cd7676a8775a9fc6b1f7cdb391363365e445b8",
+      "source_kind": "conductor_pre_gate_record",
+      "source_records": [
+        "| 2026-09-19 11:17 UTC | Audit extraction coverage and semantic preservatio | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp7416-anchored-extraction.extraction_capture_complete_score (actual=0 == expected=1) |",
+        "| 2026-09-19 11:19 UTC | Audit extraction coverage and semantic preservatio | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp7416-anchored-extraction.extraction_capture_complete_score (actual=0 == expected=1) |",
+        "| 2026-09-19 11:21 UTC | Audit extraction coverage and semantic preservatio | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp7416-anchored-extraction.extraction_capture_complete_score (actual=0 == expected=1) |"
+      ]
+    },
+    "exp7418-revision-memory": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7418_v650_revision_memory.json",
+      "sha256": "sha256:d72e23acee8fac56295aa2991ca6b8481193442b86358b8679450c5b53a4ab88",
+      "source_kind": "declared_artifact"
+    },
+    "exp7419-precision-placement": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7419_v650_precision_placement.json",
+      "sha256": "sha256:bb4c7fb4e041b5a0b454dbcfbe90c069b0243a47ac8712bf7bc9b80eb046529c",
+      "source_kind": "declared_artifact"
+    },
+    "source:AGENTS.md": {
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "source_kind": "authority_or_code"
+    },
+    "source:CLAUDE.md": {
+      "path": "CLAUDE.md",
+      "sha256": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b",
+      "source_kind": "authority_or_code"
+    },
+    "source:CODEX.md": {
+      "path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_kind": "authority_or_code"
+    },
+    "source:openspec/capabilities/research-reporting/spec.md": {
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:d220c7059d4c43b0dd333fdd40b640fdca80a10f6cc7c078c54ee662ee7243de",
+      "source_kind": "authority_or_code"
+    },
+    "source:openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:fe34e919d36a63f5148a0a3e2b501fffe880183b51fef4583a36635993bdb278",
+      "source_kind": "authority_or_code"
+    },
+    "source:ops/conductor-log.md": {
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:eb6dad27d6adb9259f0c45f204cd7676a8775a9fc6b1f7cdb391363365e445b8",
+      "source_kind": "authority_or_code"
+    },
+    "source:ops/e2e-test-plan.md": {
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+      "source_kind": "authority_or_code"
+    },
+    "source:ops/exclusion_manifest.yaml": {
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:fdab7b9ef47aa3f8be8902e30d96cd096f361d1abbe7c6de7624101383bf968e",
+      "source_kind": "authority_or_code"
+    },
+    "source:ops/north-star.md": {
+      "path": "ops/north-star.md",
+      "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+      "source_kind": "authority_or_code"
+    },
+    "source:ops/verifier_gaps.md": {
+      "path": "ops/verifier_gaps.md",
+      "sha256": "sha256:dba5c0528707e92224ddda7257fcbea4f338b4725f653c31a736b5a5c311fe6e",
+      "source_kind": "authority_or_code"
+    },
+    "source:python/carnot/experiment_7358_v646_validation_contract.py": {
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+      "source_kind": "authority_or_code"
+    },
+    "source:python/carnot/experiment_7408_v649_capstone.py": {
+      "path": "python/carnot/experiment_7408_v649_capstone.py",
+      "sha256": "sha256:f8d15742083672fc5fed095bbd95b869660680acbf2b639902c7230d7a161e1c",
+      "source_kind": "authority_or_code"
+    },
+    "source:python/carnot/experiment_7420_v650_capstone.py": {
+      "path": "python/carnot/experiment_7420_v650_capstone.py",
+      "sha256": "sha256:9dbfd970aed5a408cf71def1db03c67dd7e44a943d8a1ecc313f778745adf2ea",
+      "source_kind": "authority_or_code"
+    },
+    "source:python/carnot/reporting/current_work_receipt.py": {
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+      "source_kind": "authority_or_code"
+    },
+    "source:python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+      "source_kind": "authority_or_code"
+    },
+    "source:research-complete.yaml": {
+      "path": "research-complete.yaml",
+      "sha256": "sha256:b84f4450110b2a041f90d4af03bfd4f95819589657a6272a7685ed585570202b",
+      "source_kind": "authority_or_code"
+    },
+    "source:research-program.md": {
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "source_kind": "authority_or_code"
+    },
+    "source:research-roadmap.yaml": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:248c423ffa8045a0f6c75449d53b48f854ca03e344815a65da7a38482382fb27",
+      "source_kind": "authority_or_code"
+    },
+    "source:research-studying.md": {
+      "path": "research-studying.md",
+      "sha256": "sha256:0906c9cfd6bd982184bf289a532592648bbaf64689081214a9cfeb9e624eef5d",
+      "source_kind": "authority_or_code"
+    },
+    "source:results/experiment_7408_v649_capstone.json": {
+      "path": "results/experiment_7408_v649_capstone.json",
+      "sha256": "sha256:8671debbffce90f7f7564f36df9ab4fd8af13369d11152161cc737d52d3f0f19",
+      "source_kind": "authority_or_code"
+    },
+    "source:scripts/experiment_template.py": {
+      "path": "scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+      "source_kind": "authority_or_code"
+    },
+    "source:scripts/experiments/experiment_7420_v650_capstone.py": {
+      "path": "scripts/experiments/experiment_7420_v650_capstone.py",
+      "sha256": "sha256:29a2ef3e098b9ae2cde14539824c2437b54ee26de645a6720450371017d6fd2d",
+      "source_kind": "authority_or_code"
+    },
+    "source:tests/python/test_experiment_7420_v650_capstone.py": {
+      "path": "tests/python/test_experiment_7420_v650_capstone.py",
+      "sha256": "sha256:91ceec1a5c85b644a607f5476a8849f865abaf094d5e153e80c9d1e9eedb2ebb",
+      "source_kind": "authority_or_code"
+    }
+  },
+  "started_at_utc": "2026-09-19T12:43:46.401586+00:00",
+  "status": "complete_disqualified_current_or_required_v650_evidence",
+  "task_dispositions": [
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7409_v650_evidence_custody.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7409_v650_evidence_custody.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_evidence_custody_ready_missing_v649_producers_unavailable",
+      "numeric_experiment_id": 7409,
+      "order": 1,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:62a955a477ac0e93b53db87dfa690ede358be2b754a344eaca3b94d939012966",
+      "status": "complete_evidence_custody_ready",
+      "task_id": "exp7409-evidence-custody",
+      "title": "Bind twelve tasks and diagnose missing terminal evidence",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7410_v650_source_corpus.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7410_v650_source_corpus.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_source_corpus_ready_machine_annotations_not_truth",
+      "numeric_experiment_id": 7410,
+      "order": 2,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:f56c1acc842959972ceb425777cda16ba979f6565aa512dbfd3bb0f6db247ffe",
+      "status": "complete",
+      "task_id": "exp7410-source-corpus",
+      "title": "Seal an attributed source-context calibration corpus",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7411_v650_arc_call_budget.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7411_v650_arc_call_budget.json",
+      "failed_checks": [
+        {
+          "artifact_field": "affected_e2e_and_terminal_checks",
+          "category": "required_validation",
+          "check": "required_validation",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "upstream": "validation_receipts"
+        }
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_disqualified_required_evidence",
+      "numeric_experiment_id": 7411,
+      "order": 3,
+      "required_validation_passed": false,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:d70d0d0cc589d959fa1e1a164a37bf363cbf90156a88c82e8570236e200fcfa0",
+      "status": "complete_disqualified_required_evidence",
+      "task_id": "exp7411-arc-call-budget",
+      "title": "Enforce ARC request budgets at the live callback boundary",
+      "verdict_class": "disqualified"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7412_v650_source_features.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7412_v650_source_features.json",
+      "failed_checks": [
+        {
+          "category": "scientific_support",
+          "check": "real_source_feature_efficacy",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "principle": "Exp7412 seals a protocol and does not measure real efficacy."
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_source_feature_protocol_ready_real_efficacy_unmeasured",
+      "numeric_experiment_id": 7412,
+      "order": 4,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:b6ff5100e270646ad98961513956bcdc07073668e034f764d1bd64d20fb17874",
+      "status": "complete",
+      "task_id": "exp7412-source-features",
+      "title": "Prototype source-aware energy inputs and freeze decision tests",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7413_v650_source_calibration.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7413_v650_source_calibration.json",
+      "failed_checks": [
+        {
+          "category": "scientific_benefit",
+          "check": "registered_scientific_value",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "principle": "Benefit requires all Brier, log-loss, risk, and coverage checks."
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_source_calibration_no_registered_decision_benefit",
+      "numeric_experiment_id": 7413,
+      "order": 5,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:a32ff491648d1459a2948280d5a662b8a30fb9bb3476d10331d597be150ff647",
+      "status": "complete",
+      "task_id": "exp7413-source-calibration",
+      "title": "Measure source-grounded Gibbs calibration against simple controls",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7414_v650_selected_feedback.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7414_v650_selected_feedback.json",
+      "failed_checks": [
+        {
+          "category": "scientific_benefit",
+          "check": "registered_online_value",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "principle": "Value requires simultaneous Brier, log-loss, coverage, and action-risk gates."
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_insufficient_online_support",
+      "numeric_experiment_id": 7414,
+      "order": 6,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:12e57814d34d6ed4cd53a7ecafe56693700e4e94a98dada6cd4ac343c40f7091",
+      "status": "complete",
+      "task_id": "exp7414-selected-feedback",
+      "title": "Measure continuous energy calibration under selected feedback",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7415_v650_decision_audit.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7415_v650_decision_audit.json",
+      "failed_checks": [
+        {
+          "category": "scientific_benefit",
+          "check": "static_value",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "principle": "An eligible null remains a null."
+        },
+        {
+          "category": "scientific_benefit",
+          "check": "online_value",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "principle": "An eligible null remains a null."
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_independent_decision_audits_no_joint_registered_value",
+      "numeric_experiment_id": 7415,
+      "order": 7,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:86925e8f55b83a9a2790392ace1088f1bd1e52293b11c37b6a76bed73beb8f97",
+      "status": "complete",
+      "task_id": "exp7415-decision-audit",
+      "title": "Independently audit calibrated decisions and feedback causality",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7416_v650_anchored_extraction.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7416_v650_anchored_extraction.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_one_owned_rtx3090_slot",
+      "numeric_experiment_id": 7416,
+      "order": 8,
+      "required_validation_passed": null,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:a67c9e94f7b3a23d53a5b27dfaa6975912e6f10ae9df5d32ecd1677c1fac98ce",
+      "status": "blocked_precondition",
+      "task_id": "exp7416-anchored-extraction",
+      "title": "Compare bounded Qwen claim extraction with preserved source spans",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": null,
+      "authenticated": true,
+      "available": false,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7417_v650_extraction_audit.json",
+      "failed_checks": [
+        {
+          "check": "structured_gate:exp7416-anchored-extraction.extraction_capture_complete_score",
+          "expected": 1,
+          "field": "extraction_capture_complete_score",
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "path": "results/experiment_7416_v650_anchored_extraction.json",
+          "upstream": "exp7416-anchored-extraction"
+        },
+        {
+          "check": "structured_gate:exp7416-anchored-extraction.verdict_class",
+          "expected": [
+            "positive",
+            "circular_positive",
+            "null"
+          ],
+          "field": "verdict_class",
+          "observed": "blocked",
+          "operator": "in",
+          "passed": false,
+          "path": "results/experiment_7416_v650_anchored_extraction.json",
+          "upstream": "exp7416-anchored-extraction"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "numeric_experiment_id": 7417,
+      "order": 9,
+      "required_validation_passed": null,
+      "source_kind": "conductor_pre_gate_record",
+      "source_sha256": "sha256:7897820ce3726fae40e80bb421d77af9da554af8e6ad176bfdbe36d743b20c06",
+      "status": "blocked_gate_check_failed",
+      "task_id": "exp7417-extraction-audit",
+      "title": "Audit extraction coverage and semantic preservation independently",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7418_v650_revision_memory.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7418_v650_revision_memory.json",
+      "failed_checks": [
+        {
+          "category": "benefit",
+          "check": "total_cost_ratio_ci95_upper:persistent_incremental_solver",
+          "expected": 1.0,
+          "observed": 3.706797926244237,
+          "operator": "<=",
+          "passed": false,
+          "principle": "Saved exact work must pay for checking, invalidation, and storage."
+        },
+        {
+          "category": "benefit",
+          "check": "total_cost_ratio_ci95_upper:persistent_graph_reachability",
+          "expected": 1.0,
+          "observed": 5.180409718672519,
+          "operator": "<=",
+          "passed": false,
+          "principle": "Saved exact work must pay for checking, invalidation, and storage."
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_memory_revision_capture_no_full_cost_value",
+      "numeric_experiment_id": 7418,
+      "order": 10,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:d72e23acee8fac56295aa2991ca6b8481193442b86358b8679450c5b53a4ab88",
+      "status": "complete_memory_revision_capture_no_full_cost_value",
+      "task_id": "exp7418-revision-memory",
+      "title": "Measure certified memory under source revision and eviction",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7419_v650_precision_placement.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7419_v650_precision_placement.json",
+      "failed_checks": [
+        {
+          "category": "external_prerequisite",
+          "check": "gatemate_changed_physical_state_receipt",
+          "expected": {
+            "changed_field_any_of": [
+              "cable",
+              "port",
+              "power",
+              "board",
+              "jtag",
+              "dirtyjtag"
+            ],
+            "operator_authored": true,
+            "provenance": [
+              "ops/known-issues.md",
+              "research-hardware-wishlist.md",
+              "ops/hardware-bringup-prep.md",
+              "ops/operator-followup.md"
+            ],
+            "receipt_date": ">20260823"
+          },
+          "observed": {
+            "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+            "accepted_receipt_count": 0,
+            "selected_source_path": null
+          },
+          "operator": "matches",
+          "passed": false,
+          "principle": "Only an operator-authored changed physical state can reopen future GateMate work."
+        },
+        {
+          "category": "scientific_benefit",
+          "check": "int8_total_time_ratio_upper_paired_95",
+          "expected": 1.0,
+          "observed": 1.0377982860931962,
+          "operator": "<",
+          "passed": false,
+          "principle": "A kernel claim needs a complete-service paired speed benefit."
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_int8_no_registered_full_service_benefit",
+      "numeric_experiment_id": 7419,
+      "order": 11,
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:bb4c7fb4e041b5a0b454dbcfbe90c069b0243a47ac8712bf7bc9b80eb046529c",
+      "status": "complete",
+      "task_id": "exp7419-precision-placement",
+      "title": "Measure decision stability at reduced precision and preserve board states",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7420_v650_capstone.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7420_v650_capstone.json",
+      "failed_checks": [
+        {
+          "category": "required_validation",
+          "check": "terminal_validation_passed",
+          "expected": true,
+          "field": "terminal_validation_passed",
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "path": "results/experiment_7420_v650_capstone.json",
+          "upstream": "exp7420-capstone"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_disqualified_required_v650_evidence: twelve dispositions are retained; invalid required science or current validation prevents promotion",
+      "numeric_experiment_id": 7420,
+      "order": 12,
+      "required_validation_passed": false,
+      "source_kind": "self_current_checks",
+      "source_sha256": null,
+      "status": "complete_disqualified_current_or_required_v650_evidence",
+      "task_id": "exp7420-capstone",
+      "title": "Reconcile twelve dispositions and decide each research branch",
+      "verdict_class": "disqualified"
+    }
+  ],
+  "terminal_validation_passed": false,
+  "title": "Reconcile twelve dispositions and decide each research branch",
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7420_v650_capstone",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7420_v650_capstone"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5285707600414753,
+      "ended_at_utc": "2026-09-19T12:43:47.490450+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7420_v650_capstone/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:bc8fd54ad6f4976d412838e7b66ef911947e72a2131a83b1e422393fe8b1b183",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7420_v650_capstone\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7420_v650_capstone.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7420_v650_capstone": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7420_v650_capstone.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T12:43:46.961543+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7420-41bo5y47/basetemp/focused tests/python/test_experiment_7420_v650_capstone.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7420-41bo5y47/basetemp/focused",
+        "tests/python/test_experiment_7420_v650_capstone.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 23.322747263591737,
+      "ended_at_utc": "2026-09-19T12:44:10.813553+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7420_v650_capstone/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:3513d5cfc204d8ef57d113f3a2fe7cb0d73e22dd20d912e7057fc3c3f3605092",
+      "name": "focused_pytest",
+      "output_tail": "..........                                                               [100%]\n10 passed in 21.49s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T12:43:47.490483+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7420-41bo5y47/coverage/.coverage '--include=*/experiment_7420_v650_capstone.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7420-41bo5y47/basetemp/coverage tests/python/test_experiment_7420_v650_capstone.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7420-41bo5y47/coverage/.coverage",
+        "--include=*/experiment_7420_v650_capstone.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7420-41bo5y47/basetemp/coverage",
+        "tests/python/test_experiment_7420_v650_capstone.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 32.25100784795359,
+      "ended_at_utc": "2026-09-19T12:44:43.064953+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7420_v650_capstone/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:0ca846012234669328521c7ad1603407b5ec432da0bdaecd05e3d559e8174ba5",
+      "name": "changed_module_coverage",
+      "output_tail": "..........                                                               [100%]\n10 passed in 29.36s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-19T12:44:10.813602+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7420_v650_capstone.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7420_v650_capstone.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7420-41bo5y47/coverage/.coverage"
+      },
+      "duration_s": 0.07652953639626503,
+      "ended_at_utc": "2026-09-19T12:44:43.141745+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7420_v650_capstone/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:776ac946f4bf0b398e6ed20e805d034e9fba83eb89d1c8e3c95dc384e9600801",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                             Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------\npython/carnot/experiment_7420_v650_capstone.py     380      0   100%\n------------------------------------------------------------------------------\nTOTAL                                              380      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T12:44:43.064984+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7420_v650_capstone.py scripts/experiments/experiment_7420_v650_capstone.py tests/python/test_experiment_7420_v650_capstone.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7420_v650_capstone.py",
+        "scripts/experiments/experiment_7420_v650_capstone.py",
+        "tests/python/test_experiment_7420_v650_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.014270646031945944,
+      "ended_at_utc": "2026-09-19T12:44:43.156363+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7420_v650_capstone/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T12:44:43.141773+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7420_v650_capstone.py scripts/experiments/experiment_7420_v650_capstone.py tests/python/test_experiment_7420_v650_capstone.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7420_v650_capstone.py",
+        "scripts/experiments/experiment_7420_v650_capstone.py",
+        "tests/python/test_experiment_7420_v650_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011194549035280943,
+      "ended_at_utc": "2026-09-19T12:44:43.167865+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7420_v650_capstone/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T12:44:43.156407+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7420_v650_capstone.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7420_v650_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.10831509297713637,
+      "ended_at_utc": "2026-09-19T12:44:43.276534+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7420_v650_capstone/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T12:44:43.167889+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7420_v650_capstone.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7420_v650_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.022084944881498814,
+      "ended_at_utc": "2026-09-19T12:44:43.298980+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7420_v650_capstone/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T12:44:43.276584+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": true
+}

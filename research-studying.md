@@ -5964,3 +5964,28 @@ claim.
   source checks. It does not claim a citation census, owned Z1 hardware, or a
   reproducible Kona implementation.
 <!-- EXP7409-V650-SOURCE-INGESTION-20260919-END -->
+
+<!-- EXP7420-V650-EVIDENCE-SCOPE-20260919-START -->
+## 2026-09-19 V650 capstone evidence scope
+
+This capstone adds no literature search. It maps the dated V650 sources only
+to controls that the twelve-task milestone executed.
+
+| Source | Local control and current limit |
+|---|---|
+| Enoki, arXiv:2609.00581v2 | Exp7410 sealed attributed source spans and kept machine annotations out of predictor inputs. Exp7416 captured no Qwen rows. Exp7417 was pre-gated. This is not an Enoki model-stack reproduction or semantic-truth result. |
+| MARGIN, arXiv:2605.22949v3 | Exp7413, Exp7414, and Exp7415 compared source-aware Gibbs decisions with same-information logistic and recent-frequency controls. Static and selected-feedback results are audited nulls. |
+| Online Conformal Prediction with Corrupted Feedback, arXiv:2605.20515 | Exp7414 and Exp7415 tested delayed reveals, revoked-label replay, no-feedback, and erased-update controls. No prediction-set theorem transfers to selective actions. |
+| Memoir, arXiv:2607.20792 | Exp7418 separated reads from committed writes and tested revision, eviction, erasure, and restart. Safety completed, but total-cost value failed. Source-defined proof checking remains circular. |
+
+The corpus floor and calibrated-decision floor were measured. The
+self-learning floor was measured only for source-defined proof memory. The
+hardware floor retained host precision and three dated board states. The ARC
+floor was not satisfied because Exp7411 is flagged and disqualified. Missing
+extraction capture and audit evidence keeps required V650 science blocked.
+GateMate's expected changed-state block does not invalidate host science.
+
+The next work must use the measured causes. It must not repeat the retired
+Exp7404 or Exp7406 panel chains. Publication gates, production defaults,
+generator weights, and promotion remain unchanged.
+<!-- EXP7420-V650-EVIDENCE-SCOPE-20260919-END -->
