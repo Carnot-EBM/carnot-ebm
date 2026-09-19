@@ -8255,3 +8255,114 @@ Rust behavior.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7422 and SCENARIO-VERIFY-7422-* | Implemented in the shared Exp7400 capacity predicates, `python/carnot/experiment_7422_v651_runtime_ownership.py`, and its thin entrypoint. | Verified by spec-linked private fixtures, one current host lease lifecycle, 100% changed-module coverage, scoped affected checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency recorded in the terminal artifact. |
+
+## V651 anchored extraction capture — 2026-09-19
+
+**Status:** Specified. This phase reruns the unattempted Exp7416 schedule after the narrow runtime ownership repair.
+
+### REQ-VERIFY-7429: Anchored Capture SHALL Preserve The Frozen Exp7416 Question
+
+Exp7429 SHALL authenticate the exact Exp7412 corpus protocol and the exact
+Exp7416 96-call schedule before model work. It SHALL use the same 24 official
+cases, 24 constructed qualifier challenges, free and anchored arms, arm order,
+seed `6501601`, prompts, deterministic decoding, and 384-token call cap. It
+SHALL not reopen the retired live proof-memory chain or replace failed cases.
+
+Exp7429 SHALL require the Exp7422 runtime ownership readiness score to equal
+one. The Exp7422 verdict class SHALL be `positive`, `circular_positive`, or
+`null`. Its adversarial flag SHALL be false. Missing or unchanged unavailable
+prerequisites SHALL publish a blocked artifact with `no_model_load` and zero
+current invocation counts.
+
+The live path SHALL use `unsloth/Qwen3.8-27B-GGUF`, its resolved revision,
+model-file hash, embedded tokenizer and chat template, and the shipped native
+runner on one task-owned RTX 3090. Lease waiting SHALL not exceed 120 seconds.
+The run SHALL require `CARNOT_FORCE_LIVE=1`. It SHALL not simulate, substitute
+a smaller model, retry parser failures, or tune the token budget.
+
+The live path SHALL make up to four fixed development calls before the measured
+schedule. At least three usable, non-truncated development replies SHALL open
+the measured capture. A completed development gate with fewer than three usable
+replies SHALL produce a terminal null result with readiness zero. It SHALL not
+be reported as an external block. The measured capture SHALL keep all 96 calls
+as completed, failed, censored, or unstarted dispositions within 2400 seconds.
+
+Each current invocation event and response SHALL be flushed to a
+content-addressed task shard before the next call. Raw rows SHALL retain the
+request, response, reply, token counts, seed, parse state, source identity,
+runner PID and start tick, lease identity, and terminal disposition. An owned
+timeout SHALL wait for its child, release only its lease, and leave a resumable
+nonterminal checkpoint outside the terminal result path.
+
+The independent reducer SHALL recompute JSON validity, claim coverage,
+relation direction, negation retention, and quantifier retention for each arm.
+Every failed, truncated, censored, and unstarted measured call SHALL remain in
+the denominator. Constructed exact fixtures SHALL stay separate from official
+machine annotations. `usable_output_count` SHALL count raw-derived usable,
+non-truncated measured replies.
+
+`extraction_capture_complete_score` SHALL equal one for a valid, fully
+accounted 96-disposition paired capture even when semantic outputs fail.
+`extraction_value_score` SHALL equal one only when the frozen paired comparison
+meets its declared claim-preservation gates. Completion and scientific value
+SHALL remain separate. Promotion SHALL remain zero.
+
+The producer SHALL freeze its affected-file manifest before checks. It SHALL
+run the Exp7358 scoped plan through Exp7303. It SHALL retain command-local
+coverage data, a private existing base-temp parent, exact affected tests,
+100-percent changed-module coverage, scoped Ruff, changed-module mypy, and
+exact-test spec coverage. It SHALL run the entrypoint, fresh-process replay,
+independent reduction, adversarial verifier, and strict row-consistency reader
+before atomic terminal publication. No numbered E2E applies because this work
+changes no ARC, training, sampling, serialization, PyO3, or Rust behavior.
+
+#### SCENARIO-VERIFY-7429-FROZEN: The Original Unmeasured Schedule Stays Exact
+
+**Given** authenticated Exp7412 inputs and the blocked zero-attempt Exp7416 artifact
+**When** Exp7429 rebuilds the panel before model loading
+**Then** all case identities, prompts, arm order, seeds, and token caps match the frozen Exp7416 schedule
+**And** the Exp7422 ownership repair is the only new prerequisite.
+
+**Spec traces:** REQ-VERIFY-7429
+
+#### SCENARIO-VERIFY-7429-DEVELOPMENT: Usable Development Output Opens Capture
+
+**Given** one task-owned native model server and four fixed development prompts
+**When** at least three replies are usable and not truncated
+**Then** the server continues to the 96 measured calls without parser retries
+**And** insufficient usable output finishes as a null result rather than an external block.
+
+**Spec traces:** REQ-VERIFY-7429
+
+#### SCENARIO-VERIFY-7429-RAW: Every Measured Disposition Remains Auditable
+
+**Given** a measured call that completes, fails, truncates, is censored, or is never started
+**When** the producer checkpoints the capture
+**Then** its raw bytes, source identity, seed, parse state, runtime identity, and disposition remain present
+**And** all 96 planned calls remain in each declared denominator.
+
+**Spec traces:** REQ-VERIFY-7429
+
+#### SCENARIO-VERIFY-7429-REDUCTION: Completion And Scientific Value Stay Separate
+
+**Given** a fully accounted paired capture with any semantic quality
+**When** the independent reducer recomputes both arms
+**Then** capture completion depends on accounting and provenance rather than semantic gain
+**And** extraction value depends on qualified claim preservation under the frozen comparison.
+
+**Spec traces:** REQ-VERIFY-7429
+
+#### SCENARIO-VERIFY-7429-TERMINAL: Current Work And Validation Control Publication
+
+**Given** current owned events, immutable raw shards, and the frozen validation manifest
+**When** fresh-process replay and both strict readers finish
+**Then** the final artifact reports the actual substrate class and invocation dispositions
+**And** only a validated terminal JSON is atomically published at the declared path.
+
+**Spec traces:** REQ-VERIFY-7429
+
+## Implementation Status (REQ-VERIFY-7429)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7429 and SCENARIO-VERIFY-7429-* | Planned in a focused reusable module and thin entrypoint that reuse the Exp7416 protocol and shipped native runtime. | Planned in spec-linked focused tests, changed-module coverage, scoped checks, live entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |

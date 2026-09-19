@@ -1,0 +1,7 @@
+Scanned 1 artifact(s); 1 flagged.
+
+[CRITICAL] expexp7429-v651-anchored-capture () -- 3 flag(s)
+  - CRITICAL INFERENCE_PROVENANCE_CONTRADICTION Current-task inference provenance is contradictory: conflicting_typed_invocation_evidence; substrate='owned_native_cuda_llama_cpp_bounded_generation', live_evidence_count=5, negative_evidence_count=8. The duration check fails closed until the invocation scope agrees.
+  - CRITICAL DURATION_TOO_SHORT             duration_s=44.562854 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.
+  - CRITICAL SUBSTRATE_CLASS_MISMATCH       inference_substrate_class=model_bounded_generation claims a model ran, but typed invocation evidence says it did not (['generation_calls_attempted', 'generation_calls_completed', 'model_loads_attempted', 'model_loads_completed']). Contradictory.
+
