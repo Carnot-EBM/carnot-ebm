@@ -20145,3 +20145,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-19: Measure continuous energy calibration under selected feedback (⚠️ Research Finding) — honest_verdict=complete_null_insufficient_online_support; results/experiment_7414_v650_selected_feedback.json
 - 2026-09-19: Independently audit calibrated decisions and feedback causality (⚠️ Research Finding) — honest_verdict=complete_null_independent_decision_audits_no_joint_registered_value; results/experiment_7415_v650_decision_audit.json
 - 2026-09-19: Compare bounded Qwen claim extraction with preserved source spans (⚠️ Blocked) — honest_verdict=blocked_one_owned_rtx3090_slot; results/experiment_7416_v650_anchored_extraction.json
+- 2026-09-19: Measure certified memory under source revision and eviction (⚠️ Research Finding) — honest_verdict=complete_memory_revision_capture_no_full_cost_value; results/experiment_7418_v650_revision_memory.json
