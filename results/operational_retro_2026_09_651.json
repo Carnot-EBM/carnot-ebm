@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.651",
+  "generated_at": "2026-09-19T20:20:35Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 18.0,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 12,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure continuous local learning under randomized label audits",
+      "duration_minutes": 6.99,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure owned callback reachability in two adapter-withheld ARC episodes",
+      "duration_minutes": 4.2,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind thirteen tasks and ingest methods against V650 evidence",
+      "duration_minutes": 1.31,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure calibrated Gibbs and spline decisions on human source labels",
+      "duration_minutes": 1.3,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently test source-label leakage and learning causality",
+      "duration_minutes": 0.93,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 compute-bound experiments in 18.0 minutes. The 6.99-minute randomized-label learning audit and 4.2-minute adapter-withheld ARC callback run were the longest; no data available this milestone identifies their costly phases.",
+  "bottlenecks_identified": [
+    "The randomized-label learning audit formed the critical path, followed by the adapter-withheld ARC callback run; no data available this milestone explains which internal phases consumed their time.",
+    "Accelerator telemetry consists of a closing snapshot rather than task-aligned samples, so compute-window utilization efficiency cannot be established.",
+    "Launch receipts do not state concurrent model count or runner selection, so no data available this milestone establishes whether any task qualified for DualGPURunner or missed it."
+  ],
+  "improvements_suggested": [
+    "Emit a task-scoped execution receipt that joins phase timing, GPU utilization, memory allocation, process identity, and device assignment.",
+    "Record concurrent model count and runner selection at launch, invoking DualGPURunner only for workloads that load two or more models in parallel.",
+    "Add a capacity-aware scheduler that reclaims inactive model processes and places eligible independent work on the available second GPU.",
+    "Instrument checkpoints around the randomized-label learning audit and adapter-withheld ARC callback path before attempting code-level optimization."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Join phase and accelerator samples to each experiment in one execution receipt.",
+    "Capture model-count and runner-dispatch evidence for every compute launch.",
+    "Schedule eligible independent workloads across both GPUs after verifying ownership and reclaiming inactive allocations."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstructed timing is sufficient to rank the critical path but not to explain it. No data available this milestone supports a measured savings forecast, a task-window GPU-efficiency verdict, or a parallel-model runner-failure claim."
+}

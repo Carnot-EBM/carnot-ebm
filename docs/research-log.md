@@ -6864,3 +6864,10 @@ The critical path for milestone .250:
 - theme: source-revision memory and callback-budget enforcement set the pace in an all-compute run with unjoined accelerator evidence
 - key result: honest operational negative — elapsed leaders are identifiable, but their phase costs, task-window accelerator efficiency, and any qualifying multi-model runner miss are not established
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.651
+
+- exp_range: no data available this milestone
+- theme: randomized-feedback learning and adapter-withheld callback reachability set the pace while execution telemetry remained task-agnostic
+- key result: honest operational negative — the critical path is ranked, but no data available this milestone explains its internal cost, proves compute-window accelerator efficiency, or demonstrates an eligible multi-model runner miss
+- acceptance: no data available this milestone
