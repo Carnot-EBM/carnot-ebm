@@ -18235,3 +18235,4 @@ code |
 | 2026-09-19 18:36 UTC | Audit Qwen claim coverage and qualifier preservati | GATE_BLOCK | gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp7429-anchored-capture.extraction_capture_complete_score (actual=0 == expected=1) |
 | 2026-09-19 19:26 UTC | Measure owned callback reachability in two adapter | OK | 97 passed, 1 warning in 7.61s |
 | 2026-09-19 19:47 UTC | Measure fixed-point local updates and preserve boa | OK | 90 passed, 1 warning in 9.16s |
+| 2026-09-19 20:12 UTC | Reconcile thirteen dispositions and decide calibra | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 92 passed, 1 warning in 16.44s |
