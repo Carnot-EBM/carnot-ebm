@@ -1,0 +1,613 @@
+{
+  "case_count": 24,
+  "evaluator_records": [
+    {
+      "answer_span": [
+        0,
+        25
+      ],
+      "answer_span_text": "Mira approved the permit.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-01-negation-base",
+      "expected_scope": "declared_relation",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "Mira",
+        "approved",
+        "permit"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        32
+      ],
+      "answer_span_text": "Mira did not approve the permit.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-01-negation-contrast",
+      "expected_scope": "negated_relation",
+      "expected_verdict": "unsupported_or_ambiguous",
+      "source_relation": [
+        "Mira",
+        "approved",
+        "permit"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        32
+      ],
+      "answer_span_text": "Permit status: approved by Mira.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-01-negation-control",
+      "expected_scope": "equivalent_paraphrase_or_format",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "Mira",
+        "approved",
+        "permit"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        18
+      ],
+      "answer_span_text": "Lena coached Omar.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-02-subject_object_reversal-base",
+      "expected_scope": "declared_relation",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "Lena",
+        "coached",
+        "Omar"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        18
+      ],
+      "answer_span_text": "Omar coached Lena.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-02-subject_object_reversal-contrast",
+      "expected_scope": "reversed_arguments",
+      "expected_verdict": "unsupported_or_ambiguous",
+      "source_relation": [
+        "Lena",
+        "coached",
+        "Omar"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        25
+      ],
+      "answer_span_text": "Omar was coached by Lena.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-02-subject_object_reversal-control",
+      "expected_scope": "equivalent_paraphrase_or_format",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "Lena",
+        "coached",
+        "Omar"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        31
+      ],
+      "answer_span_text": "River A is longer than River B.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-03-comparator_reversal-base",
+      "expected_scope": "declared_relation",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "River A",
+        "longer_than",
+        "River B"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        32
+      ],
+      "answer_span_text": "River A is shorter than River B.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-03-comparator_reversal-contrast",
+      "expected_scope": "reversed_comparator",
+      "expected_verdict": "unsupported_or_ambiguous",
+      "source_relation": [
+        "River A",
+        "longer_than",
+        "River B"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        41
+      ],
+      "answer_span_text": "Compared with River B, River A is longer.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-03-comparator_reversal-control",
+      "expected_scope": "equivalent_paraphrase_or_format",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "River A",
+        "longer_than",
+        "River B"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        26
+      ],
+      "answer_span_text": "The clinic opened in 2020.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-04-time_qualifier-base",
+      "expected_scope": "declared_relation",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "clinic",
+        "opened_in",
+        "2020"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        26
+      ],
+      "answer_span_text": "The clinic opened in 2021.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-04-time_qualifier-contrast",
+      "expected_scope": "changed_time",
+      "expected_verdict": "unsupported_or_ambiguous",
+      "source_relation": [
+        "clinic",
+        "opened_in",
+        "2020"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        34
+      ],
+      "answer_span_text": "Opening year for the clinic: 2020.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-04-time_qualifier-control",
+      "expected_scope": "equivalent_paraphrase_or_format",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "clinic",
+        "opened_in",
+        "2020"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        30
+      ],
+      "answer_span_text": "The parcel weighs 5 kilograms.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-05-unit_mismatch-base",
+      "expected_scope": "declared_relation",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "parcel",
+        "weight",
+        "5 kilograms"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        27
+      ],
+      "answer_span_text": "The parcel weighs 5 pounds.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-05-unit_mismatch-contrast",
+      "expected_scope": "changed_unit",
+      "expected_verdict": "unsupported_or_ambiguous",
+      "source_relation": [
+        "parcel",
+        "weight",
+        "5 kilograms"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        20
+      ],
+      "answer_span_text": "Parcel weight: 5 kg.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-05-unit_mismatch-control",
+      "expected_scope": "equivalent_paraphrase_or_format",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "parcel",
+        "weight",
+        "5 kilograms"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        17
+      ],
+      "answer_span_text": "Ivo won 3 medals.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-06-count_mismatch-base",
+      "expected_scope": "declared_relation",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "Ivo",
+        "medal_count",
+        "3"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        17
+      ],
+      "answer_span_text": "Ivo won 4 medals.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-06-count_mismatch-contrast",
+      "expected_scope": "changed_count",
+      "expected_verdict": "unsupported_or_ambiguous",
+      "source_relation": [
+        "Ivo",
+        "medal_count",
+        "3"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        25
+      ],
+      "answer_span_text": "Medals won by Ivo: three.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-06-count_mismatch-control",
+      "expected_scope": "equivalent_paraphrase_or_format",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "Ivo",
+        "medal_count",
+        "3"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        42
+      ],
+      "answer_span_text": "Rae is eligible if Rae completes training.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-07-omitted_condition-base",
+      "expected_scope": "declared_relation",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "training_complete",
+        "implies",
+        "Rae eligible"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        16
+      ],
+      "answer_span_text": "Rae is eligible.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-07-omitted_condition-contrast",
+      "expected_scope": "omitted_condition",
+      "expected_verdict": "unsupported_or_ambiguous",
+      "source_relation": [
+        "training_complete",
+        "implies",
+        "Rae eligible"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        39
+      ],
+      "answer_span_text": "Completing training makes Rae eligible.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-07-omitted_condition-control",
+      "expected_scope": "equivalent_paraphrase_or_format",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "training_complete",
+        "implies",
+        "Rae eligible"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        15
+      ],
+      "answer_span_text": "Ava drove home.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-08-coreference_ambiguity-base",
+      "expected_scope": "declared_relation",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "Ava",
+        "drove",
+        "home"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        36
+      ],
+      "answer_span_text": "Nia called Ava while she drove home.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-08-coreference_ambiguity-contrast",
+      "expected_scope": "ambiguous_coreference",
+      "expected_verdict": "unsupported_or_ambiguous",
+      "source_relation": [
+        "Ava",
+        "drove",
+        "home"
+      ]
+    },
+    {
+      "answer_span": [
+        0,
+        32
+      ],
+      "answer_span_text": "The person driving home was Ava.",
+      "authority": "constructed_source_defined_fixture",
+      "case_id": "pair-08-coreference_ambiguity-control",
+      "expected_scope": "equivalent_paraphrase_or_format",
+      "expected_verdict": "supported",
+      "source_relation": [
+        "Ava",
+        "drove",
+        "home"
+      ]
+    }
+  ],
+  "expected_fields_exposed_to_prediction_reader": false,
+  "external_accuracy_evidence": false,
+  "manifest_hash": "sha256:fc0486dcfde468e1291f66c08d51903b3a1987ca85d8e5753d998784e07eff15",
+  "pair_count": 8,
+  "predictor_records": [
+    {
+      "answer": "Mira approved the permit.",
+      "case_id": "pair-01-negation-base",
+      "case_kind": "minimal_pair_member",
+      "family": "negation",
+      "pair_id": "pair-01-negation",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Mira approved the permit."
+    },
+    {
+      "answer": "Mira did not approve the permit.",
+      "case_id": "pair-01-negation-contrast",
+      "case_kind": "minimal_pair_member",
+      "family": "negation",
+      "pair_id": "pair-01-negation",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Mira approved the permit."
+    },
+    {
+      "answer": "Permit status: approved by Mira.",
+      "case_id": "pair-01-negation-control",
+      "case_kind": "equivalent_control",
+      "family": "negation",
+      "pair_id": "pair-01-negation",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Mira approved the permit."
+    },
+    {
+      "answer": "Lena coached Omar.",
+      "case_id": "pair-02-subject_object_reversal-base",
+      "case_kind": "minimal_pair_member",
+      "family": "subject_object_reversal",
+      "pair_id": "pair-02-subject_object_reversal",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Lena coached Omar."
+    },
+    {
+      "answer": "Omar coached Lena.",
+      "case_id": "pair-02-subject_object_reversal-contrast",
+      "case_kind": "minimal_pair_member",
+      "family": "subject_object_reversal",
+      "pair_id": "pair-02-subject_object_reversal",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Lena coached Omar."
+    },
+    {
+      "answer": "Omar was coached by Lena.",
+      "case_id": "pair-02-subject_object_reversal-control",
+      "case_kind": "equivalent_control",
+      "family": "subject_object_reversal",
+      "pair_id": "pair-02-subject_object_reversal",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Lena coached Omar."
+    },
+    {
+      "answer": "River A is longer than River B.",
+      "case_id": "pair-03-comparator_reversal-base",
+      "case_kind": "minimal_pair_member",
+      "family": "comparator_reversal",
+      "pair_id": "pair-03-comparator_reversal",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "River A is longer than River B."
+    },
+    {
+      "answer": "River A is shorter than River B.",
+      "case_id": "pair-03-comparator_reversal-contrast",
+      "case_kind": "minimal_pair_member",
+      "family": "comparator_reversal",
+      "pair_id": "pair-03-comparator_reversal",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "River A is longer than River B."
+    },
+    {
+      "answer": "Compared with River B, River A is longer.",
+      "case_id": "pair-03-comparator_reversal-control",
+      "case_kind": "equivalent_control",
+      "family": "comparator_reversal",
+      "pair_id": "pair-03-comparator_reversal",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "River A is longer than River B."
+    },
+    {
+      "answer": "The clinic opened in 2020.",
+      "case_id": "pair-04-time_qualifier-base",
+      "case_kind": "minimal_pair_member",
+      "family": "time_qualifier",
+      "pair_id": "pair-04-time_qualifier",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "The clinic opened in 2020."
+    },
+    {
+      "answer": "The clinic opened in 2021.",
+      "case_id": "pair-04-time_qualifier-contrast",
+      "case_kind": "minimal_pair_member",
+      "family": "time_qualifier",
+      "pair_id": "pair-04-time_qualifier",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "The clinic opened in 2020."
+    },
+    {
+      "answer": "Opening year for the clinic: 2020.",
+      "case_id": "pair-04-time_qualifier-control",
+      "case_kind": "equivalent_control",
+      "family": "time_qualifier",
+      "pair_id": "pair-04-time_qualifier",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "The clinic opened in 2020."
+    },
+    {
+      "answer": "The parcel weighs 5 kilograms.",
+      "case_id": "pair-05-unit_mismatch-base",
+      "case_kind": "minimal_pair_member",
+      "family": "unit_mismatch",
+      "pair_id": "pair-05-unit_mismatch",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "The parcel weighs 5 kilograms."
+    },
+    {
+      "answer": "The parcel weighs 5 pounds.",
+      "case_id": "pair-05-unit_mismatch-contrast",
+      "case_kind": "minimal_pair_member",
+      "family": "unit_mismatch",
+      "pair_id": "pair-05-unit_mismatch",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "The parcel weighs 5 kilograms."
+    },
+    {
+      "answer": "Parcel weight: 5 kg.",
+      "case_id": "pair-05-unit_mismatch-control",
+      "case_kind": "equivalent_control",
+      "family": "unit_mismatch",
+      "pair_id": "pair-05-unit_mismatch",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "The parcel weighs 5 kilograms."
+    },
+    {
+      "answer": "Ivo won 3 medals.",
+      "case_id": "pair-06-count_mismatch-base",
+      "case_kind": "minimal_pair_member",
+      "family": "count_mismatch",
+      "pair_id": "pair-06-count_mismatch",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Ivo won 3 medals."
+    },
+    {
+      "answer": "Ivo won 4 medals.",
+      "case_id": "pair-06-count_mismatch-contrast",
+      "case_kind": "minimal_pair_member",
+      "family": "count_mismatch",
+      "pair_id": "pair-06-count_mismatch",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Ivo won 3 medals."
+    },
+    {
+      "answer": "Medals won by Ivo: three.",
+      "case_id": "pair-06-count_mismatch-control",
+      "case_kind": "equivalent_control",
+      "family": "count_mismatch",
+      "pair_id": "pair-06-count_mismatch",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Ivo won 3 medals."
+    },
+    {
+      "answer": "Rae is eligible if Rae completes training.",
+      "case_id": "pair-07-omitted_condition-base",
+      "case_kind": "minimal_pair_member",
+      "family": "omitted_condition",
+      "pair_id": "pair-07-omitted_condition",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Rae is eligible if Rae completes training."
+    },
+    {
+      "answer": "Rae is eligible.",
+      "case_id": "pair-07-omitted_condition-contrast",
+      "case_kind": "minimal_pair_member",
+      "family": "omitted_condition",
+      "pair_id": "pair-07-omitted_condition",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Rae is eligible if Rae completes training."
+    },
+    {
+      "answer": "Completing training makes Rae eligible.",
+      "case_id": "pair-07-omitted_condition-control",
+      "case_kind": "equivalent_control",
+      "family": "omitted_condition",
+      "pair_id": "pair-07-omitted_condition",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Rae is eligible if Rae completes training."
+    },
+    {
+      "answer": "Ava drove home.",
+      "case_id": "pair-08-coreference_ambiguity-base",
+      "case_kind": "minimal_pair_member",
+      "family": "coreference_ambiguity",
+      "pair_id": "pair-08-coreference_ambiguity",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Nia called Ava while Ava drove home."
+    },
+    {
+      "answer": "Nia called Ava while she drove home.",
+      "case_id": "pair-08-coreference_ambiguity-contrast",
+      "case_kind": "minimal_pair_member",
+      "family": "coreference_ambiguity",
+      "pair_id": "pair-08-coreference_ambiguity",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Nia called Ava while Ava drove home."
+    },
+    {
+      "answer": "The person driving home was Ava.",
+      "case_id": "pair-08-coreference_ambiguity-control",
+      "case_kind": "equivalent_control",
+      "family": "coreference_ambiguity",
+      "pair_id": "pair-08-coreference_ambiguity",
+      "question": "Extract the relation and preserve its qualifiers.",
+      "source": "Nia called Ava while Ava drove home."
+    }
+  ],
+  "schema": "carnot.exp7412.challenge_manifest.v1",
+  "training_use": "prohibited"
+}

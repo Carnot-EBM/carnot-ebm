@@ -1,0 +1,2164 @@
+{
+  "annotation_budgets": {
+    "correct_reject": 0.1,
+    "incorrect_accept": 0.05,
+    "scope": "machine_annotation_only_not_truth"
+  },
+  "architecture": {
+    "activation": "silu",
+    "energy_output": "scalar",
+    "probability": "sigmoid_energy_is_p_incorrect",
+    "response_only": [
+      2,
+      4,
+      1
+    ],
+    "source_aware": [
+      6,
+      4,
+      1
+    ]
+  },
+  "arms": [
+    "training_prevalence",
+    "l2_logistic_six_input",
+    "response_only_2_4_1_gibbs",
+    "source_aware_6_4_1_gibbs"
+  ],
+  "challenge_manifest_hash": "sha256:fc0486dcfde468e1291f66c08d51903b3a1987ca85d8e5753d998784e07eff15",
+  "challenge_manifest_path": "results/raw/experiment_7412_v650_source_features/challenge_manifest.json",
+  "challenge_manifest_sha256": "sha256:832167dabdf0b76a0c760906c9a167fbbcd0a76e21db287887cf05657c64fb6a",
+  "feature_definitions": {
+    "bounds": [
+      0.0,
+      1.0
+    ],
+    "normalization": "Unicode NFKC and lowercase lexical matching",
+    "ordered_source_features": [
+      "numeric_novelty_with_context",
+      "falsifiability_score",
+      "normalized_number_token_overlap",
+      "normalized_content_token_overlap",
+      "max_answer_source_sentence_overlap",
+      "missing_or_empty_source"
+    ],
+    "response_only_ablation": {
+      "context": "empty string to preserve the shipped two-feature PCIB representation",
+      "ordered_features": [
+        "entity_uptake",
+        "falsifiability_score"
+      ]
+    },
+    "semantic_scope": "interpretable_proxy_not_entailment",
+    "source_features": {
+      "falsifiability_score": {
+        "empty_denominator": 0.0,
+        "rule": "existing PCIBProbe falsifiability score with actual bounded context"
+      },
+      "max_answer_source_sentence_overlap": {
+        "empty_denominator": 0.0,
+        "rule": "maximum response-content overlap against one bounded source sentence"
+      },
+      "missing_or_empty_source": {
+        "empty_denominator": 1.0,
+        "rule": "one for missing or whitespace-only context, else zero"
+      },
+      "normalized_content_token_overlap": {
+        "empty_denominator": 0.0,
+        "rule": "unique response content words in context divided by response content words"
+      },
+      "normalized_number_token_overlap": {
+        "empty_denominator": 0.0,
+        "rule": "unique response numbers in context divided by unique response numbers"
+      },
+      "numeric_novelty_with_context": {
+        "empty_denominator": 0.0,
+        "empty_source": "all response numbers are novel",
+        "rule": "unique response numbers absent from context divided by unique response numbers"
+      }
+    },
+    "token_limits": {
+      "answer": 1024,
+      "context": 4096,
+      "question": 1024,
+      "selected_sentence": 1024
+    }
+  },
+  "feature_row_count": 3990,
+  "feature_rows_path": "results/raw/experiment_7412_v650_source_features/source_feature_rows.json",
+  "feature_rows_sha256": "sha256:a34e26beee7f797bb68fe69af1be00420c1c2cc3bbb1b203ebc89dd59df36864",
+  "intervals": {
+    "alpha_per_test": 0.0001388888888888889,
+    "correction": "bonferroni",
+    "empty_action": "disabled_without_certificate",
+    "familywise_confidence": 0.95,
+    "method": "one_sided_exact_binomial_clopper_pearson",
+    "representative_rule": "lowest_row_key_per_independent_group_label_blind",
+    "simultaneous_test_count": 360
+  },
+  "manifest_hash": "sha256:65a9a5b817f4cfbef1524efa809bc1203402dfeffd5e400b93dabe2f249407af",
+  "official_test_labels_opened": false,
+  "optimizer": {
+    "architecture_or_learning_rate_sweep": false,
+    "l2": 0.001,
+    "learning_rate": 0.01,
+    "loss": "natural_prevalence_bernoulli",
+    "name": "adam",
+    "steps": 500
+  },
+  "partition_roles": {
+    "final_evaluation": "final_test_trusted_evaluator_only",
+    "fit_probabilities": "probability_calibration",
+    "fit_weights": "train",
+    "select_policy": "policy_calibration"
+  },
+  "planned_conditions": [
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65001:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65001:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65001:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65001:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65001:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65001:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65001:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65001:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65001:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65002:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65002:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65002:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65002:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65002:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65002:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65002:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65002:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65002:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65003:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65003:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65003:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65003:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65003:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65003:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65003:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65003:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65003:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65004:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65004:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65004:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65004:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65004:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65004:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65004:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65004:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65004:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65005:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65005:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65005:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65005:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65005:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65005:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65005:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65005:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "training_prevalence",
+      "comparative_unit": "training_prevalence:seed-65005:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65001:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65001:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65001:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65001:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65001:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65001:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65001:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65001:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65001:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65002:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65002:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65002:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65002:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65002:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65002:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65002:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65002:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65002:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65003:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65003:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65003:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65003:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65003:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65003:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65003:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65003:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65003:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65004:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65004:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65004:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65004:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65004:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65004:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65004:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65004:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65004:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65005:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65005:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65005:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65005:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65005:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65005:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65005:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65005:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "l2_logistic_six_input",
+      "comparative_unit": "l2_logistic_six_input:seed-65005:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65001:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65001:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65001:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65001:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65001:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65001:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65001:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65001:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65001:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65002:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65002:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65002:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65002:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65002:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65002:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65002:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65002:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65002:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65003:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65003:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65003:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65003:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65003:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65003:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65003:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65003:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65003:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65004:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65004:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65004:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65004:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65004:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65004:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65004:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65004:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65004:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65005:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65005:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65005:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65005:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65005:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65005:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65005:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65005:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "response_only_2_4_1_gibbs",
+      "comparative_unit": "response_only_2_4_1_gibbs:seed-65005:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65001:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65001:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65001:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65001:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65001:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65001:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65001:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65001:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65001:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65001,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65002:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65002:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65002:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65002:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65002:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65002:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65002:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65002:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65002:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65002,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65003:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65003:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65003:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65003:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65003:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65003:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65003:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65003:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65003:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65003,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65004:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65004:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65004:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65004:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65004:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65004:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65004:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65004:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65004:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65004,
+      "status": "unstarted",
+      "threshold_index": 8
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65005:threshold-0",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 0
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65005:threshold-1",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 1
+    },
+    {
+      "accept_threshold": 0.01,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65005:threshold-2",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 2
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65005:threshold-3",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 3
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65005:threshold-4",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 4
+    },
+    {
+      "accept_threshold": 0.025,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65005:threshold-5",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 5
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65005:threshold-6",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.9,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 6
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65005:threshold-7",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.95,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 7
+    },
+    {
+      "accept_threshold": 0.05,
+      "arm": "source_aware_6_4_1_gibbs",
+      "comparative_unit": "source_aware_6_4_1_gibbs:seed-65005:threshold-8",
+      "condition": "real_corpus_fit",
+      "reason": "sealed_for_exp7413_no_official_labels_opened",
+      "reject_threshold": 0.99,
+      "seed": 65005,
+      "status": "unstarted",
+      "threshold_index": 8
+    }
+  ],
+  "real_fitting_performed": false,
+  "schema": "carnot.exp7412.protocol_manifest.v1",
+  "source_manifest_hash": "sha256:2843bdf316cb6e75f0fcd878704ca3ac937eaa43b2812ef2b73bea3106f7b5d1",
+  "task_acceptance_rules": {
+    "constructed_challenge_is_external_accuracy": false,
+    "lexical_match_proves_entailment": false,
+    "protocol_ready": "fixture_reader_checkpoint_and_validation_checks_all_pass",
+    "scientific_benefit": "not_measured_in_exp7412",
+    "valid_span_proves_entailment": false
+  },
+  "thresholds": {
+    "accept": [
+      0.01,
+      0.025,
+      0.05
+    ],
+    "pairs": [
+      [
+        0.01,
+        0.9
+      ],
+      [
+        0.01,
+        0.95
+      ],
+      [
+        0.01,
+        0.99
+      ],
+      [
+        0.025,
+        0.9
+      ],
+      [
+        0.025,
+        0.95
+      ],
+      [
+        0.025,
+        0.99
+      ],
+      [
+        0.05,
+        0.9
+      ],
+      [
+        0.05,
+        0.95
+      ],
+      [
+        0.05,
+        0.99
+      ]
+    ],
+    "reject": [
+      0.9,
+      0.95,
+      0.99
+    ]
+  },
+  "training_seeds": [
+    65001,
+    65002,
+    65003,
+    65004,
+    65005
+  ]
+}

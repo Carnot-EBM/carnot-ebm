@@ -557,6 +557,158 @@ remain denied.
 **then** memberships, masks, counts, hashes, and predictor boundaries match
 **and** any changed row, duplicate leak, or test overlap fails readiness.
 
+### REQ-AUTO-7412: Seal source-aware feature and decision protocol
+
+Exp7412 SHALL authenticate the exact Exp7410 artifact and corpus manifest before
+dependent work. It SHALL require `source_corpus_ready_score=1`, an allowed
+`verdict_class`, `flagged_adversarial=false`, matching manifest hashes, and a
+predictor-only reload. A failed gate SHALL emit a terminal blocked artifact that
+names the upstream, path, check, field, expected value, and observed value.
+
+The feature reader SHALL use only question, context, answer, selected sentence,
+row key, group ID, and partition. It SHALL never request official final-test
+labels. It SHALL preserve the response-only PCIB entity-uptake and
+falsifiability features as a two-input ablation. It SHALL define these six
+source-aware inputs in this order:
+
+1. numeric novelty with actual context;
+2. the existing PCIB falsifiability score;
+3. normalized number-token overlap;
+4. normalized content-token overlap;
+5. maximum answer-sentence overlap with one source sentence; and
+6. a missing-or-empty-source indicator.
+
+Text SHALL be normalized with Unicode NFKC and lowercase token matching.
+Question, answer, and selected sentence inputs SHALL be capped at 1,024 tokens.
+Context SHALL be capped at 4,096 tokens. Number tokens SHALL use finite decimal
+conversion and exact canonical values. Content tokens SHALL contain Unicode
+word tokens with at least two characters and SHALL exclude a frozen stop-word
+set. Each overlap SHALL divide the number of unique answer-side matches by the
+number of unique answer-side tokens. An empty denominator SHALL return zero.
+Numeric novelty SHALL be the unmatched unique answer-number fraction. It SHALL
+return zero when the answer has no numbers. Sentence overlap SHALL return the
+largest answer-side content-token overlap across bounded source sentences.
+Missing or whitespace-only context SHALL set the final feature to one and all
+source overlaps to zero. Every feature SHALL be finite and bounded to `[0, 1]`.
+These values are interpretable proxies. They are not an EnokiQA or PCIB paper
+replication. A lexical match or a valid span SHALL not claim entailment.
+
+The experiment SHALL provide a reusable experiment-local Gibbs head with six
+inputs, one four-unit hidden layer, and scalar energy. It SHALL use
+`p_incorrect=sigmoid(energy)`, natural-prevalence Bernoulli loss, learning rate
+`0.01`, L2 coefficient `0.001`, 500 optimizer steps, and seeds 65001 through
+65005. Checkpoints SHALL contain finite plain numeric arrays with exact shapes.
+Reload SHALL reject extra keys, non-finite values, wrong shapes, booleans, and
+executable values. The typed policy SHALL emit accept when probability is at or
+below its accept threshold, reject when it is at or above its reject threshold,
+and escalate otherwise. Invalid probabilities SHALL escalate without invented
+confidence.
+
+The frozen arms SHALL be training prevalence, L2 logistic on the six inputs,
+response-only 2-4-1 Gibbs, and source-aware 6-4-1 Gibbs. Accept thresholds SHALL
+be `0.01`, `0.025`, and `0.05`. Reject thresholds SHALL be `0.90`, `0.95`, and
+`0.99`. Later fitting SHALL use training rows only. Probability calibration
+SHALL use probability-calibration groups only. Policy selection SHALL use
+policy-calibration groups only. Each risk calculation SHALL use one
+label-blind representative per independent group. One-sided 95-percent exact
+binomial bounds SHALL use Bonferroni correction across four arms, five seeds,
+nine threshold pairs, and two actions. An action with no selected group SHALL
+have no certificate and SHALL be disabled. Incorrect accepts SHALL have a
+machine-annotation risk budget of 0.05. Correct rejects SHALL have a
+machine-annotation risk budget of 0.10.
+
+Exp7412 SHALL seal eight nontraining semantic minimal pairs for negation,
+subject/object reversal, comparator reversal, time qualifier, unit mismatch,
+count mismatch, omitted condition, and coreference ambiguity. Each pair SHALL
+declare a small source relation, exact answer spans, and deterministic expected
+scope in an evaluator-only view. It SHALL also seal eight equivalent
+paraphrase or format controls. Prediction readers SHALL not expose expected
+verdicts or expected scope. The fixtures SHALL remain future inputs for Exp7416
+and Exp7417. They SHALL not provide external accuracy evidence.
+
+This experiment SHALL train only on test fixtures. It SHALL not fit real corpus
+labels or open official test labels. It SHALL emit unstarted rows for every
+frozen real arm, seed, and threshold condition. The protocol manifest SHALL
+freeze architecture, seeds, roles, losses, costs, thresholds, intervals,
+machine-annotation budgets, and task-specific acceptance rules before later
+real fitting. `source_feature_protocol_ready_score` SHALL equal one only when
+the fixture training, checkpoint reload, predictor reader, challenge masking,
+and required validation checks pass. Readiness SHALL remain independent of
+scientific benefit. `promotion_score` SHALL remain zero.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate=no_model_load`,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`. Fixture
+Gibbs work SHALL appear only in `small_ebm_training`. The workflow SHALL use the
+Exp7358 scoped command plan and the Exp7303 runner. It SHALL run the declared
+entrypoint, fresh-process cold replay, independent row recomputation,
+adversarial verification, and strict verdict-row consistency. No numbered E2E
+scenario applies because shared training, sampling, serialization, and PyO3
+behavior remain unchanged.
+
+The required ordinary fields SHALL include `run_date`,
+`preconditions_checked`, `MODEL_SPECS`, `model_invoked`,
+`invocation_counts`, `inference_substrate`, `inference_substrate_details`,
+`inference_substrate_class`, `execution_venue`, `duration_s`, `phase_spans`,
+`random_seed`, `reproducibility_checksum`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `acceptance_gate_results`, `gate_check_summary`,
+`verifier_is_oracle`, `honest_verdict`, `verdict_class`,
+`flagged_adversarial`, `validation_receipts`, `field_principles`,
+`promotion_score`, `source_feature_protocol_ready_score`,
+`feature_definitions`, `protocol_manifest_path`, `challenge_manifest_path`,
+and `annotation_risk_scope`.
+
+#### SCENARIO-AUTO-7412-01: Source features stay bounded and predictor-only
+
+**Given** numeric text, empty context, long text, and Unicode-equivalent text,
+**when** the six fixed source features are computed,
+**then** every value is finite and in `[0, 1]`
+**and** the computation uses no label or evaluator field.
+
+#### SCENARIO-AUTO-7412-02: Checkpoints reject unsafe numeric state
+
+**Given** a valid 6-4-1 checkpoint and mutations with non-finite values, wrong
+shapes, extra keys, booleans, or executable values,
+**when** the experiment reloads the checkpoint,
+**then** valid numeric state reproduces identical probabilities
+**and** every unsafe mutation fails before scoring.
+
+#### SCENARIO-AUTO-7412-03: Fixture fitting survives constant and imbalanced data
+
+**Given** constant feature columns and a highly imbalanced two-class fixture,
+**when** the frozen Bernoulli Gibbs and logistic harnesses fit,
+**then** each completed update and loss remains finite
+**and** one-class fitting input fails closed.
+
+#### SCENARIO-AUTO-7412-04: Policy certificates use independent groups
+
+**Given** multiple rows from one group and all nine frozen threshold pairs,
+**when** risk policies are selected,
+**then** one label-blind representative per group enters each exact bound
+**and** an empty or uncertified action is disabled.
+
+#### SCENARIO-AUTO-7412-05: Challenge semantics stay outside prediction views
+
+**Given** eight semantic pairs and eight equivalent controls,
+**when** the challenge manifest is sealed and reloaded,
+**then** exact spans, relation scope, and fixture identities reproduce
+**and** predictor records contain no expected verdict or expected scope.
+
+#### SCENARIO-AUTO-7412-06: Official labels remain unopened
+
+**Given** the authenticated Exp7410 predictor reader and a fixture-only trainer,
+**when** Exp7412 builds its protocol artifact,
+**then** official final-test labels are never requested
+**and** every real fitting row remains explicitly unstarted for Exp7413.
+
+#### SCENARIO-AUTO-7412-07: Completion and efficacy remain separate
+
+**Given** complete feature, fixture, reader, manifest, and validation checks,
+**when** no real source-aware efficacy measurement has run,
+**then** protocol readiness equals one while the verdict is complete null
+**and** no lexical feature, span, or constructed fixture is reported as
+entailment or external accuracy evidence.
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the
