@@ -18218,3 +18218,4 @@ code |
 | 2026-09-19 11:17 UTC | Audit extraction coverage and semantic preservatio | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp7416-anchored-extraction.extraction_capture_complete_score (actual=0 == expected=1) |
 | 2026-09-19 11:19 UTC | Audit extraction coverage and semantic preservatio | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp7416-anchored-extraction.extraction_capture_complete_score (actual=0 == expected=1) |
 | 2026-09-19 11:21 UTC | Audit extraction coverage and semantic preservatio | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp7416-anchored-extraction.extraction_capture_complete_score (actual=0 == expected=1) |
+| 2026-09-19 11:51 UTC | Measure certified memory under source revision and | OK | 112 passed, 1 warning in 65.98s (0:01:05) |
