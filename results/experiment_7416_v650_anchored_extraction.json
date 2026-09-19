@@ -1,0 +1,712 @@
+{
+  "MODEL_SPECS": [
+    "unsloth/Qwen3.8-27B-GGUF"
+  ],
+  "acceptance_gate_results": [],
+  "completed_at_utc": "2026-09-19T11:12:53.812977Z",
+  "current_invocation_events": [],
+  "current_owner_pid": 3884585,
+  "current_run_id": "exp7416-anchored-extraction:unstarted",
+  "duration_s": 1.7517,
+  "endpoint_metrics": {},
+  "event_count": 0,
+  "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "execution_venue": "host",
+  "experiment_id": "exp7416-anchored-extraction",
+  "extraction_capture_complete_score": 0,
+  "extraction_rows": [],
+  "field_principles": {
+    "MODEL_SPECS": "Name unsloth/Qwen3.8-27B-GGUF for every current attempted LLM call.",
+    "acceptance_gate_results": "Separate completion, evidence, safety, validation, and scientific benefit checks.",
+    "duration_s": "Measure current monotonic task time without padding or historical time.",
+    "execution_venue": "Use the closed host string and keep hostname and device details elsewhere.",
+    "extraction_capture_complete_score": "Measure accountable raw capture and checks separately from parsing or semantic quality.",
+    "extraction_rows": "Keep all 48 cases by both arms, including failed, censored, and unstarted calls.",
+    "field_principles": "Explain fields separately and keep gate values as ordinary scalars.",
+    "flagged_adversarial": "Preserve critical findings because flagged science cannot supply readiness.",
+    "gate_check_summary": "Name the exact upstream, path, check, field, operator, expected value, and observed value.",
+    "honest_verdict": "Use complete_ for finished findings and blocked_ for unchanged missing prerequisites.",
+    "inference_substrate": "Use a truthful string and keep device and software facts in a separate detail object.",
+    "inference_substrate_class": "Name bounded generation, load-only work, or no-load work from actual current events.",
+    "invocation_counts": "Reduce owned current event dispositions without importing historical counts.",
+    "model_invoked": "Set true for actual current attempted model work, including a failed load.",
+    "model_receipt": "Record actual model, runtime, device, lease, ownership, hash, and CUDA offload.",
+    "phase_spans": "Keep real phase boundaries, checkpoints, completed units, and heartbeat records.",
+    "preconditions_checked": "Authenticate exact paths, hashes, eligibility, model, runner, and owned capacity before dependent work.",
+    "promotion_score": "Keep zero because capture cannot change defaults, weights, publication, or rollout.",
+    "random_seed": "Freeze selection, order, sampling, and any resampling seed before outcomes.",
+    "raw_capture_manifest": "Bind immutable request, response, timing, cancellation, and byte hashes for both arms.",
+    "reproducibility_checksum": "Bind code, prompts, inputs, events, raw bytes, reductions, and checks.",
+    "rows": "Keep every assigned case, arm, condition, and terminal disposition.",
+    "run_date": "Use 20260919 and retain actual UTC boundaries.",
+    "sample_size_budget": "Keep planned, attempted, completed, failed, censored, and unstarted counts with the fixed stop rule.",
+    "schema": "Use a versioned schema with ordinary top-level identity and terminal fields.",
+    "semantic_scope": "Keep real annotation alignment, constructed semantic checks, and offset validity distinct.",
+    "source_artifact_hashes": "Hash exact source paths and preserve original artifact flags in sidecar metadata.",
+    "validation_receipts": "Retain exact argv, environment, names, exits, durations, and hashed logs.",
+    "verdict_class": "Use only positive, circular_positive, null, blocked, disqualified, or partial.",
+    "verifier_is_oracle": "Mark true because source-defined span proofs are correctness authority for those endpoints."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "all_passed": false,
+    "artifact_field": "owned_runtime_receipt",
+    "check": "one_owned_rtx3090_slot",
+    "expected_value": {
+      "minimum_rtx3090_slots": 1,
+      "query_ok": true
+    },
+    "failed_checks": [
+      "one_owned_rtx3090_slot"
+    ],
+    "failed_count": 1,
+    "observed_value": {
+      "minimum_rtx3090_slots": 2,
+      "query_ok": true
+    },
+    "operator": "==",
+    "passed": false,
+    "path": null,
+    "upstream": "nvidia-smi_and_gpu_lease_journal"
+  },
+  "historical_receipt_sidecars": [],
+  "honest_verdict": "blocked_one_owned_rtx3090_slot",
+  "inference_substrate": "no_model_load",
+  "inference_substrate_class": "no_model_load",
+  "inference_substrate_details": {
+    "bytes": 17106775008,
+    "chat_template_sha256": "sha256:12827f24b742ea4e80cdc12dbcf9622227056b9f797252a3149263d4f9aaadce",
+    "decoding": {
+      "max_new_tokens": 384,
+      "repair_attempts": 0,
+      "retry_budget": 0,
+      "seed": 6501601,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+    "embedded_tokenizer_loadable": true,
+    "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+    "model_block_count": 65,
+    "native_chat_template": true,
+    "native_tokenizer": "embedded_gguf",
+    "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "quantization": "Q4_K_M",
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.650",
+  "model_invoked": false,
+  "model_receipt": {},
+  "phase": 3,
+  "phase_spans": [
+    {
+      "checkpoint_at_utc": "2026-09-19T11:12:52.201895Z",
+      "checkpoint_times_s": [
+        0.140603
+      ],
+      "completed_units": 34,
+      "duration_s": 0.140523,
+      "end_s": 0.140603,
+      "heartbeat_times_s": [],
+      "phase": "preconditions_static",
+      "start_s": 8e-05
+    },
+    {
+      "checkpoint_at_utc": "2026-09-19T11:12:53.812022Z",
+      "checkpoint_times_s": [
+        1.750731
+      ],
+      "completed_units": 6,
+      "duration_s": 1.610099,
+      "end_s": 1.750731,
+      "heartbeat_times_s": [],
+      "phase": "preconditions_runtime",
+      "start_s": 0.140632
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "run_date",
+      "category": "precondition",
+      "check": "run_date",
+      "expected_value": "20260919",
+      "observed_value": "20260919",
+      "operator": "==",
+      "passed": true,
+      "path": "execution_contract",
+      "principle": "The fixed protocol uses one declared execution date.",
+      "upstream": "execution_contract"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:AGENTS.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "AGENTS.md",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:CLAUDE.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:CODEX.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "CODEX.md",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:research-program.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "research-program.md",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/reporting/current_work_receipt.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/inference/sota_models.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/inference/sota_models.py",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "python/carnot/inference/sota_models.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7400_v649_assignment_canary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7400_v649_assignment_canary.py",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "python/carnot/experiment_7400_v649_assignment_canary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7402_v649_proposal_capture.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7402_v649_proposal_capture.py",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "python/carnot/experiment_7402_v649_proposal_capture.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:openspec/capabilities/constraint-verification/spec.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "openspec/capabilities/constraint-verification/spec.md",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "openspec/capabilities/constraint-verification/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7416_v650_anchored_extraction.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7416_v650_anchored_extraction.py",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "python/carnot/experiment_7416_v650_anchored_extraction.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiments/experiment_7416_v650_anchored_extraction.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "scripts/experiments/experiment_7416_v650_anchored_extraction.py",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "scripts/experiments/experiment_7416_v650_anchored_extraction.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:tests/python/test_experiment_7416_v650_anchored_extraction.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "tests/python/test_experiment_7416_v650_anchored_extraction.py",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "tests/python/test_experiment_7416_v650_anchored_extraction.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/experiment_7412_v650_source_features.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7412_v650_source_features.json",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "results/experiment_7412_v650_source_features.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/experiment_7410_v650_source_corpus.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7410_v650_source_corpus.json",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "results/experiment_7410_v650_source_corpus.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/raw/experiment_7410_v650_source_corpus/corpus_manifest.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7410_v650_source_corpus/corpus_manifest.json",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "results/raw/experiment_7410_v650_source_corpus/corpus_manifest.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/raw/experiment_7412_v650_source_features/challenge_manifest.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7412_v650_source_features/challenge_manifest.json",
+      "principle": "Required bytes must exist before dependent work.",
+      "upstream": "results/raw/experiment_7412_v650_source_features/challenge_manifest.json"
+    },
+    {
+      "artifact_field": "REQ-*",
+      "category": "precondition",
+      "check": "driving_requirement",
+      "expected_value": "REQ-VERIFY-7416",
+      "observed_value": "REQ-VERIFY-7416",
+      "operator": "==",
+      "passed": true,
+      "path": "openspec/capabilities/constraint-verification/spec.md",
+      "principle": "Implementation starts only after the capability requirement exists.",
+      "upstream": "openspec/capabilities/constraint-verification/spec.md"
+    },
+    {
+      "artifact_field": "experiment_id",
+      "category": "precondition",
+      "check": "upstream_identity",
+      "expected_value": "exp7412-source-features",
+      "observed_value": "exp7412-source-features",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7412_v650_source_features.json",
+      "principle": "Only exact eligible Exp7412 evidence can authorize capture.",
+      "upstream": "results/experiment_7412_v650_source_features.json"
+    },
+    {
+      "artifact_field": "source_feature_protocol_ready_score",
+      "category": "precondition",
+      "check": "source_feature_protocol_ready",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7412_v650_source_features.json",
+      "principle": "Only exact eligible Exp7412 evidence can authorize capture.",
+      "upstream": "results/experiment_7412_v650_source_features.json"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "category": "precondition",
+      "check": "upstream_verdict_eligible",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": "null",
+      "operator": "in",
+      "passed": true,
+      "path": "results/experiment_7412_v650_source_features.json",
+      "principle": "Only exact eligible Exp7412 evidence can authorize capture.",
+      "upstream": "results/experiment_7412_v650_source_features.json"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "category": "precondition",
+      "check": "upstream_unflagged",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7412_v650_source_features.json",
+      "principle": "Only exact eligible Exp7412 evidence can authorize capture.",
+      "upstream": "results/experiment_7412_v650_source_features.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "category": "precondition",
+      "check": "upstream_artifact_hash",
+      "expected_value": "sha256:b6ff5100e270646ad98961513956bcdc07073668e034f764d1bd64d20fb17874",
+      "observed_value": "sha256:b6ff5100e270646ad98961513956bcdc07073668e034f764d1bd64d20fb17874",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7412_v650_source_features.json",
+      "principle": "A changed producer cannot silently authorize this run.",
+      "upstream": "results/experiment_7412_v650_source_features.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "category": "precondition",
+      "check": "source_artifact_hash",
+      "expected_value": "sha256:f56c1acc842959972ceb425777cda16ba979f6565aa512dbfd3bb0f6db247ffe",
+      "observed_value": "sha256:f56c1acc842959972ceb425777cda16ba979f6565aa512dbfd3bb0f6db247ffe",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7410_v650_source_corpus.json",
+      "principle": "The real corpus identity must remain exact.",
+      "upstream": "results/experiment_7410_v650_source_corpus.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "category": "precondition",
+      "check": "source_manifest_hash",
+      "expected_value": "sha256:be0f0b29d6216eaf9a2c1a8ddefd98a5761256c2c9a091038baaf901ab4c277a",
+      "observed_value": "sha256:be0f0b29d6216eaf9a2c1a8ddefd98a5761256c2c9a091038baaf901ab4c277a",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7410_v650_source_corpus/corpus_manifest.json",
+      "principle": "Selection must use the authenticated predictor manifest.",
+      "upstream": "results/raw/experiment_7410_v650_source_corpus/corpus_manifest.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "category": "precondition",
+      "check": "challenge_manifest_hash",
+      "expected_value": "sha256:832167dabdf0b76a0c760906c9a167fbbcd0a76e21db287887cf05657c64fb6a",
+      "observed_value": "sha256:832167dabdf0b76a0c760906c9a167fbbcd0a76e21db287887cf05657c64fb6a",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7412_v650_source_features/challenge_manifest.json",
+      "principle": "Constructed pairs must remain sealed before generation.",
+      "upstream": "results/raw/experiment_7412_v650_source_features/challenge_manifest.json"
+    },
+    {
+      "artifact_field": "validate_artifact.errors",
+      "category": "precondition",
+      "check": "upstream_cold_validation",
+      "expected_value": [],
+      "observed_value": [],
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7412_v650_source_features.json",
+      "principle": "The producer must replay before its score is trusted.",
+      "upstream": "results/experiment_7412_v650_source_features.json"
+    },
+    {
+      "artifact_field": "exp7416-anchored-extraction",
+      "category": "precondition",
+      "check": "current_task_not_quarantined",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "principle": "A retired unchanged capture cannot run automatically.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "sample_size_budget",
+      "category": "precondition",
+      "check": "frozen_extraction_panel",
+      "expected_value": {
+        "calls": 96,
+        "challenge": 24,
+        "error": null,
+        "official": 24
+      },
+      "observed_value": {
+        "calls": 96,
+        "challenge": 24,
+        "error": null,
+        "official": 24
+      },
+      "operator": "==",
+      "passed": true,
+      "path": "authenticated_predictor_views",
+      "principle": "The fixed panel cannot replace hard cases after outcomes exist.",
+      "upstream": "authenticated_predictor_views"
+    },
+    {
+      "artifact_field": "CARNOT_FORCE_LIVE",
+      "category": "precondition",
+      "check": "force_live_mode",
+      "expected_value": "1",
+      "observed_value": "1",
+      "operator": "==",
+      "passed": true,
+      "upstream": "process_environment"
+    },
+    {
+      "artifact_field": "MODEL_SPECS",
+      "category": "precondition",
+      "check": "cached_current_qwen_gguf",
+      "expected_value": {
+        "chat_template": true,
+        "exists": true,
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_block_count_positive": true,
+        "tokenizer": true
+      },
+      "observed_value": {
+        "chat_template": true,
+        "exists": true,
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_block_count_positive": true,
+        "tokenizer": true
+      },
+      "operator": "==",
+      "passed": true,
+      "upstream": "cached_current_model"
+    },
+    {
+      "artifact_field": "runner_capabilities",
+      "category": "precondition",
+      "check": "native_cuda_runner",
+      "expected_value": {
+        "errors": [],
+        "server_hash_present": true
+      },
+      "observed_value": {
+        "errors": [],
+        "server_hash_present": true
+      },
+      "operator": "==",
+      "passed": true,
+      "upstream": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    {
+      "artifact_field": "owned_runtime_receipt",
+      "category": "precondition",
+      "check": "one_owned_rtx3090_slot",
+      "expected_value": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "observed_value": {
+        "minimum_rtx3090_slots": 2,
+        "query_ok": true
+      },
+      "operator": "==",
+      "passed": false,
+      "upstream": "nvidia-smi_and_gpu_lease_journal"
+    },
+    {
+      "artifact_field": "lease_wait_timeout_s",
+      "category": "precondition",
+      "check": "bounded_lease_wait",
+      "expected_value": 180.0,
+      "observed_value": 180.0,
+      "operator": "==",
+      "passed": true,
+      "path": "runtime_policy",
+      "principle": "Contention cannot consume an unbounded task window.",
+      "upstream": "runtime_policy"
+    },
+    {
+      "artifact_field": "available_rtx3090_slots",
+      "category": "precondition",
+      "check": "one_owned_rtx3090_slot",
+      "expected_value": 1,
+      "observed_value": 2,
+      "operator": ">=",
+      "passed": true,
+      "path": "nvidia-smi_and_gpu_lease_journal",
+      "principle": "Headline capture requires one task-owned RTX 3090 and no CPU fallback.",
+      "upstream": "nvidia-smi_and_gpu_lease_journal"
+    }
+  ],
+  "promotion_score": 0,
+  "random_seed": {
+    "arm_order": 6501601,
+    "resampling": 6501601,
+    "sampling": 6501601,
+    "selection": 6501601
+  },
+  "raw_capture_manifest": [],
+  "repository_health": {
+    "affects_required_checks": false,
+    "status": "not_checked",
+    "unrelated_broad_suite_observations": []
+  },
+  "reproducibility_checksum": "sha256:779a7e55d1b1bf9a05ef53bc4094dc3c163526d6bc51ee22062810da0ae2d08e",
+  "rows": [],
+  "run_date": "20260919",
+  "sample_size_budget": {
+    "attempted": 0,
+    "capture_timeout_s": 2400.0,
+    "case_count": 48,
+    "censored": 0,
+    "completed": 0,
+    "constructed_case_count": 24,
+    "development_call_limit": 4,
+    "development_calls_used": 0,
+    "development_token_limit": 64,
+    "failed": 0,
+    "independent_constructed_pair_count": 8,
+    "lease_wait_timeout_s": 180.0,
+    "maximum_new_tokens_per_call": 384,
+    "measured_calls_per_case": 2,
+    "official_case_count": 24,
+    "planned": 96,
+    "stop_rule": "stop_after_96_dispositions_or_capture_deadline_without_replacement",
+    "unstarted": 96,
+    "validation_timeout_s": 900.0
+  },
+  "schema": "carnot.exp7416.v650.anchored_extraction.v1",
+  "scientific_duration_s": 0.0,
+  "semantic_pair_rows": [],
+  "semantic_scope": {
+    "constructed_semantic_checks": "source_defined_but_provisional_until_exp7417",
+    "full_system_correctness_claimed": false,
+    "offset_validity": "exact_half_open_offsets_into_answer",
+    "real_annotation_alignment": "machine_annotation_not_truth",
+    "repair_claimed": false
+  },
+  "source_artifact_hashes": {},
+  "started_at_utc": "2026-09-19T11:12:52.061282Z",
+  "status": "blocked_precondition",
+  "token_and_cost_totals": {
+    "completion_tokens": 0,
+    "local_inference_usd": 0.0,
+    "prompt_tokens": 0
+  },
+  "validation_duration_s": 0.0,
+  "validation_receipts": [],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}

@@ -8051,3 +8051,102 @@ And a missing parent cannot disqualify otherwise complete measured evidence.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7340 and SCENARIO-VERIFY-7340-* | Implemented in `python/carnot/experiment_7340_v644_native_cost.py` using the shipped Exp7339 binding and Exp7326 service mechanisms. | `tests/python/test_experiment_7340_v644_native_cost.py` plus the measured E2E-003 and terminal validation receipts. |
+
+### REQ-VERIFY-7416: Anchored Claim Extraction SHALL Preserve Raw Evidence And Span Semantics
+
+Exp7416 SHALL authenticate the exact Exp7410 corpus and Exp7412 source-feature
+artifact before model work. The Exp7412 readiness score SHALL equal one. Its
+verdict class SHALL be eligible, and its adversarial flag SHALL be false. A
+missing, changed, excluded, or ineligible prerequisite SHALL produce a blocked
+artifact with zero current invocation counts.
+
+The experiment SHALL select 24 final-test sentences from the Exp7410 predictor
+view by a label-blind hash with seed `6501601`. It SHALL also use all 24 sealed
+Exp7412 challenge sentences. Selection SHALL not read labels, expected verdicts,
+source relations, or annotation scores. Each case SHALL receive the same
+question, source sentence, and answer in two fixed arms. The free arm SHALL ask
+for decontextualized relation triples. The anchored arm SHALL also require exact
+half-open answer offsets and explicit qualifiers. Arm order SHALL alternate by
+case hash.
+
+The measured schedule SHALL contain exactly 96 calls to
+`unsloth/Qwen3.8-27B-GGUF`. Each call SHALL permit at most 384 new tokens and
+use the same deterministic sampling settings. The current runtime SHALL use one
+task-owned RTX 3090, the cached GGUF tokenizer and chat template, and native
+llama.cpp CUDA offload. It SHALL not use CPU fallback. Lease waiting SHALL not
+exceed 180 seconds. Capture SHALL stop after 2400 seconds and SHALL retain every
+planned call as completed, failed, censored, or unstarted.
+
+Each request and raw response SHALL be written before the Exp7416 parser runs.
+No repair, parser retry, grammar retry, or larger token budget SHALL follow a
+bad response. Current load and generation counts SHALL come from owned events.
+Historical model evidence SHALL stay in hashed sidecars. The artifact SHALL use
+`model_bounded_generation` after generation, `model_load_no_generation` after a
+real load with no generation, and `no_model_load` when no load was attempted.
+
+The reducer SHALL report JSON validity, argument anchoring, controlled qualifier
+retention, real-example teacher-span overlap, extraction coverage, and latency
+as separate endpoints. All assigned cases SHALL remain in each denominator.
+The eight constructed semantic pairs SHALL remain eight independent units.
+Unknown semantic judgments SHALL remain unknown until Exp7417. No endpoint SHALL
+claim full-system correctness, repair efficacy, or automatic promotion.
+
+`extraction_capture_complete_score` SHALL equal one only when all 96 planned
+dispositions and immutable raw hashes are present, current provenance is
+consistent, CUDA offload is confirmed, affected checks pass, and terminal
+readers pass. Parsing or semantic quality SHALL not control this completion
+score. A complete low-quality capture SHALL be a null finding. Validation
+failure SHALL disqualify the result. The terminal JSON SHALL be written
+atomically only after fresh-process replay, independent reduction, adversarial
+verification, and strict verdict-row consistency checks.
+
+#### SCENARIO-VERIFY-7416-SELECTION: Predictor-Only Hashing Freezes Both Arms
+
+Given authenticated Exp7410 predictor rows and the sealed Exp7412 challenge,
+When the fixed selector builds the schedule before outcomes exist,
+Then it chooses 24 final-test sentences and all 24 challenge cases,
+And each case has both arms with hash-alternated order and no authority leakage.
+
+**Spec traces:** REQ-VERIFY-7416
+
+#### SCENARIO-VERIFY-7416-RAW: Parsing Cannot Change Captured Model Bytes
+
+Given one owned native response for a scheduled call,
+When the capture path records the request and response before parsing,
+Then their byte hashes bind the later extraction row,
+And malformed JSON remains one terminal failed-quality observation without retry.
+
+**Spec traces:** REQ-VERIFY-7416
+
+#### SCENARIO-VERIFY-7416-ENDPOINTS: Span And Meaning Stay Separate
+
+Given complete or failed outputs from both prompt arms,
+When the independent reducer evaluates all assigned cases,
+Then parse validity, anchoring, qualifiers, teacher overlap, coverage, and latency remain separate,
+And missing semantic judgments stay unknown across eight independent pairs.
+
+**Spec traces:** REQ-VERIFY-7416
+
+#### SCENARIO-VERIFY-7416-PROVENANCE: Current CUDA Events Control The Substrate
+
+Given a preflight block, load-only run, or bounded generation run,
+When current owned events and CUDA receipts are reduced,
+Then counts and substrate class match the actual current work,
+And historical calls, CPU fallback, and another owner's process cannot supply evidence.
+
+**Spec traces:** REQ-VERIFY-7416
+
+#### SCENARIO-VERIFY-7416-TERMINAL: Accountable Null Capture Can Complete
+
+Given all 96 dispositions, immutable raw evidence, and required validation,
+When extraction quality is weak or outputs are censored within the fixed budget,
+Then capture completion can remain one while the verdict is null,
+And promotion stays zero without a correctness or repair claim.
+
+**Spec traces:** REQ-VERIFY-7416
+
+## Implementation Status (REQ-VERIFY-7416)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7416 and SCENARIO-VERIFY-7416-* | Planned in a focused experiment module and thin entrypoint that reuse the shipped native runtime and scoped validation helpers. | Planned in focused tests before implementation and one live capability replay. |
