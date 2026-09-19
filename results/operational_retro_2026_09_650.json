@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.650",
+  "generated_at": "2026-09-19T12:53:24Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 10.0,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 11,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure certified memory under source revision and eviction",
+      "duration_minutes": 3.21,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Enforce ARC request budgets at the live callback boundary",
+      "duration_minutes": 1.68,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind twelve tasks and diagnose missing terminal evidence",
+      "duration_minutes": 1.09,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile twelve dispositions and decide each research branch",
+      "duration_minutes": 1.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure continuous energy calibration under selected feedback",
+      "duration_minutes": 0.73,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 11 experiments in 10.0 minutes, and all 11 were compute-bound. The locked record does not classify compute tasks as GPU-idle; task-synchronized telemetry is missing, so accelerator efficiency and runner dispatch cannot be verified.",
+  "bottlenecks_identified": [
+    "The three-minute certified-memory revision-and-eviction run was the critical path, with the two-minute ARC request-budget run next; the supplied timing data contains no phase breakdown explaining either duration.",
+    "Experiment records lack task-window GPU and process correlation, so the available GPU snapshot cannot establish sustained accelerator efficiency.",
+    "No task receipt records concurrent model count or selected runner, so DualGPURunner eligibility cannot be audited."
+  ],
+  "improvements_suggested": [
+    "Emit one task-scoped execution receipt that joins phase timings with sampled GPU utilization, memory, process, and device data.",
+    "Record concurrent model count and runner selection at launch, and dispatch DualGPURunner only when two or more models are loaded in parallel.",
+    "Add scheduling support for placing independent compute-bound work on the otherwise unused second GPU after confirming capacity and process ownership.",
+    "Add phase checkpoints to the certified-memory and ARC request-budget paths so their dominant stages are measurable."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Capture task-aligned phase, GPU, process, device, model-count, and runner evidence in a unified receipt.",
+    "Schedule independent eligible compute work across both GPUs while preserving single-GPU execution for single-model tasks.",
+    "Instrument phase checkpoints in the two longest experiment paths before optimizing them."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstruction is adequate for ranking elapsed tasks but not for causal bottleneck analysis because the GPU snapshot is not joined to experiment windows and model concurrency is unrecorded. Future retrospectives should require joined task receipts before rating utilization or projecting savings."
+}

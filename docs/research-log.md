@@ -6857,3 +6857,10 @@ The critical path for milestone .250:
 - theme: durable ARC evidence collection dominated an all-compute execution window while phase and device telemetry remained unaligned
 - key result: honest operational negative — the duration leader is known, but no data available this milestone explains its internal cost, establishes sustained task-window GPU efficiency, or demonstrates a qualifying parallel-model DualGPURunner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.650
+
+- exp_range: no data available this milestone
+- theme: source-revision memory and callback-budget enforcement set the pace in an all-compute run with unjoined accelerator evidence
+- key result: honest operational negative — elapsed leaders are identifiable, but their phase costs, task-window accelerator efficiency, and any qualifying multi-model runner miss are not established
+- acceptance: no data available this milestone
