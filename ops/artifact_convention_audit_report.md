@@ -9,9 +9,11 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 8 |
+| CHECKABLE | 6 |
+| AGGREGATE_ONLY | 1 |
+| CANNOT_DETERMINE | 1 |
 
-## experiment_7385_v648_decision_training.json
+## experiment_7401_v649_online_audit.json
 
 **CHECKABLE**
 
@@ -19,7 +21,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The calibration value-reduction gate failed, with a score of 0, because `brier_ci_below_both_controls` was false while the other efficacy checks passed.
+The online audit was blocked because two required producer artifacts were missing or unreadable.
 
 ## WHAT IS MISSING
 nothing
@@ -27,7 +29,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7386_v648_online_decisions.json
+## experiment_7402_v649_proposal_capture.json
 
 **CHECKABLE**
 
@@ -35,7 +37,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The acceptance gate was not met because `required_validation`, `independent_safety_readers`, and `online_learning_value` each observed `false` against an expected `true`.
+The experiment was blocked because the `one_owned_rtx3090_slot` precondition failed.
 
 ## WHAT IS MISSING
 nothing
@@ -43,7 +45,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7387_decision_audit.json
+## experiment_7403_v649_synthetic_memory.json
 
 **CHECKABLE**
 
@@ -51,7 +53,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because 3 of 6 upstream gates failed.
+The efficacy gates passed because the reported paid-query and full-cost ratio CI95 upper bounds beat their thresholds against both persistent comparator arms.
 
 ## WHAT IS MISSING
 nothing
@@ -59,7 +61,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7388_proposal_capture.json
+## experiment_7404_live_memory.json
 
 **CHECKABLE**
 
@@ -67,7 +69,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because 4 of 6 prerequisite gates failed.
+The experiment was blocked because 2 of 6 upstream gates failed.
 
 ## WHAT IS MISSING
 nothing
@@ -75,7 +77,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7391_arc_generalization.json
+## experiment_7405_v649_proof_audit.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The synthetic cohort passed the efficacy gate because both persistent methods achieved acceptable aggregate full-cost and paid-query ratio confidence bounds.
+
+## WHAT IS MISSING
+Per-stream or per-formula-family arm-level cost and paid-query measurements underlying `"full_cost_ratio_ci95_upper"` and `"paid_query_ratio_ci95_upper"`; `"erasure_witness_rows"` contains per-request diagnostic booleans but not those comparative metric values.
+
+## THE CHECK A READER CANNOT DO
+Did the reported efficacy hold broadly across the 32 independent stream groups, or was it driven by a few outliers or units with no headroom?
+
+## experiment_7406_v649_arc_generalization.json
 
 **CHECKABLE**
 
@@ -83,7 +101,23 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because all three prerequisite gates failed.
+The experiment was completed but disqualified because required evidence checks failed.
+
+## WHAT IS MISSING
+nothing; `"gate_check_summary.failed_checks"` identifies both failures and records each `"check"`, `"artifact_field"`, `"expected"`, `"observed"`, and `"upstream"` value.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7407_v649_service_cost.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The vectorized NumPy arm provides a positive full-service benefit over the scalar NumPy arm.
 
 ## WHAT IS MISSING
 nothing
@@ -91,50 +125,18 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7392_v648_ising_reduction.json
+## experiment_7408_v649_capstone.json
 
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The reduction was disqualified because `capability_e2e_passed` was false, while exact-law preservation and quality gates for nonempty archived cells passed but the original all-cell gate failed.
-
-## WHAT IS MISSING
-nothing; `"rows"` contains per-unit formula/beta/condition outcomes, and `"gate_check_summary"` identifies the blocking failure with `"check": "capability_e2e_passed"`, `"expected": true`, and `"observed": false`.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7393_v648_hardware_placement.json
-
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
 ## VERDICT
-CHECKABLE
+CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The task is blocked because no qualifying post-Exp6559 GateMate physical-state change was recorded, and incomplete placement-stage measurements support no hardware-speed claim.
+The capstone claims completion with fourteen honest dispositions, while combined scientific benefit was not established and several branches remained blocked.
 
 ## WHAT IS MISSING
-nothing; `"gate_check_summary.failures"`, `"honest_verdict"`, `"board_rows[].error"`, `"placement_envelope_rows[].failed_field"`, and `"observed_value"` identify the failed checks and observed values.
+The artifact is truncated mid-value inside `"field_principles"`, so the actual `"gate_check_summary"` and any per-unit metric rows supporting the positive `"claim_matrix"` entries cannot be found; only summaries such as `"acceptance_gate_results"` and `"continuation_rows"` are visible.
 
 ## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7394_v648_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-All fourteen V648 tasks were accounted for, but required science and validation gates failed, so promotion, deployment, and publication were not authorized.
-
-## WHAT IS MISSING
-nothing; `"disposition_rows"` provides per-task outcomes and `"gate_check_summary.failures"` records the failed checks with expected and observed values.
-
-## THE CHECK A READER CANNOT DO
-none
+Do later, omitted fields contain per-unit evidence showing that the claimed synthetic-memory and host-service benefits were broad effects rather than aggregate results driven by outliers or degenerate controls?

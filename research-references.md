@@ -45366,3 +45366,80 @@ paper. Existing entries and negative results remain authoritative in scope.
   The public description separates language interaction and constraint
   enforcement. No reproducible implementation or calibrated error guarantee
   was established by this check. Use as architectural context only.
+
+## 2026-09-19 — V650 planning source review
+
+Recorded before writing the V650 task contract. Sources below were opened
+in this session. Paper results are external evidence, not Carnot results.
+
+### Selected research directions
+
+| Primary source | Finding and bounded use |
+|---|---|
+| [Enoki, 2609.00581v2](https://arxiv.org/html/2609.00581v2), September 4, 2026 | Keeps extracted relations tied to answer spans. Test explicit source context and span-preserving extraction. Separate omitted arguments and modifiers from valid JSON. Adapt this representation without claiming to replicate Enoki's model stack. |
+| [MARGIN, 2605.22949v3](https://arxiv.org/html/2605.22949v3), July 31, 2026 | Finds simple online calibrators competitive. Forgetting schedules and selected-only feedback matter. Compare adaptive energy with same-information frequency and logistic controls. Selection-dependent feedback needs its own arm; it is not random missingness. |
+| [Online Conformal Prediction with Corrupted Feedback, 2605.20515](https://arxiv.org/abs/2605.20515), May 19, 2026 | Studies corrupted coverage feedback. Add revoked-label and feedback-replay tests. Its prediction-set guarantees do not certify Carnot's selective actions or learned probabilities. |
+| [Memoir, 2607.20792](https://arxiv.org/abs/2607.20792), July 22, 2026, rechecked | Motivates separate memory reads and committed writes. Test source revision and eviction after the existing synthetic implication-memory result. Procedural recall is not formal constraint learning. |
+
+The [author repository](https://github.com/s-nlp/Enoki) links
+[EnokiQA](https://huggingface.co/datasets/s-nlp/EnokiQA). Its API returned revision
+`06638fd6fa5c599f3249e27d1cb489b9bd584411`, with dev/test Parquet files.
+The card identifies machine-generated annotations and CC BY-SA 4.0 licensing.
+These are teacher labels with limited human validation, not exact truth.
+Keep annotation scores and gold triples outside predictor inputs.
+Use a private cache with attribution; avoid committing the roughly 208 MB release.
+This supplies genuine source text where the current FoVer feature study lacks it.
+
+### Required topic sweep
+
+- **EBM verification/reasoning:** rechecked [EBT](https://arxiv.org/abs/2507.02092)
+  and [ARM–EBM](https://arxiv.org/abs/2512.15605). Their energy formulations do
+  not prove that an extracted statement preserves source meaning.
+- **Neural constraint satisfaction:** opened [AS2](https://arxiv.org/abs/2603.18436)
+  and [hard-constrained neural certificates](https://arxiv.org/abs/2602.23526).
+  Soft consistency and exact certificates need separate acceptance criteria.
+- **Ising applications:** rechecked [Thermodynamic learning](https://arxiv.org/abs/2609.04732)
+  and [learning-to-sample hardness](https://arxiv.org/abs/2605.24752).
+  Parameter fitting, faithful sampling, and satisfiability remain different targets.
+- **Hallucination detection:** selected Enoki. Also checked
+  [density-ridge selective prediction](https://arxiv.org/abs/2606.10198).
+  Its hidden-state trajectories need authenticated representation access.
+  Text statistics cannot substitute for that input.
+- **KANs:** rechecked [KAC](https://arxiv.org/abs/2503.21076) and
+  [KAN calibration](https://arxiv.org/abs/2503.01195). Defer a spline sweep
+  until source information improves the simple calibrated energy baseline.
+- **Energy-guided generation:** rechecked [ETS](https://arxiv.org/abs/2601.21484).
+  Account for cost and distribution changes. No retired ranker is reopened.
+- **Hardware sampling:** rechecked [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985).
+  Measure full service cost and numeric decision stability before a device port.
+- **Continual learning:** selected delayed/selected-feedback controls above.
+  Exact proof invalidation and statistical recalibration need separate evidence.
+
+### Secondary sources and access results
+
+- **OpenReview:** searched 2025–2026 ICLR/ICML/NeurIPS EBM work. The current
+  [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) and PDF redirected to
+  a browser challenge. Indexed submission excerpts were available. This pass
+  does not claim a full review of inaccessible submissions.
+- **Semantic Scholar:** Graph API calls returned HTTP 200 for
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=20)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=20).
+  EBT returned 20 entries and another-page pointer; ARM–EBM returned eight.
+  This is a partial citation walk. Opened
+  [energy/reconstruction complementarity](https://arxiv.org/abs/2608.14186),
+  [safe distillation](https://arxiv.org/abs/2606.03089), Memoir, and
+  [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047).
+  Retain complementarity and distribution-collapse controls as background.
+- **Hugging Face Papers:** opened [Enoki](https://huggingface.co/papers/2609.00581),
+  then checked its paper, author repository, dataset card, and revision API.
+- **GitHub trending:** opened [weekly Python](https://github.com/trending/python?since=weekly)
+  and [monthly Rust](https://github.com/trending/rust?since=monthly). No new
+  EBM/constraint/KAN dependency was selected from the returned lists.
+  Enoki was author-linked; this review does not call it trending.
+- **Extropic:** opened [writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t), dated September 4, 2026.
+  The index exposed navigation. The article describes sparse probabilistic
+  hardware co-design. Vendor efficiency claims are not local measurements.
+- **Logical Intelligence:** opened [Kona](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  Its public language/energy separation remains architectural context.
+  No reproducible local implementation or new hardware access was established.
