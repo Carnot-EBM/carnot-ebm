@@ -74542,3 +74542,98 @@ consistency SHALL pass on the exact candidate before atomic publication.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7420 and SCENARIO-REPORT-7420-* | Implemented: V650 host capstone reducer, thin entrypoint, exact twelve-row accounting, and nine branch claims | Verified by spec-linked tests, 100 percent changed-module coverage, exact affected checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V651 contract and method ingestion — 2026-09-19
+
+**Status:** Specified. This host aggregation performs no model inference,
+training, board operation, or scientific promotion.
+
+### REQ-REPORT-7421: Audit the thirteen-task authority and ingest bounded methods
+
+Exp7421 SHALL parse the single Markdown Exact Task Contract and the active YAML
+with the shipped generic parsers. A ready contract SHALL contain milestone
+`2026.09.651` and exactly thirteen ordered tasks from Exp7421 through Exp7433.
+Both authorities SHALL agree on titles, paths, phases, substrate classes, and
+structured gates. Every consumed producer field SHALL be declared in its
+producer prompt. Private controls SHALL reject changed count, order, milestone,
+producer fields, and quarantine status. A stale or absent Markdown authority
+SHALL fail contract readiness without blocking independent science.
+
+Exp7421 SHALL authenticate every V650 terminal artifact and the Exp7417
+conductor pre-gate record. It SHALL bind byte hashes, original verdict classes,
+adversarial flags, and failed gate operands. The prior disposition rows SHALL
+retain the five negative labels among 149 online groups, the zero-call GPU
+dictionary-equality block, and the Exp7411 typed invocation conflict. The
+completion ledger SHALL remain unchanged. Its V650 end state SHALL be reported
+as ledger lag and SHALL not reopen completed work.
+
+Exp7421 SHALL make a fresh bounded access check for at most eight declared
+sources from the dated V651 review. Access failure is a result. The rows SHALL
+include Semantic Scholar citation access. Method mappings SHALL connect spline
+locality, randomized partial feedback, and claim attribution to exact V651
+tests and limits. The ingestion note SHALL state that an additive spline energy
+logit is logistic regression on the same fixed basis. The note SHALL defer
+unchanged proof memory, external-text reranking, generic Ising sweeps, and
+foundation-model training. It SHALL leave G1 through G4 unchanged.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. It SHALL record that no small energy model trained.
+Archived and scripted model events SHALL remain typed, hash-bound historical
+evidence. `promotion_score` SHALL remain zero. `contract_ready_score` SHALL be
+one only for the exact matching thirteen-row contract. Method ingestion SHALL
+not depend on that score.
+
+The terminal artifact SHALL use ordinary top-level fields. It SHALL include
+actual UTC boundaries, monotonic duration, phase spans, preconditions, source
+hashes, all comparative rows, sample budgets, categorized gates, exact blocker
+operands, validation receipts, field principles, and a checksum. Completed
+accounting with a failed contract authority SHALL use a complete disqualified
+verdict. Unavailable external access SHALL remain a bounded access outcome and
+SHALL not become retryable partial work.
+
+The affected command plan SHALL come from Exp7358 and execute through Exp7303.
+It SHALL use worktree imports, focused pytest with `-n 0 -o addopts= --no-cov`
+and a private existing base-temp parent, separate 100 percent changed-module
+coverage, scoped Ruff check and format, changed-module mypy, and exact-test
+specification coverage. It SHALL preserve command-local `COVERAGE_FILE` and
+SHALL not launch the full Python suite from the experiment.
+
+No numbered end-to-end check applies. The declared entrypoint and a fresh
+process cold replay are the capability end-to-end checks. Independent raw-row
+reduction, adversarial verification, and strict verdict-row consistency SHALL
+pass before atomic publication.
+
+#### SCENARIO-REPORT-7421-CONTRACT: Independent contract authorities fail closed
+
+**Given** the active V651 YAML and the declared Markdown authority
+**When** generic parsers compare every ordered task and structured gate
+**Then** readiness is one only for thirteen exact rows from Exp7421 through Exp7433
+**And** count, order, milestone, producer-field, quarantine, or stale-authority defects fail.
+
+#### SCENARIO-REPORT-7421-PRIORS: V650 dispositions remain unchanged
+
+**Given** the V650 artifacts and the Exp7417 pre-gate record
+**When** Exp7421 reduces their authenticated bytes
+**Then** static and online nulls, blocked extraction, and flagged ARC evidence keep their original classes
+**And** five negative groups, zero Qwen calls, typed invocation conflict, and ledger lag remain explicit.
+
+#### SCENARIO-REPORT-7421-METHODS: Source access cannot promote a method
+
+**Given** at most eight selected primary or citation endpoints
+**When** the ingestion records fresh access states and exact method mappings
+**Then** source failure remains visible and successful access does not establish Carnot benefit
+**And** spline, partial-feedback, and attribution mappings retain their declared limits.
+
+#### SCENARIO-REPORT-7421-ARTIFACT: Scoped readers control atomic publication
+
+**Given** source hashes, raw rows, method rows, and the frozen affected plan
+**When** fresh processes replay, reduce, adversarially verify, and run strict row consistency
+**Then** identity, source, order, class, gate, score, principle, or checksum drift fails
+**And** only a valid terminal JSON is published atomically.
+
+## Implementation Status (REQ-REPORT-7421)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7421 and SCENARIO-REPORT-7421-* | Implemented: V651 host contract and method-ingestion reducer, thin entrypoint, research note, and terminal artifact | Verified by spec-linked tests and 100 percent changed-module coverage; the declared entrypoint runs exact affected checks, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage |

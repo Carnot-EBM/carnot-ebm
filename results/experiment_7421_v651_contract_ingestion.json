@@ -1,0 +1,5228 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "accounting",
+      "check": "contract_match",
+      "expected": true,
+      "observed": false,
+      "operator": "==",
+      "passed": false,
+      "principle": "Both independent authorities must contain the exact thirteen rows."
+    },
+    {
+      "category": "safety",
+      "check": "contract_mutations",
+      "expected": 5,
+      "observed": 5,
+      "operator": "==",
+      "passed": true,
+      "principle": "Every named private defect must fail closed."
+    },
+    {
+      "category": "historical_evidence",
+      "check": "v650_dispositions",
+      "expected": 12,
+      "observed": 12,
+      "operator": "==",
+      "passed": true,
+      "principle": "Every V650 task keeps its original terminal class and flag."
+    },
+    {
+      "category": "methodology",
+      "check": "method_ingestion",
+      "expected": 1,
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "principle": "Bounded access, mappings, and basis equivalence must all complete."
+    },
+    {
+      "category": "required_validation",
+      "check": "affected_validation",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "The frozen file-scoped command plan controls implementation validity."
+    },
+    {
+      "category": "required_validation",
+      "check": "terminal_validation",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Cold replay and strict readers control terminal publication."
+    },
+    {
+      "category": "promotion",
+      "check": "promotion",
+      "expected": 0,
+      "observed": 0,
+      "operator": "==",
+      "passed": true,
+      "principle": "Advisory accounting cannot promote science or change weights."
+    }
+  ],
+  "completion_ledger_lag": {
+    "changed_by_experiment": false,
+    "expected_current_milestone": "2026.09.651",
+    "lag": true,
+    "latest_milestone": "2026.09.650",
+    "path": "research-complete.yaml"
+  },
+  "contract_comparison": {
+    "contract_rows": [
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": true,
+          "id": false,
+          "phase": true,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": true,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable"
+        ],
+        "markdown": {
+          "deliverable": "results/experiment_7409_v650_evidence_custody.json",
+          "gates": [],
+          "id": "exp7409-evidence-custody",
+          "order": 1,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Bind twelve tasks and diagnose missing terminal evidence"
+        },
+        "order": 1,
+        "passed": false,
+        "producer_declarations": [],
+        "unit_id": "exp7421-contract-ingestion",
+        "yaml": {
+          "deliverable": "results/experiment_7421_v651_contract_ingestion.json",
+          "gates": [],
+          "id": "exp7421-contract-ingestion",
+          "order": 1,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Bind thirteen tasks and ingest methods against V650 evidence"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": true,
+          "id": false,
+          "phase": true,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": true,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable"
+        ],
+        "markdown": {
+          "deliverable": "results/experiment_7410_v650_source_corpus.json",
+          "gates": [],
+          "id": "exp7410-source-corpus",
+          "order": 2,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Seal an attributed source-context calibration corpus"
+        },
+        "order": 2,
+        "passed": false,
+        "producer_declarations": [],
+        "unit_id": "exp7422-runtime-ownership",
+        "yaml": {
+          "deliverable": "results/experiment_7422_v651_runtime_ownership.json",
+          "gates": [],
+          "id": "exp7422-runtime-ownership",
+          "order": 2,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Repair GPU capacity checks and prove one owned lease"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": true,
+          "id": false,
+          "phase": true,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": true,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable"
+        ],
+        "markdown": {
+          "deliverable": "results/experiment_7411_v650_arc_call_budget.json",
+          "gates": [],
+          "id": "exp7411-arc-call-budget",
+          "order": 3,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Enforce ARC request budgets at the live callback boundary"
+        },
+        "order": 3,
+        "passed": false,
+        "producer_declarations": [],
+        "unit_id": "exp7423-annotated-protocol",
+        "yaml": {
+          "deliverable": "results/experiment_7423_v651_annotated_protocol.json",
+          "gates": [],
+          "id": "exp7423-annotated-protocol",
+          "order": 3,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Seal human-annotated source groups and calibration partitions"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": true,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "gates"
+        ],
+        "markdown": {
+          "deliverable": "results/experiment_7412_v650_source_features.json",
+          "gates": [
+            {
+              "artifact_field": "source_corpus_ready_score",
+              "op": "==",
+              "upstream": "exp7410-source-corpus",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7410-source-corpus",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7410-source-corpus",
+              "value": false
+            }
+          ],
+          "id": "exp7412-source-features",
+          "order": 4,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Prototype source-aware energy inputs and freeze decision tests"
+        },
+        "order": 4,
+        "passed": false,
+        "producer_declarations": [],
+        "unit_id": "exp7424-arc-receipt-boundary",
+        "yaml": {
+          "deliverable": "results/experiment_7424_v651_arc_receipt_boundary.json",
+          "gates": [],
+          "id": "exp7424-arc-receipt-boundary",
+          "order": 4,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Qualify ARC request accounting with isolated scripted evidence"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": true,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "gates"
+        ],
+        "markdown": {
+          "deliverable": "results/experiment_7413_v650_source_calibration.json",
+          "gates": [
+            {
+              "artifact_field": "source_feature_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7412-source-features",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": false
+            }
+          ],
+          "id": "exp7413-source-calibration",
+          "order": 5,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure source-grounded Gibbs calibration against simple controls"
+        },
+        "order": 5,
+        "passed": false,
+        "producer_declarations": [],
+        "unit_id": "exp7425-spline-prototype",
+        "yaml": {
+          "deliverable": "results/experiment_7425_v651_spline_prototype.json",
+          "gates": [],
+          "id": "exp7425-spline-prototype",
+          "order": 5,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Prototype sparse local energy updates with dense-basis parity"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": true,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "gates"
+        ],
+        "markdown": {
+          "deliverable": "results/experiment_7414_v650_selected_feedback.json",
+          "gates": [
+            {
+              "artifact_field": "source_feature_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7412-source-features",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": false
+            }
+          ],
+          "id": "exp7414-selected-feedback",
+          "order": 6,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure continuous energy calibration under selected feedback"
+        },
+        "order": 6,
+        "passed": false,
+        "producer_declarations": [
+          {
+            "artifact_field": "annotated_protocol_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7423-annotated-protocol"
+          },
+          {
+            "artifact_field": "verdict_class",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7423-annotated-protocol"
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7423-annotated-protocol"
+          },
+          {
+            "artifact_field": "spline_prototype_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7425-spline-prototype"
+          },
+          {
+            "artifact_field": "verdict_class",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7425-spline-prototype"
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7425-spline-prototype"
+          }
+        ],
+        "unit_id": "exp7426-static-decisions",
+        "yaml": {
+          "deliverable": "results/experiment_7426_v651_static_decisions.json",
+          "gates": [
+            {
+              "artifact_field": "annotated_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7423-annotated-protocol",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7423-annotated-protocol",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7423-annotated-protocol",
+              "value": false
+            },
+            {
+              "artifact_field": "spline_prototype_ready_score",
+              "op": "==",
+              "upstream": "exp7425-spline-prototype",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7425-spline-prototype",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7425-spline-prototype",
+              "value": false
+            }
+          ],
+          "id": "exp7426-static-decisions",
+          "order": 6,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure calibrated Gibbs and spline decisions on human source labels"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": false,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "substrate",
+          "gates"
+        ],
+        "markdown": {
+          "deliverable": "results/experiment_7415_v650_decision_audit.json",
+          "gates": [],
+          "id": "exp7415-decision-audit",
+          "order": 7,
+          "phase": 2,
+          "substrate": "aggregation",
+          "title": "Independently audit calibrated decisions and feedback causality"
+        },
+        "order": 7,
+        "passed": false,
+        "producer_declarations": [
+          {
+            "artifact_field": "decision_capture_complete_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7426-static-decisions"
+          },
+          {
+            "artifact_field": "verdict_class",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7426-static-decisions"
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7426-static-decisions"
+          }
+        ],
+        "unit_id": "exp7427-randomized-feedback",
+        "yaml": {
+          "deliverable": "results/experiment_7427_v651_randomized_feedback.json",
+          "gates": [
+            {
+              "artifact_field": "decision_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7426-static-decisions",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7426-static-decisions",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7426-static-decisions",
+              "value": false
+            }
+          ],
+          "id": "exp7427-randomized-feedback",
+          "order": 7,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure continuous local learning under randomized label audits"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": false,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": false,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates"
+        ],
+        "markdown": {
+          "deliverable": "results/experiment_7416_v650_anchored_extraction.json",
+          "gates": [
+            {
+              "artifact_field": "source_feature_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7412-source-features",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7412-source-features",
+              "value": false
+            }
+          ],
+          "id": "exp7416-anchored-extraction",
+          "order": 8,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Compare bounded Qwen claim extraction with preserved source spans"
+        },
+        "order": 8,
+        "passed": false,
+        "producer_declarations": [],
+        "unit_id": "exp7428-decision-audit",
+        "yaml": {
+          "deliverable": "results/experiment_7428_v651_decision_audit.json",
+          "gates": [],
+          "id": "exp7428-decision-audit",
+          "order": 8,
+          "phase": 2,
+          "substrate": "aggregation",
+          "title": "Independently test source-label leakage and learning causality"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": false,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "substrate",
+          "gates"
+        ],
+        "markdown": {
+          "deliverable": "results/experiment_7417_v650_extraction_audit.json",
+          "gates": [
+            {
+              "artifact_field": "extraction_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7416-anchored-extraction",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7416-anchored-extraction",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7416-anchored-extraction",
+              "value": false
+            }
+          ],
+          "id": "exp7417-extraction-audit",
+          "order": 9,
+          "phase": 3,
+          "substrate": "aggregation",
+          "title": "Audit extraction coverage and semantic preservation independently"
+        },
+        "order": 9,
+        "passed": false,
+        "producer_declarations": [
+          {
+            "artifact_field": "runtime_ownership_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7422-runtime-ownership"
+          },
+          {
+            "artifact_field": "verdict_class",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7422-runtime-ownership"
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7422-runtime-ownership"
+          }
+        ],
+        "unit_id": "exp7429-anchored-capture",
+        "yaml": {
+          "deliverable": "results/experiment_7429_v651_anchored_capture.json",
+          "gates": [
+            {
+              "artifact_field": "runtime_ownership_ready_score",
+              "op": "==",
+              "upstream": "exp7422-runtime-ownership",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7422-runtime-ownership",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7422-runtime-ownership",
+              "value": false
+            }
+          ],
+          "id": "exp7429-anchored-capture",
+          "order": 9,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Capture the sealed Qwen span comparison after lease repair"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": false,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "substrate",
+          "gates"
+        ],
+        "markdown": {
+          "deliverable": "results/experiment_7418_v650_revision_memory.json",
+          "gates": [],
+          "id": "exp7418-revision-memory",
+          "order": 10,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Measure certified memory under source revision and eviction"
+        },
+        "order": 10,
+        "passed": false,
+        "producer_declarations": [
+          {
+            "artifact_field": "extraction_capture_complete_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7429-anchored-capture"
+          },
+          {
+            "artifact_field": "verdict_class",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7429-anchored-capture"
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7429-anchored-capture"
+          }
+        ],
+        "unit_id": "exp7430-extraction-audit",
+        "yaml": {
+          "deliverable": "results/experiment_7430_v651_extraction_audit.json",
+          "gates": [
+            {
+              "artifact_field": "extraction_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7429-anchored-capture",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7429-anchored-capture",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7429-anchored-capture",
+              "value": false
+            }
+          ],
+          "id": "exp7430-extraction-audit",
+          "order": 10,
+          "phase": 3,
+          "substrate": "aggregation",
+          "title": "Audit Qwen claim coverage and qualifier preservation from raw replies"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": false,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": false,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates"
+        ],
+        "markdown": {
+          "deliverable": "results/experiment_7419_v650_precision_placement.json",
+          "gates": [],
+          "id": "exp7419-precision-placement",
+          "order": 11,
+          "phase": 4,
+          "substrate": "no_model_load",
+          "title": "Measure decision stability at reduced precision and preserve board states"
+        },
+        "order": 11,
+        "passed": false,
+        "producer_declarations": [
+          {
+            "artifact_field": "runtime_ownership_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7422-runtime-ownership"
+          },
+          {
+            "artifact_field": "verdict_class",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7422-runtime-ownership"
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7422-runtime-ownership"
+          },
+          {
+            "artifact_field": "arc_receipt_boundary_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7424-arc-receipt-boundary"
+          },
+          {
+            "artifact_field": "verdict_class",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7424-arc-receipt-boundary"
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "declared_verbatim": true,
+            "passed": true,
+            "producer_precedes_consumer": true,
+            "upstream": "exp7424-arc-receipt-boundary"
+          }
+        ],
+        "unit_id": "exp7431-arc-live-sentinel",
+        "yaml": {
+          "deliverable": "results/experiment_7431_v651_arc_live_sentinel.json",
+          "gates": [
+            {
+              "artifact_field": "runtime_ownership_ready_score",
+              "op": "==",
+              "upstream": "exp7422-runtime-ownership",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7422-runtime-ownership",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7422-runtime-ownership",
+              "value": false
+            },
+            {
+              "artifact_field": "arc_receipt_boundary_ready_score",
+              "op": "==",
+              "upstream": "exp7424-arc-receipt-boundary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7424-arc-receipt-boundary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7424-arc-receipt-boundary",
+              "value": false
+            }
+          ],
+          "id": "exp7431-arc-live-sentinel",
+          "order": 11,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Measure owned callback reachability in two adapter-withheld ARC episodes"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": true,
+          "id": false,
+          "phase": true,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": false,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "substrate"
+        ],
+        "markdown": {
+          "deliverable": "results/experiment_7420_v650_capstone.json",
+          "gates": [],
+          "id": "exp7420-capstone",
+          "order": 12,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Reconcile twelve dispositions and decide each research branch"
+        },
+        "order": 12,
+        "passed": false,
+        "producer_declarations": [],
+        "unit_id": "exp7432-update-placement",
+        "yaml": {
+          "deliverable": "results/experiment_7432_v651_update_placement.json",
+          "gates": [],
+          "id": "exp7432-update-placement",
+          "order": 12,
+          "phase": 4,
+          "substrate": "no_model_load",
+          "title": "Measure fixed-point local updates and preserve board prerequisites"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": false,
+          "producer_fields": true,
+          "quarantine_status": true,
+          "substrate": false,
+          "title": false
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates"
+        ],
+        "markdown": null,
+        "order": 13,
+        "passed": false,
+        "producer_declarations": [],
+        "unit_id": "exp7433-capstone",
+        "yaml": {
+          "deliverable": "results/experiment_7433_v651_capstone.json",
+          "gates": [],
+          "id": "exp7433-capstone",
+          "order": 13,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Reconcile thirteen dispositions and decide calibrated-learning continuation"
+        }
+      }
+    ],
+    "errors": [
+      "markdown_milestone",
+      "markdown_task_order",
+      "markdown_task_count",
+      "row_mismatch"
+    ],
+    "markdown_milestone": "2026.09.650",
+    "markdown_task_rows": [
+      {
+        "deliverable": "results/experiment_7409_v650_evidence_custody.json",
+        "gates": [],
+        "id": "exp7409-evidence-custody",
+        "order": 1,
+        "phase": 1,
+        "substrate": "aggregation",
+        "title": "Bind twelve tasks and diagnose missing terminal evidence"
+      },
+      {
+        "deliverable": "results/experiment_7410_v650_source_corpus.json",
+        "gates": [],
+        "id": "exp7410-source-corpus",
+        "order": 2,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Seal an attributed source-context calibration corpus"
+      },
+      {
+        "deliverable": "results/experiment_7411_v650_arc_call_budget.json",
+        "gates": [],
+        "id": "exp7411-arc-call-budget",
+        "order": 3,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Enforce ARC request budgets at the live callback boundary"
+      },
+      {
+        "deliverable": "results/experiment_7412_v650_source_features.json",
+        "gates": [
+          {
+            "artifact_field": "source_corpus_ready_score",
+            "op": "==",
+            "upstream": "exp7410-source-corpus",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7410-source-corpus",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7410-source-corpus",
+            "value": false
+          }
+        ],
+        "id": "exp7412-source-features",
+        "order": 4,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Prototype source-aware energy inputs and freeze decision tests"
+      },
+      {
+        "deliverable": "results/experiment_7413_v650_source_calibration.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7413-source-calibration",
+        "order": 5,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure source-grounded Gibbs calibration against simple controls"
+      },
+      {
+        "deliverable": "results/experiment_7414_v650_selected_feedback.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7414-selected-feedback",
+        "order": 6,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure continuous energy calibration under selected feedback"
+      },
+      {
+        "deliverable": "results/experiment_7415_v650_decision_audit.json",
+        "gates": [],
+        "id": "exp7415-decision-audit",
+        "order": 7,
+        "phase": 2,
+        "substrate": "aggregation",
+        "title": "Independently audit calibrated decisions and feedback causality"
+      },
+      {
+        "deliverable": "results/experiment_7416_v650_anchored_extraction.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7416-anchored-extraction",
+        "order": 8,
+        "phase": 3,
+        "substrate": "model_bounded_generation",
+        "title": "Compare bounded Qwen claim extraction with preserved source spans"
+      },
+      {
+        "deliverable": "results/experiment_7417_v650_extraction_audit.json",
+        "gates": [
+          {
+            "artifact_field": "extraction_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7416-anchored-extraction",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7416-anchored-extraction",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7416-anchored-extraction",
+            "value": false
+          }
+        ],
+        "id": "exp7417-extraction-audit",
+        "order": 9,
+        "phase": 3,
+        "substrate": "aggregation",
+        "title": "Audit extraction coverage and semantic preservation independently"
+      },
+      {
+        "deliverable": "results/experiment_7418_v650_revision_memory.json",
+        "gates": [],
+        "id": "exp7418-revision-memory",
+        "order": 10,
+        "phase": 3,
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Measure certified memory under source revision and eviction"
+      },
+      {
+        "deliverable": "results/experiment_7419_v650_precision_placement.json",
+        "gates": [],
+        "id": "exp7419-precision-placement",
+        "order": 11,
+        "phase": 4,
+        "substrate": "no_model_load",
+        "title": "Measure decision stability at reduced precision and preserve board states"
+      },
+      {
+        "deliverable": "results/experiment_7420_v650_capstone.json",
+        "gates": [],
+        "id": "exp7420-capstone",
+        "order": 12,
+        "phase": 4,
+        "substrate": "aggregation",
+        "title": "Reconcile twelve dispositions and decide each research branch"
+      }
+    ],
+    "passed": false,
+    "yaml_milestone": "2026.09.651",
+    "yaml_task_rows": [
+      {
+        "deliverable": "results/experiment_7421_v651_contract_ingestion.json",
+        "gates": [],
+        "id": "exp7421-contract-ingestion",
+        "order": 1,
+        "phase": 1,
+        "substrate": "aggregation",
+        "title": "Bind thirteen tasks and ingest methods against V650 evidence"
+      },
+      {
+        "deliverable": "results/experiment_7422_v651_runtime_ownership.json",
+        "gates": [],
+        "id": "exp7422-runtime-ownership",
+        "order": 2,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Repair GPU capacity checks and prove one owned lease"
+      },
+      {
+        "deliverable": "results/experiment_7423_v651_annotated_protocol.json",
+        "gates": [],
+        "id": "exp7423-annotated-protocol",
+        "order": 3,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Seal human-annotated source groups and calibration partitions"
+      },
+      {
+        "deliverable": "results/experiment_7424_v651_arc_receipt_boundary.json",
+        "gates": [],
+        "id": "exp7424-arc-receipt-boundary",
+        "order": 4,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Qualify ARC request accounting with isolated scripted evidence"
+      },
+      {
+        "deliverable": "results/experiment_7425_v651_spline_prototype.json",
+        "gates": [],
+        "id": "exp7425-spline-prototype",
+        "order": 5,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Prototype sparse local energy updates with dense-basis parity"
+      },
+      {
+        "deliverable": "results/experiment_7426_v651_static_decisions.json",
+        "gates": [
+          {
+            "artifact_field": "annotated_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7423-annotated-protocol",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7423-annotated-protocol",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7423-annotated-protocol",
+            "value": false
+          },
+          {
+            "artifact_field": "spline_prototype_ready_score",
+            "op": "==",
+            "upstream": "exp7425-spline-prototype",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7425-spline-prototype",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7425-spline-prototype",
+            "value": false
+          }
+        ],
+        "id": "exp7426-static-decisions",
+        "order": 6,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure calibrated Gibbs and spline decisions on human source labels"
+      },
+      {
+        "deliverable": "results/experiment_7427_v651_randomized_feedback.json",
+        "gates": [
+          {
+            "artifact_field": "decision_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7426-static-decisions",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7426-static-decisions",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7426-static-decisions",
+            "value": false
+          }
+        ],
+        "id": "exp7427-randomized-feedback",
+        "order": 7,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure continuous local learning under randomized label audits"
+      },
+      {
+        "deliverable": "results/experiment_7428_v651_decision_audit.json",
+        "gates": [],
+        "id": "exp7428-decision-audit",
+        "order": 8,
+        "phase": 2,
+        "substrate": "aggregation",
+        "title": "Independently test source-label leakage and learning causality"
+      },
+      {
+        "deliverable": "results/experiment_7429_v651_anchored_capture.json",
+        "gates": [
+          {
+            "artifact_field": "runtime_ownership_ready_score",
+            "op": "==",
+            "upstream": "exp7422-runtime-ownership",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7422-runtime-ownership",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7422-runtime-ownership",
+            "value": false
+          }
+        ],
+        "id": "exp7429-anchored-capture",
+        "order": 9,
+        "phase": 3,
+        "substrate": "model_bounded_generation",
+        "title": "Capture the sealed Qwen span comparison after lease repair"
+      },
+      {
+        "deliverable": "results/experiment_7430_v651_extraction_audit.json",
+        "gates": [
+          {
+            "artifact_field": "extraction_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7429-anchored-capture",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7429-anchored-capture",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7429-anchored-capture",
+            "value": false
+          }
+        ],
+        "id": "exp7430-extraction-audit",
+        "order": 10,
+        "phase": 3,
+        "substrate": "aggregation",
+        "title": "Audit Qwen claim coverage and qualifier preservation from raw replies"
+      },
+      {
+        "deliverable": "results/experiment_7431_v651_arc_live_sentinel.json",
+        "gates": [
+          {
+            "artifact_field": "runtime_ownership_ready_score",
+            "op": "==",
+            "upstream": "exp7422-runtime-ownership",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7422-runtime-ownership",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7422-runtime-ownership",
+            "value": false
+          },
+          {
+            "artifact_field": "arc_receipt_boundary_ready_score",
+            "op": "==",
+            "upstream": "exp7424-arc-receipt-boundary",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7424-arc-receipt-boundary",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7424-arc-receipt-boundary",
+            "value": false
+          }
+        ],
+        "id": "exp7431-arc-live-sentinel",
+        "order": 11,
+        "phase": 3,
+        "substrate": "model_bounded_generation",
+        "title": "Measure owned callback reachability in two adapter-withheld ARC episodes"
+      },
+      {
+        "deliverable": "results/experiment_7432_v651_update_placement.json",
+        "gates": [],
+        "id": "exp7432-update-placement",
+        "order": 12,
+        "phase": 4,
+        "substrate": "no_model_load",
+        "title": "Measure fixed-point local updates and preserve board prerequisites"
+      },
+      {
+        "deliverable": "results/experiment_7433_v651_capstone.json",
+        "gates": [],
+        "id": "exp7433-capstone",
+        "order": 13,
+        "phase": 4,
+        "substrate": "aggregation",
+        "title": "Reconcile thirteen dispositions and decide calibrated-learning continuation"
+      }
+    ]
+  },
+  "contract_mutation_rows": [
+    {
+      "mutation": "count",
+      "rejected": true
+    },
+    {
+      "mutation": "order",
+      "rejected": true
+    },
+    {
+      "mutation": "milestone",
+      "rejected": true
+    },
+    {
+      "mutation": "missing_producer_field",
+      "rejected": true
+    },
+    {
+      "mutation": "quarantine_status",
+      "rejected": true
+    }
+  ],
+  "contract_ready_score": 0,
+  "current_invocation_events": [],
+  "deferred_ideas": [
+    "unchanged proof memory",
+    "external-text reranking",
+    "generic Ising sweeps",
+    "foundation-model training"
+  ],
+  "duration_s": 78.82081206189469,
+  "ended_at_utc": "2026-09-19T14:57:29.693648+00:00",
+  "execution_venue": "host",
+  "experiment_id": "exp7421-contract-ingestion",
+  "field_principles": {
+    "MODEL_SPECS": "Every current LLM would use unsloth/Qwen3.8-27B-GGUF; this run uses none.",
+    "acceptance_gate_results": "Every gate has category, operator, expected, observed, passed, and principle fields.",
+    "completion_ledger_lag": "Record the measured V651 value for completion ledger lag.",
+    "contract_comparison": "Record the measured V651 value for contract comparison.",
+    "contract_mutation_rows": "Record the measured V651 value for contract mutation rows.",
+    "contract_ready_score": "One requires the exact matching thirteen-row contract and remains advisory.",
+    "current_invocation_events": "Record the measured V651 value for current invocation events.",
+    "deferred_ideas": "Record the measured V651 value for deferred ideas.",
+    "duration_s": "Measured current work separates validation, source access, and cold-reader durations through phase spans.",
+    "ended_at_utc": "Record the measured V651 value for ended at utc.",
+    "execution_venue": "The closed venue is host; CPU, CUDA, and board identities are separate details.",
+    "experiment_id": "Record the measured V651 value for experiment id.",
+    "field_principles": "Principles stay separate from ordinary scalar and collection values.",
+    "flagged_adversarial": "Critical producer flags stay visible and cannot supply scientific readiness.",
+    "gate_check_summary": "Each failure names exact upstream, path, check, field, expected, and observed values.",
+    "honest_verdict": "Completed findings start complete_; invalid contract evidence is disqualified.",
+    "inference_substrate": "A truthful string names aggregation; device details stay separate.",
+    "inference_substrate_class": "The aggregation class describes current compute, not historical inference.",
+    "inference_substrate_details": "Record the measured V651 value for inference substrate details.",
+    "invocation_counts": "Owned current load and generation attempts, completions, failures, cancellations, and in-flight counts stay exact.",
+    "method_ingestion_complete_score": "Record the measured V651 value for method ingestion complete score.",
+    "method_mapping_rows": "Primary URLs, versions, access states, tests, and method limits remain explicit.",
+    "milestone": "Record the measured V651 value for milestone.",
+    "model_invoked": "Only actual current attempted model use can make this true.",
+    "phase": "Record the measured V651 value for phase.",
+    "phase_spans": "Real phase boundaries include flushed progress, completed units, and resumable checkpoints.",
+    "preconditions_checked": "Exact resource, path, identity, and observed values precede dependent work.",
+    "prior_dispositions": "Original V650 classes, missing paths, flags, and failed gates remain unchanged.",
+    "promotion_score": "This is always zero; no rollout, publication, or generator update follows.",
+    "publication_gate_definitions_changed": "Record the measured V651 value for publication gate definitions changed.",
+    "random_seed": "Only deterministic contract and basis controls use frozen seeds.",
+    "repository_health": "Record the measured V651 value for repository health.",
+    "reproducibility_checksum": "The checksum binds code, protocol, inputs, rows, and validation scope.",
+    "rows": "All contract, prior, access, method, and equivalence units remain visible.",
+    "run_date": "Use 20260919 with actual UTC start and end plus monotonic timing.",
+    "sample_size_budget": "Planned, attempted, completed, failed, censored, unstarted, groups, and stop rule stay separate.",
+    "schema": "Versioned plain top-level schema, experiment_id, milestone, and terminal status identify this receipt.",
+    "small_ebm_training": "Record the measured V651 value for small ebm training.",
+    "source_access_rows": "Record the measured V651 value for source access rows.",
+    "source_artifact_hashes": "Exact input hashes retain original V650 classes and flags.",
+    "spline_logit_equivalence": "Record the measured V651 value for spline logit equivalence.",
+    "started_at_utc": "Record the measured V651 value for started at utc.",
+    "status": "Record the measured V651 value for status.",
+    "task_contract_rows": "All thirteen comparison slots retain independently parsed authorities.",
+    "validation_receipts": "Exact scoped arguments, environments, exits, durations, names, and hashed logs support the run.",
+    "verdict_class": "The closed class is positive, circular_positive, null, blocked, disqualified, or partial.",
+    "verifier_is_oracle": "The audit does not share scientific correctness authority."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "all_required_checks_passed": false,
+    "failed_checks": [
+      {
+        "check": "contract_milestone",
+        "expected": "2026.09.651",
+        "field": "milestone",
+        "observed": "2026.09.650",
+        "operator": "==",
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "upstream": "exact_task_contract"
+      }
+    ],
+    "first_failure": {
+      "check": "contract_milestone",
+      "expected": "2026.09.651",
+      "field": "milestone",
+      "observed": "2026.09.650",
+      "operator": "==",
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "upstream": "exact_task_contract"
+    }
+  },
+  "honest_verdict": "complete_disqualified_stale_markdown_contract_with_method_ingestion",
+  "inference_substrate": "aggregation_from_exact_declared_artifacts",
+  "inference_substrate_class": "aggregation",
+  "inference_substrate_details": {
+    "current_llm_operations": 0,
+    "device": "host_cpu",
+    "network_request_limit": 8
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "method_ingestion_complete_score": 1,
+  "method_mapping_rows": [
+    {
+      "access_states": [
+        "ok",
+        "ok"
+      ],
+      "method": "spline_locality",
+      "method_limit": "Local coefficient updates and host parity do not reproduce FPGA speed or prove benefit.",
+      "previously_indexed": true,
+      "primary_urls": [
+        "https://arxiv.org/abs/2602.02056v4",
+        "https://arxiv.org/abs/2512.12850"
+      ],
+      "proposed_test": "Exp7425 compares sparse local updates with a dense evaluation on the same basis.",
+      "versions": [
+        "arXiv:2602.02056v4",
+        "arXiv:2512.12850"
+      ]
+    },
+    {
+      "access_states": [
+        "ok"
+      ],
+      "method": "partial_feedback",
+      "method_limit": "The selective-generation FDR theorem does not transfer to Carnot's three-action learner.",
+      "previously_indexed": true,
+      "primary_urls": [
+        "https://arxiv.org/abs/2506.14067v2"
+      ],
+      "proposed_test": "Exp7427 records randomized reveal probabilities and compares selected-only and uniform audits.",
+      "versions": [
+        "arXiv:2506.14067v2"
+      ]
+    },
+    {
+      "access_states": [
+        "ok",
+        "ok",
+        "ok"
+      ],
+      "method": "claim_attribution",
+      "method_limit": "Human labels are fallible, and extraction or database execution is not independent truth.",
+      "previously_indexed": true,
+      "primary_urls": [
+        "https://arxiv.org/abs/2608.05823",
+        "https://arxiv.org/abs/2609.05025",
+        "https://github.com/ParticleMedia/RAGTruth"
+      ],
+      "proposed_test": "Exp7423 and Exp7430 retain source IDs, spans, qualifiers, contradiction, and coverage.",
+      "versions": [
+        "arXiv:2608.05823",
+        "arXiv:2609.05025",
+        "author repository checked 2026-09-19"
+      ]
+    }
+  ],
+  "milestone": "2026.09.651",
+  "model_invoked": false,
+  "phase": 1,
+  "phase_spans": [
+    {
+      "checkpoint": "authenticated_input_paths",
+      "completed_units": 37,
+      "duration_s": 0.5765068461187184,
+      "end_s": 0.57654580892995,
+      "heartbeat_count": 0,
+      "phase": "preconditions",
+      "start_s": 3.896281123161316e-05
+    },
+    {
+      "checkpoint": "no_current_llm_work",
+      "completed_units": 0,
+      "duration_s": 2.9550865292549133e-06,
+      "end_s": 0.576572529040277,
+      "heartbeat_count": 0,
+      "phase": "model_load",
+      "start_s": 0.5765695739537477
+    },
+    {
+      "checkpoint": "no_current_llm_work",
+      "completed_units": 0,
+      "duration_s": 1.742970198392868e-06,
+      "end_s": 0.5765762659721076,
+      "heartbeat_count": 0,
+      "phase": "generation",
+      "start_s": 0.5765745230019093
+    },
+    {
+      "checkpoint": "contract_and_mutations_reduced",
+      "completed_units": 18,
+      "duration_s": 0.06655750004574656,
+      "end_s": 0.6431354689411819,
+      "heartbeat_count": 0,
+      "phase": "contract",
+      "start_s": 0.5765779688954353
+    },
+    {
+      "checkpoint": "bounded_source_access_rows",
+      "completed_units": 7,
+      "duration_s": 1.1670616469345987,
+      "end_s": 1.8102179849520326,
+      "heartbeat_count": 0,
+      "phase": "source_access",
+      "start_s": 0.6431563380174339
+    },
+    {
+      "checkpoint": "affected_checks_complete",
+      "completed_units": 8,
+      "duration_s": 69.38749909587204,
+      "end_s": 71.19917697273195,
+      "heartbeat_count": 0,
+      "phase": "validation",
+      "start_s": 1.8116778768599033
+    },
+    {
+      "checkpoint": "cold_replay_and_strict_readers_complete",
+      "completed_units": 4,
+      "duration_s": 3.105181133840233,
+      "end_s": 78.82079932885244,
+      "heartbeat_count": 0,
+      "phase": "terminal_validation",
+      "start_s": 75.71561819501221
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 1165,
+      "operator": ">",
+      "passed": true,
+      "path": "AGENTS.md",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 317781,
+      "operator": ">",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 2396,
+      "operator": ">",
+      "passed": true,
+      "path": "CODEX.md",
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 28560,
+      "operator": ">",
+      "passed": true,
+      "path": "research-program.md",
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 8502,
+      "operator": ">",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 58837,
+      "operator": ">",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 4377483,
+      "operator": ">",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 37206,
+      "operator": ">",
+      "passed": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 158882,
+      "operator": ">",
+      "passed": true,
+      "path": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 5061219,
+      "operator": ">",
+      "passed": true,
+      "path": "research-complete.yaml",
+      "upstream": "research-complete.yaml"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 3532547,
+      "operator": ">",
+      "passed": true,
+      "path": "research-references.md",
+      "upstream": "research-references.md"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 421436,
+      "operator": ">",
+      "passed": true,
+      "path": "research-studying.md",
+      "upstream": "research-studying.md"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 1979,
+      "operator": ">",
+      "passed": true,
+      "path": "docs/research-notes/v651-method-ingestion.md",
+      "upstream": "docs/research-notes/v651-method-ingestion.md"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 115811,
+      "operator": ">",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 7025,
+      "operator": ">",
+      "passed": true,
+      "path": "scripts/sweep_clusters.py",
+      "upstream": "scripts/sweep_clusters.py"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 4273,
+      "operator": ">",
+      "passed": true,
+      "path": "scripts/sweep_semscholar.py",
+      "upstream": "scripts/sweep_semscholar.py"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 12790,
+      "operator": ">",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 13393,
+      "operator": ">",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 54324,
+      "operator": ">",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 76360,
+      "operator": ">",
+      "passed": true,
+      "path": "python/carnot/experiment_7329_v644_contract.py",
+      "upstream": "python/carnot/experiment_7329_v644_contract.py"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 67286,
+      "operator": ">",
+      "passed": true,
+      "path": "python/carnot/experiment_7409_v650_evidence_custody.py",
+      "upstream": "python/carnot/experiment_7409_v650_evidence_custody.py"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 121216,
+      "operator": ">",
+      "passed": true,
+      "path": "results/experiment_7420_v650_capstone.json",
+      "upstream": "results/experiment_7420_v650_capstone.json"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 59801,
+      "operator": ">",
+      "passed": true,
+      "path": "python/carnot/experiment_7421_v651_contract_ingestion.py",
+      "upstream": "python/carnot/experiment_7421_v651_contract_ingestion.py"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 218,
+      "operator": ">",
+      "passed": true,
+      "path": "scripts/experiments/experiment_7421_v651_contract_ingestion.py",
+      "upstream": "scripts/experiments/experiment_7421_v651_contract_ingestion.py"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 15998,
+      "operator": ">",
+      "passed": true,
+      "path": "tests/python/test_experiment_7421_v651_contract_ingestion.py",
+      "upstream": "tests/python/test_experiment_7421_v651_contract_ingestion.py"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 115681,
+      "operator": ">",
+      "passed": true,
+      "path": "results/experiment_7409_v650_evidence_custody.json",
+      "upstream": "results/experiment_7409_v650_evidence_custody.json"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 2016508,
+      "operator": ">",
+      "passed": true,
+      "path": "results/experiment_7410_v650_source_corpus.json",
+      "upstream": "results/experiment_7410_v650_source_corpus.json"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 79114,
+      "operator": ">",
+      "passed": true,
+      "path": "results/experiment_7411_v650_arc_call_budget.json",
+      "upstream": "results/experiment_7411_v650_arc_call_budget.json"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 119749,
+      "operator": ">",
+      "passed": true,
+      "path": "results/experiment_7412_v650_source_features.json",
+      "upstream": "results/experiment_7412_v650_source_features.json"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 52469982,
+      "operator": ">",
+      "passed": true,
+      "path": "results/experiment_7413_v650_source_calibration.json",
+      "upstream": "results/experiment_7413_v650_source_calibration.json"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 74691457,
+      "operator": ">",
+      "passed": true,
+      "path": "results/experiment_7414_v650_selected_feedback.json",
+      "upstream": "results/experiment_7414_v650_selected_feedback.json"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 304160,
+      "operator": ">",
+      "passed": true,
+      "path": "results/experiment_7415_v650_decision_audit.json",
+      "upstream": "results/experiment_7415_v650_decision_audit.json"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 28313,
+      "operator": ">",
+      "passed": true,
+      "path": "results/experiment_7416_v650_anchored_extraction.json",
+      "upstream": "results/experiment_7416_v650_anchored_extraction.json"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 3436,
+      "operator": ">",
+      "passed": true,
+      "path": "results/experiment_7417_extraction_audit.json",
+      "upstream": "results/experiment_7417_extraction_audit.json"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 10989726,
+      "operator": ">",
+      "passed": true,
+      "path": "results/experiment_7418_v650_revision_memory.json",
+      "upstream": "results/experiment_7418_v650_revision_memory.json"
+    },
+    {
+      "check": "readable_nonempty_bytes",
+      "expected": 0,
+      "field": "bytes",
+      "observed": 14424237,
+      "operator": ">",
+      "passed": true,
+      "path": "results/experiment_7419_v650_precision_placement.json",
+      "upstream": "results/experiment_7419_v650_precision_placement.json"
+    },
+    {
+      "check": "prior_row_count",
+      "expected": 12,
+      "field": "prior_dispositions",
+      "observed": 12,
+      "operator": "==",
+      "passed": true,
+      "path": "results",
+      "upstream": "v650_terminal_set"
+    }
+  ],
+  "prior_dispositions": [
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_null_evidence_custody_ready_missing_v649_producers_unavailable",
+      "original_status": "complete_evidence_custody_ready",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7409_v650_evidence_custody.json",
+      "sha256": "sha256:62a955a477ac0e93b53db87dfa690ede358be2b754a344eaca3b94d939012966",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7409-evidence-custody"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_null_source_corpus_ready_machine_annotations_not_truth",
+      "original_status": "complete",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7410_v650_source_corpus.json",
+      "sha256": "sha256:f56c1acc842959972ceb425777cda16ba979f6565aa512dbfd3bb0f6db247ffe",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7410-source-corpus"
+    },
+    {
+      "flagged_adversarial": true,
+      "observed_facts": {
+        "typed_invocation_conflict": true
+      },
+      "original_honest_verdict": "complete_disqualified_required_evidence",
+      "original_status": "complete_disqualified_required_evidence",
+      "original_verdict_class": "disqualified",
+      "path": "results/experiment_7411_v650_arc_call_budget.json",
+      "sha256": "sha256:d70d0d0cc589d959fa1e1a164a37bf363cbf90156a88c82e8570236e200fcfa0",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7411-arc-call-budget"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_null_source_feature_protocol_ready_real_efficacy_unmeasured",
+      "original_status": "complete",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7412_v650_source_features.json",
+      "sha256": "sha256:b6ff5100e270646ad98961513956bcdc07073668e034f764d1bd64d20fb17874",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7412-source-features"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_null_source_calibration_no_registered_decision_benefit",
+      "original_status": "complete",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7413_v650_source_calibration.json",
+      "sha256": "sha256:a32ff491648d1459a2948280d5a662b8a30fb9bb3476d10331d597be150ff647",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7413-source-calibration"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {
+        "independent_groups": 149,
+        "negative_labels": 5,
+        "positive_labels": 144
+      },
+      "original_honest_verdict": "complete_null_insufficient_online_support",
+      "original_status": "complete",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7414_v650_selected_feedback.json",
+      "sha256": "sha256:12e57814d34d6ed4cd53a7ecafe56693700e4e94a98dada6cd4ac343c40f7091",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7414-selected-feedback"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_null_independent_decision_audits_no_joint_registered_value",
+      "original_status": "complete",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7415_v650_decision_audit.json",
+      "sha256": "sha256:86925e8f55b83a9a2790392ace1088f1bd1e52293b11c37b6a76bed73beb8f97",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7415-decision-audit"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {
+        "attempted_calls": 0,
+        "block": "available_slot_dictionary_exact_equality",
+        "expected": {
+          "minimum_rtx3090_slots": 1,
+          "query_ok": true
+        },
+        "observed": {
+          "minimum_rtx3090_slots": 2,
+          "query_ok": true
+        }
+      },
+      "original_honest_verdict": "blocked_one_owned_rtx3090_slot",
+      "original_status": "blocked_precondition",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7416_v650_anchored_extraction.json",
+      "sha256": "sha256:a67c9e94f7b3a23d53a5b27dfaa6975912e6f10ae9df5d32ecd1677c1fac98ce",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7416-anchored-extraction"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "blocked_gate_check_failed",
+      "original_status": "blocked",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7417_extraction_audit.json",
+      "sha256": "sha256:31310dc50d9ae4d3fc406f7a1dcd8f1548e471ae5aebeb00a5b2291446bd7a3b",
+      "source_kind": "conductor_pre_gate_record",
+      "task_id": "exp7417-extraction-audit"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_memory_revision_capture_no_full_cost_value",
+      "original_status": "complete_memory_revision_capture_no_full_cost_value",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7418_v650_revision_memory.json",
+      "sha256": "sha256:d72e23acee8fac56295aa2991ca6b8481193442b86358b8679450c5b53a4ab88",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7418-revision-memory"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_null_int8_no_registered_full_service_benefit",
+      "original_status": "complete",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7419_v650_precision_placement.json",
+      "sha256": "sha256:bb4c7fb4e041b5a0b454dbcfbe90c069b0243a47ac8712bf7bc9b80eb046529c",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7419-precision-placement"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_blocked_required_v650_science_with_twelve_dispositions",
+      "original_status": "complete_blocked_required_v650_science",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7420_v650_capstone.json",
+      "sha256": "sha256:1acdff1b3b4a95d671815cdf229298a536a22425904d75dbb34ada937eeeb347",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7420-capstone"
+    }
+  ],
+  "promotion_score": 0,
+  "publication_gate_definitions_changed": false,
+  "random_seed": {
+    "basis_equivalence": 742165102,
+    "contract_mutations": 742165101
+  },
+  "repository_health": {
+    "affects_required_checks": false,
+    "historical_failures": [],
+    "status": "not_used_as_current_gate"
+  },
+  "reproducibility_checksum": "sha256:35fb3b24a226ae76d3998abfd4dadbde689e522ab0674fd9da4695a326f0b9e8",
+  "rows": [
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": true,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7409_v650_evidence_custody.json",
+        "gates": [],
+        "id": "exp7409-evidence-custody",
+        "order": 1,
+        "phase": 1,
+        "substrate": "aggregation",
+        "title": "Bind twelve tasks and diagnose missing terminal evidence"
+      },
+      "order": 1,
+      "passed": false,
+      "producer_declarations": [],
+      "row_kind": "contract",
+      "unit_id": "exp7421-contract-ingestion",
+      "yaml": {
+        "deliverable": "results/experiment_7421_v651_contract_ingestion.json",
+        "gates": [],
+        "id": "exp7421-contract-ingestion",
+        "order": 1,
+        "phase": 1,
+        "substrate": "aggregation",
+        "title": "Bind thirteen tasks and ingest methods against V650 evidence"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": true,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7410_v650_source_corpus.json",
+        "gates": [],
+        "id": "exp7410-source-corpus",
+        "order": 2,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Seal an attributed source-context calibration corpus"
+      },
+      "order": 2,
+      "passed": false,
+      "producer_declarations": [],
+      "row_kind": "contract",
+      "unit_id": "exp7422-runtime-ownership",
+      "yaml": {
+        "deliverable": "results/experiment_7422_v651_runtime_ownership.json",
+        "gates": [],
+        "id": "exp7422-runtime-ownership",
+        "order": 2,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Repair GPU capacity checks and prove one owned lease"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": true,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7411_v650_arc_call_budget.json",
+        "gates": [],
+        "id": "exp7411-arc-call-budget",
+        "order": 3,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Enforce ARC request budgets at the live callback boundary"
+      },
+      "order": 3,
+      "passed": false,
+      "producer_declarations": [],
+      "row_kind": "contract",
+      "unit_id": "exp7423-annotated-protocol",
+      "yaml": {
+        "deliverable": "results/experiment_7423_v651_annotated_protocol.json",
+        "gates": [],
+        "id": "exp7423-annotated-protocol",
+        "order": 3,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Seal human-annotated source groups and calibration partitions"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": true,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7412_v650_source_features.json",
+        "gates": [
+          {
+            "artifact_field": "source_corpus_ready_score",
+            "op": "==",
+            "upstream": "exp7410-source-corpus",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7410-source-corpus",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7410-source-corpus",
+            "value": false
+          }
+        ],
+        "id": "exp7412-source-features",
+        "order": 4,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Prototype source-aware energy inputs and freeze decision tests"
+      },
+      "order": 4,
+      "passed": false,
+      "producer_declarations": [],
+      "row_kind": "contract",
+      "unit_id": "exp7424-arc-receipt-boundary",
+      "yaml": {
+        "deliverable": "results/experiment_7424_v651_arc_receipt_boundary.json",
+        "gates": [],
+        "id": "exp7424-arc-receipt-boundary",
+        "order": 4,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Qualify ARC request accounting with isolated scripted evidence"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": true,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7413_v650_source_calibration.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7413-source-calibration",
+        "order": 5,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure source-grounded Gibbs calibration against simple controls"
+      },
+      "order": 5,
+      "passed": false,
+      "producer_declarations": [],
+      "row_kind": "contract",
+      "unit_id": "exp7425-spline-prototype",
+      "yaml": {
+        "deliverable": "results/experiment_7425_v651_spline_prototype.json",
+        "gates": [],
+        "id": "exp7425-spline-prototype",
+        "order": 5,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Prototype sparse local energy updates with dense-basis parity"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": true,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7414_v650_selected_feedback.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7414-selected-feedback",
+        "order": 6,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure continuous energy calibration under selected feedback"
+      },
+      "order": 6,
+      "passed": false,
+      "producer_declarations": [
+        {
+          "artifact_field": "annotated_protocol_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7423-annotated-protocol"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7423-annotated-protocol"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7423-annotated-protocol"
+        },
+        {
+          "artifact_field": "spline_prototype_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7425-spline-prototype"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7425-spline-prototype"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7425-spline-prototype"
+        }
+      ],
+      "row_kind": "contract",
+      "unit_id": "exp7426-static-decisions",
+      "yaml": {
+        "deliverable": "results/experiment_7426_v651_static_decisions.json",
+        "gates": [
+          {
+            "artifact_field": "annotated_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7423-annotated-protocol",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7423-annotated-protocol",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7423-annotated-protocol",
+            "value": false
+          },
+          {
+            "artifact_field": "spline_prototype_ready_score",
+            "op": "==",
+            "upstream": "exp7425-spline-prototype",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7425-spline-prototype",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7425-spline-prototype",
+            "value": false
+          }
+        ],
+        "id": "exp7426-static-decisions",
+        "order": 6,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure calibrated Gibbs and spline decisions on human source labels"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7415_v650_decision_audit.json",
+        "gates": [],
+        "id": "exp7415-decision-audit",
+        "order": 7,
+        "phase": 2,
+        "substrate": "aggregation",
+        "title": "Independently audit calibrated decisions and feedback causality"
+      },
+      "order": 7,
+      "passed": false,
+      "producer_declarations": [
+        {
+          "artifact_field": "decision_capture_complete_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7426-static-decisions"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7426-static-decisions"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7426-static-decisions"
+        }
+      ],
+      "row_kind": "contract",
+      "unit_id": "exp7427-randomized-feedback",
+      "yaml": {
+        "deliverable": "results/experiment_7427_v651_randomized_feedback.json",
+        "gates": [
+          {
+            "artifact_field": "decision_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7426-static-decisions",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7426-static-decisions",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7426-static-decisions",
+            "value": false
+          }
+        ],
+        "id": "exp7427-randomized-feedback",
+        "order": 7,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure continuous local learning under randomized label audits"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7416_v650_anchored_extraction.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7416-anchored-extraction",
+        "order": 8,
+        "phase": 3,
+        "substrate": "model_bounded_generation",
+        "title": "Compare bounded Qwen claim extraction with preserved source spans"
+      },
+      "order": 8,
+      "passed": false,
+      "producer_declarations": [],
+      "row_kind": "contract",
+      "unit_id": "exp7428-decision-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7428_v651_decision_audit.json",
+        "gates": [],
+        "id": "exp7428-decision-audit",
+        "order": 8,
+        "phase": 2,
+        "substrate": "aggregation",
+        "title": "Independently test source-label leakage and learning causality"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7417_v650_extraction_audit.json",
+        "gates": [
+          {
+            "artifact_field": "extraction_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7416-anchored-extraction",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7416-anchored-extraction",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7416-anchored-extraction",
+            "value": false
+          }
+        ],
+        "id": "exp7417-extraction-audit",
+        "order": 9,
+        "phase": 3,
+        "substrate": "aggregation",
+        "title": "Audit extraction coverage and semantic preservation independently"
+      },
+      "order": 9,
+      "passed": false,
+      "producer_declarations": [
+        {
+          "artifact_field": "runtime_ownership_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7422-runtime-ownership"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7422-runtime-ownership"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7422-runtime-ownership"
+        }
+      ],
+      "row_kind": "contract",
+      "unit_id": "exp7429-anchored-capture",
+      "yaml": {
+        "deliverable": "results/experiment_7429_v651_anchored_capture.json",
+        "gates": [
+          {
+            "artifact_field": "runtime_ownership_ready_score",
+            "op": "==",
+            "upstream": "exp7422-runtime-ownership",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7422-runtime-ownership",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7422-runtime-ownership",
+            "value": false
+          }
+        ],
+        "id": "exp7429-anchored-capture",
+        "order": 9,
+        "phase": 3,
+        "substrate": "model_bounded_generation",
+        "title": "Capture the sealed Qwen span comparison after lease repair"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7418_v650_revision_memory.json",
+        "gates": [],
+        "id": "exp7418-revision-memory",
+        "order": 10,
+        "phase": 3,
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Measure certified memory under source revision and eviction"
+      },
+      "order": 10,
+      "passed": false,
+      "producer_declarations": [
+        {
+          "artifact_field": "extraction_capture_complete_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7429-anchored-capture"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7429-anchored-capture"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7429-anchored-capture"
+        }
+      ],
+      "row_kind": "contract",
+      "unit_id": "exp7430-extraction-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7430_v651_extraction_audit.json",
+        "gates": [
+          {
+            "artifact_field": "extraction_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7429-anchored-capture",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7429-anchored-capture",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7429-anchored-capture",
+            "value": false
+          }
+        ],
+        "id": "exp7430-extraction-audit",
+        "order": 10,
+        "phase": 3,
+        "substrate": "aggregation",
+        "title": "Audit Qwen claim coverage and qualifier preservation from raw replies"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7419_v650_precision_placement.json",
+        "gates": [],
+        "id": "exp7419-precision-placement",
+        "order": 11,
+        "phase": 4,
+        "substrate": "no_model_load",
+        "title": "Measure decision stability at reduced precision and preserve board states"
+      },
+      "order": 11,
+      "passed": false,
+      "producer_declarations": [
+        {
+          "artifact_field": "runtime_ownership_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7422-runtime-ownership"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7422-runtime-ownership"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7422-runtime-ownership"
+        },
+        {
+          "artifact_field": "arc_receipt_boundary_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7424-arc-receipt-boundary"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7424-arc-receipt-boundary"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7424-arc-receipt-boundary"
+        }
+      ],
+      "row_kind": "contract",
+      "unit_id": "exp7431-arc-live-sentinel",
+      "yaml": {
+        "deliverable": "results/experiment_7431_v651_arc_live_sentinel.json",
+        "gates": [
+          {
+            "artifact_field": "runtime_ownership_ready_score",
+            "op": "==",
+            "upstream": "exp7422-runtime-ownership",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7422-runtime-ownership",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7422-runtime-ownership",
+            "value": false
+          },
+          {
+            "artifact_field": "arc_receipt_boundary_ready_score",
+            "op": "==",
+            "upstream": "exp7424-arc-receipt-boundary",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7424-arc-receipt-boundary",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7424-arc-receipt-boundary",
+            "value": false
+          }
+        ],
+        "id": "exp7431-arc-live-sentinel",
+        "order": 11,
+        "phase": 3,
+        "substrate": "model_bounded_generation",
+        "title": "Measure owned callback reachability in two adapter-withheld ARC episodes"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "substrate"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7420_v650_capstone.json",
+        "gates": [],
+        "id": "exp7420-capstone",
+        "order": 12,
+        "phase": 4,
+        "substrate": "aggregation",
+        "title": "Reconcile twelve dispositions and decide each research branch"
+      },
+      "order": 12,
+      "passed": false,
+      "producer_declarations": [],
+      "row_kind": "contract",
+      "unit_id": "exp7432-update-placement",
+      "yaml": {
+        "deliverable": "results/experiment_7432_v651_update_placement.json",
+        "gates": [],
+        "id": "exp7432-update-placement",
+        "order": 12,
+        "phase": 4,
+        "substrate": "no_model_load",
+        "title": "Measure fixed-point local updates and preserve board prerequisites"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 13,
+      "passed": false,
+      "producer_declarations": [],
+      "row_kind": "contract",
+      "unit_id": "exp7433-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7433_v651_capstone.json",
+        "gates": [],
+        "id": "exp7433-capstone",
+        "order": 13,
+        "phase": 4,
+        "substrate": "aggregation",
+        "title": "Reconcile thirteen dispositions and decide calibrated-learning continuation"
+      }
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_null_evidence_custody_ready_missing_v649_producers_unavailable",
+      "original_status": "complete_evidence_custody_ready",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7409_v650_evidence_custody.json",
+      "row_kind": "prior_disposition",
+      "sha256": "sha256:62a955a477ac0e93b53db87dfa690ede358be2b754a344eaca3b94d939012966",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7409-evidence-custody"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_null_source_corpus_ready_machine_annotations_not_truth",
+      "original_status": "complete",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7410_v650_source_corpus.json",
+      "row_kind": "prior_disposition",
+      "sha256": "sha256:f56c1acc842959972ceb425777cda16ba979f6565aa512dbfd3bb0f6db247ffe",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7410-source-corpus"
+    },
+    {
+      "flagged_adversarial": true,
+      "observed_facts": {
+        "typed_invocation_conflict": true
+      },
+      "original_honest_verdict": "complete_disqualified_required_evidence",
+      "original_status": "complete_disqualified_required_evidence",
+      "original_verdict_class": "disqualified",
+      "path": "results/experiment_7411_v650_arc_call_budget.json",
+      "row_kind": "prior_disposition",
+      "sha256": "sha256:d70d0d0cc589d959fa1e1a164a37bf363cbf90156a88c82e8570236e200fcfa0",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7411-arc-call-budget"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_null_source_feature_protocol_ready_real_efficacy_unmeasured",
+      "original_status": "complete",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7412_v650_source_features.json",
+      "row_kind": "prior_disposition",
+      "sha256": "sha256:b6ff5100e270646ad98961513956bcdc07073668e034f764d1bd64d20fb17874",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7412-source-features"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_null_source_calibration_no_registered_decision_benefit",
+      "original_status": "complete",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7413_v650_source_calibration.json",
+      "row_kind": "prior_disposition",
+      "sha256": "sha256:a32ff491648d1459a2948280d5a662b8a30fb9bb3476d10331d597be150ff647",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7413-source-calibration"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {
+        "independent_groups": 149,
+        "negative_labels": 5,
+        "positive_labels": 144
+      },
+      "original_honest_verdict": "complete_null_insufficient_online_support",
+      "original_status": "complete",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7414_v650_selected_feedback.json",
+      "row_kind": "prior_disposition",
+      "sha256": "sha256:12e57814d34d6ed4cd53a7ecafe56693700e4e94a98dada6cd4ac343c40f7091",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7414-selected-feedback"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_null_independent_decision_audits_no_joint_registered_value",
+      "original_status": "complete",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7415_v650_decision_audit.json",
+      "row_kind": "prior_disposition",
+      "sha256": "sha256:86925e8f55b83a9a2790392ace1088f1bd1e52293b11c37b6a76bed73beb8f97",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7415-decision-audit"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {
+        "attempted_calls": 0,
+        "block": "available_slot_dictionary_exact_equality",
+        "expected": {
+          "minimum_rtx3090_slots": 1,
+          "query_ok": true
+        },
+        "observed": {
+          "minimum_rtx3090_slots": 2,
+          "query_ok": true
+        }
+      },
+      "original_honest_verdict": "blocked_one_owned_rtx3090_slot",
+      "original_status": "blocked_precondition",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7416_v650_anchored_extraction.json",
+      "row_kind": "prior_disposition",
+      "sha256": "sha256:a67c9e94f7b3a23d53a5b27dfaa6975912e6f10ae9df5d32ecd1677c1fac98ce",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7416-anchored-extraction"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "blocked_gate_check_failed",
+      "original_status": "blocked",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7417_extraction_audit.json",
+      "row_kind": "prior_disposition",
+      "sha256": "sha256:31310dc50d9ae4d3fc406f7a1dcd8f1548e471ae5aebeb00a5b2291446bd7a3b",
+      "source_kind": "conductor_pre_gate_record",
+      "task_id": "exp7417-extraction-audit"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_memory_revision_capture_no_full_cost_value",
+      "original_status": "complete_memory_revision_capture_no_full_cost_value",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7418_v650_revision_memory.json",
+      "row_kind": "prior_disposition",
+      "sha256": "sha256:d72e23acee8fac56295aa2991ca6b8481193442b86358b8679450c5b53a4ab88",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7418-revision-memory"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_null_int8_no_registered_full_service_benefit",
+      "original_status": "complete",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7419_v650_precision_placement.json",
+      "row_kind": "prior_disposition",
+      "sha256": "sha256:bb4c7fb4e041b5a0b454dbcfbe90c069b0243a47ac8712bf7bc9b80eb046529c",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7419-precision-placement"
+    },
+    {
+      "flagged_adversarial": false,
+      "observed_facts": {},
+      "original_honest_verdict": "complete_blocked_required_v650_science_with_twelve_dispositions",
+      "original_status": "complete_blocked_required_v650_science",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7420_v650_capstone.json",
+      "row_kind": "prior_disposition",
+      "sha256": "sha256:1acdff1b3b4a95d671815cdf229298a536a22425904d75dbb34ada937eeeb347",
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7420-capstone"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:8915bbe25819d0653e44c9e94789a146f3361e8f72bda1db234599bdad2c4c5b",
+      "detail": "read_bytes=4096",
+      "http_status": 206,
+      "kind": "primary_paper",
+      "response_url": "https://arxiv.org/abs/2602.02056v4",
+      "row_kind": "source_access",
+      "source_id": "spline_locality",
+      "url": "https://arxiv.org/abs/2602.02056v4",
+      "version": "arXiv:2602.02056v4"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:1e9fc514d3f9e8e2416cfee4f2b98c9cd3445baa4ee5fa3332c0c6e610d2a234",
+      "detail": "read_bytes=4096",
+      "http_status": 206,
+      "kind": "primary_paper",
+      "response_url": "https://arxiv.org/abs/2506.14067v2",
+      "row_kind": "source_access",
+      "source_id": "partial_feedback",
+      "url": "https://arxiv.org/abs/2506.14067v2",
+      "version": "arXiv:2506.14067v2"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:d2bfd5e29b07e94316d027189c404cf50d96ab8f0f6a910ef3127106fe458012",
+      "detail": "read_bytes=4096",
+      "http_status": 206,
+      "kind": "primary_paper",
+      "response_url": "https://arxiv.org/abs/2608.05823",
+      "row_kind": "source_access",
+      "source_id": "claim_attribution",
+      "url": "https://arxiv.org/abs/2608.05823",
+      "version": "arXiv:2608.05823"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:c3cf6516bb292b2bf9b0e05a9c64564f6983ad4dede24f1161c5966381ff6b45",
+      "detail": "read_bytes=4096",
+      "http_status": 206,
+      "kind": "primary_paper",
+      "response_url": "https://arxiv.org/abs/2609.05025",
+      "row_kind": "source_access",
+      "source_id": "symbolic_grounding",
+      "url": "https://arxiv.org/abs/2609.05025",
+      "version": "arXiv:2609.05025"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:072b39d5e441f131ab179e43ae85a3cb5385717cbd14a09323d39440698f3058",
+      "detail": "read_bytes=4096",
+      "http_status": 206,
+      "kind": "primary_paper",
+      "response_url": "https://arxiv.org/abs/2512.12850",
+      "row_kind": "source_access",
+      "source_id": "kanele",
+      "url": "https://arxiv.org/abs/2512.12850",
+      "version": "arXiv:2512.12850"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:8865f7f753d8d04c1813d1253e66af1221bdacc37e2293c8f44c6fcdfd44de81",
+      "detail": "read_bytes=4096",
+      "http_status": 206,
+      "kind": "primary_dataset",
+      "response_url": "https://github.com/ParticleMedia/RAGTruth",
+      "row_kind": "source_access",
+      "source_id": "ragtruth",
+      "url": "https://github.com/ParticleMedia/RAGTruth",
+      "version": "author repository checked 2026-09-19"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:4119f3ff40b8183f8b61ef03abc6920ba8f9c16fd8d611933770f8f2d86fc23f",
+      "detail": "read_bytes=212",
+      "http_status": 200,
+      "kind": "citation_endpoint",
+      "prior_review_access_state": "failed",
+      "prior_review_detail": "The dated V651 planning review recorded failed citation endpoint reads.",
+      "response_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2602.02056/citations?limit=1",
+      "row_kind": "source_access",
+      "source_id": "semantic_scholar_citations",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2602.02056/citations?limit=1",
+      "version": "Graph API checked 2026-09-19"
+    },
+    {
+      "access_states": [
+        "ok",
+        "ok"
+      ],
+      "method": "spline_locality",
+      "method_limit": "Local coefficient updates and host parity do not reproduce FPGA speed or prove benefit.",
+      "previously_indexed": true,
+      "primary_urls": [
+        "https://arxiv.org/abs/2602.02056v4",
+        "https://arxiv.org/abs/2512.12850"
+      ],
+      "proposed_test": "Exp7425 compares sparse local updates with a dense evaluation on the same basis.",
+      "row_kind": "method_mapping",
+      "versions": [
+        "arXiv:2602.02056v4",
+        "arXiv:2512.12850"
+      ]
+    },
+    {
+      "access_states": [
+        "ok"
+      ],
+      "method": "partial_feedback",
+      "method_limit": "The selective-generation FDR theorem does not transfer to Carnot's three-action learner.",
+      "previously_indexed": true,
+      "primary_urls": [
+        "https://arxiv.org/abs/2506.14067v2"
+      ],
+      "proposed_test": "Exp7427 records randomized reveal probabilities and compares selected-only and uniform audits.",
+      "row_kind": "method_mapping",
+      "versions": [
+        "arXiv:2506.14067v2"
+      ]
+    },
+    {
+      "access_states": [
+        "ok",
+        "ok",
+        "ok"
+      ],
+      "method": "claim_attribution",
+      "method_limit": "Human labels are fallible, and extraction or database execution is not independent truth.",
+      "previously_indexed": true,
+      "primary_urls": [
+        "https://arxiv.org/abs/2608.05823",
+        "https://arxiv.org/abs/2609.05025",
+        "https://github.com/ParticleMedia/RAGTruth"
+      ],
+      "proposed_test": "Exp7423 and Exp7430 retain source IDs, spans, qualifiers, contradiction, and coverage.",
+      "row_kind": "method_mapping",
+      "versions": [
+        "arXiv:2608.05823",
+        "arXiv:2609.05025",
+        "author repository checked 2026-09-19"
+      ]
+    },
+    {
+      "additive_spline_energy_logits": [
+        0.35,
+        0.3,
+        0.55
+      ],
+      "basis_row_count": 3,
+      "coefficient_count": 4,
+      "maximum_absolute_difference": 0.0,
+      "passed": true,
+      "principle": "With a fixed basis phi(x), both models compute beta dot phi(x). Spline locality changes which basis coefficients update, not the linear logit form.",
+      "row_kind": "basis_equivalence",
+      "same_basis_logistic_logits": [
+        0.35,
+        0.3,
+        0.55
+      ]
+    }
+  ],
+  "run_date": "20260919",
+  "sample_size_budget": {
+    "attempted": 36,
+    "censored": 0,
+    "completed": 36,
+    "failed": 0,
+    "independent_groups": {
+      "basis_equivalence": 1,
+      "contract_slots": 13,
+      "method_mappings": 3,
+      "source_endpoints": 7,
+      "v650_dispositions": 12
+    },
+    "planned": 36,
+    "stop_rule": "Stop after thirteen contract slots, twelve prior dispositions, at most eight source checks, three mappings, and one equivalence control.",
+    "unstarted": 0
+  },
+  "schema": "carnot.exp7421.v651.contract_ingestion.v1",
+  "small_ebm_training": {
+    "attempted": 0,
+    "completed": 0,
+    "performed": false,
+    "principle": "This audit reads archived training receipts but trains no current energy head."
+  },
+  "source_access_rows": [
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:8915bbe25819d0653e44c9e94789a146f3361e8f72bda1db234599bdad2c4c5b",
+      "detail": "read_bytes=4096",
+      "http_status": 206,
+      "kind": "primary_paper",
+      "response_url": "https://arxiv.org/abs/2602.02056v4",
+      "source_id": "spline_locality",
+      "url": "https://arxiv.org/abs/2602.02056v4",
+      "version": "arXiv:2602.02056v4"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:1e9fc514d3f9e8e2416cfee4f2b98c9cd3445baa4ee5fa3332c0c6e610d2a234",
+      "detail": "read_bytes=4096",
+      "http_status": 206,
+      "kind": "primary_paper",
+      "response_url": "https://arxiv.org/abs/2506.14067v2",
+      "source_id": "partial_feedback",
+      "url": "https://arxiv.org/abs/2506.14067v2",
+      "version": "arXiv:2506.14067v2"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:d2bfd5e29b07e94316d027189c404cf50d96ab8f0f6a910ef3127106fe458012",
+      "detail": "read_bytes=4096",
+      "http_status": 206,
+      "kind": "primary_paper",
+      "response_url": "https://arxiv.org/abs/2608.05823",
+      "source_id": "claim_attribution",
+      "url": "https://arxiv.org/abs/2608.05823",
+      "version": "arXiv:2608.05823"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:c3cf6516bb292b2bf9b0e05a9c64564f6983ad4dede24f1161c5966381ff6b45",
+      "detail": "read_bytes=4096",
+      "http_status": 206,
+      "kind": "primary_paper",
+      "response_url": "https://arxiv.org/abs/2609.05025",
+      "source_id": "symbolic_grounding",
+      "url": "https://arxiv.org/abs/2609.05025",
+      "version": "arXiv:2609.05025"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:072b39d5e441f131ab179e43ae85a3cb5385717cbd14a09323d39440698f3058",
+      "detail": "read_bytes=4096",
+      "http_status": 206,
+      "kind": "primary_paper",
+      "response_url": "https://arxiv.org/abs/2512.12850",
+      "source_id": "kanele",
+      "url": "https://arxiv.org/abs/2512.12850",
+      "version": "arXiv:2512.12850"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:8865f7f753d8d04c1813d1253e66af1221bdacc37e2293c8f44c6fcdfd44de81",
+      "detail": "read_bytes=4096",
+      "http_status": 206,
+      "kind": "primary_dataset",
+      "response_url": "https://github.com/ParticleMedia/RAGTruth",
+      "source_id": "ragtruth",
+      "url": "https://github.com/ParticleMedia/RAGTruth",
+      "version": "author repository checked 2026-09-19"
+    },
+    {
+      "access_state": "ok",
+      "content_prefix_sha256": "sha256:4119f3ff40b8183f8b61ef03abc6920ba8f9c16fd8d611933770f8f2d86fc23f",
+      "detail": "read_bytes=212",
+      "http_status": 200,
+      "kind": "citation_endpoint",
+      "prior_review_access_state": "failed",
+      "prior_review_detail": "The dated V651 planning review recorded failed citation endpoint reads.",
+      "response_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2602.02056/citations?limit=1",
+      "source_id": "semantic_scholar_citations",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2602.02056/citations?limit=1",
+      "version": "Graph API checked 2026-09-19"
+    }
+  ],
+  "source_artifact_hashes": {
+    "AGENTS.md": {
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "source_kind": "authority_or_code"
+    },
+    "CLAUDE.md": {
+      "path": "CLAUDE.md",
+      "sha256": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b",
+      "source_kind": "authority_or_code"
+    },
+    "CODEX.md": {
+      "path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_kind": "authority_or_code"
+    },
+    "docs/research-notes/v651-method-ingestion.md": {
+      "path": "docs/research-notes/v651-method-ingestion.md",
+      "sha256": "sha256:ff08fdc8fb921b7222da91753c97e373ff895fff1073d8d6ef397e3c4b771a4b",
+      "source_kind": "authority_or_code"
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:92287dfe670751574d2234026c127bc742f719d55cf7a0977b373c69c582bdc9",
+      "source_kind": "authority_or_code"
+    },
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:fe34e919d36a63f5148a0a3e2b501fffe880183b51fef4583a36635993bdb278",
+      "source_kind": "authority_or_code"
+    },
+    "ops/e2e-test-plan.md": {
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+      "source_kind": "authority_or_code"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:fdab7b9ef47aa3f8be8902e30d96cd096f361d1abbe7c6de7624101383bf968e",
+      "source_kind": "authority_or_code"
+    },
+    "python/carnot/experiment_7329_v644_contract.py": {
+      "path": "python/carnot/experiment_7329_v644_contract.py",
+      "sha256": "sha256:b452b3d0cff04523a47caba3938b01387f1ee70547e92d7932f15e5ba9788d5b",
+      "source_kind": "authority_or_code"
+    },
+    "python/carnot/experiment_7358_v646_validation_contract.py": {
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+      "source_kind": "authority_or_code"
+    },
+    "python/carnot/experiment_7409_v650_evidence_custody.py": {
+      "path": "python/carnot/experiment_7409_v650_evidence_custody.py",
+      "sha256": "sha256:c67fb5dba560392d417174bc2b4d7b909558eefc707b2b1929b3d2043e4c92ff",
+      "source_kind": "authority_or_code"
+    },
+    "python/carnot/experiment_7421_v651_contract_ingestion.py": {
+      "path": "python/carnot/experiment_7421_v651_contract_ingestion.py",
+      "sha256": "sha256:549d187b76725dc57d34a48782664ee595c5b2fdc7e30e190565b1719e9b4855",
+      "source_kind": "authority_or_code"
+    },
+    "python/carnot/reporting/current_work_receipt.py": {
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+      "source_kind": "authority_or_code"
+    },
+    "python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+      "source_kind": "authority_or_code"
+    },
+    "research-complete.yaml": {
+      "path": "research-complete.yaml",
+      "sha256": "sha256:494e49095ca9d6240173ed256d608561e13899dbd9caf2b9d2c798dc7e6e6a43",
+      "source_kind": "authority_or_code"
+    },
+    "research-program.md": {
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "source_kind": "authority_or_code"
+    },
+    "research-references.md": {
+      "path": "research-references.md",
+      "sha256": "sha256:7e5379474790c6522beb8827e8af7b85977dd6fbb2bcf639940e69a97ac2c342",
+      "source_kind": "authority_or_code"
+    },
+    "research-roadmap.yaml": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:e4d91ca83dc66138c4a925a74317355f182ecebb77397fdf63af180f2901bbf6",
+      "source_kind": "authority_or_code"
+    },
+    "research-studying.md": {
+      "path": "research-studying.md",
+      "sha256": "sha256:fd146b78edb822aee2d77498fc8796da68c82c5c71fe840af3fb748c5ac39e1d",
+      "source_kind": "authority_or_code"
+    },
+    "results/experiment_7409_v650_evidence_custody.json": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7409_v650_evidence_custody.json",
+      "sha256": "sha256:62a955a477ac0e93b53db87dfa690ede358be2b754a344eaca3b94d939012966",
+      "source_kind": "terminal_artifact"
+    },
+    "results/experiment_7410_v650_source_corpus.json": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7410_v650_source_corpus.json",
+      "sha256": "sha256:f56c1acc842959972ceb425777cda16ba979f6565aa512dbfd3bb0f6db247ffe",
+      "source_kind": "terminal_artifact"
+    },
+    "results/experiment_7411_v650_arc_call_budget.json": {
+      "original_flagged_adversarial": true,
+      "original_verdict_class": "disqualified",
+      "path": "results/experiment_7411_v650_arc_call_budget.json",
+      "sha256": "sha256:d70d0d0cc589d959fa1e1a164a37bf363cbf90156a88c82e8570236e200fcfa0",
+      "source_kind": "terminal_artifact"
+    },
+    "results/experiment_7412_v650_source_features.json": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7412_v650_source_features.json",
+      "sha256": "sha256:b6ff5100e270646ad98961513956bcdc07073668e034f764d1bd64d20fb17874",
+      "source_kind": "terminal_artifact"
+    },
+    "results/experiment_7413_v650_source_calibration.json": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7413_v650_source_calibration.json",
+      "sha256": "sha256:a32ff491648d1459a2948280d5a662b8a30fb9bb3476d10331d597be150ff647",
+      "source_kind": "terminal_artifact"
+    },
+    "results/experiment_7414_v650_selected_feedback.json": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7414_v650_selected_feedback.json",
+      "sha256": "sha256:12e57814d34d6ed4cd53a7ecafe56693700e4e94a98dada6cd4ac343c40f7091",
+      "source_kind": "terminal_artifact"
+    },
+    "results/experiment_7415_v650_decision_audit.json": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7415_v650_decision_audit.json",
+      "sha256": "sha256:86925e8f55b83a9a2790392ace1088f1bd1e52293b11c37b6a76bed73beb8f97",
+      "source_kind": "terminal_artifact"
+    },
+    "results/experiment_7416_v650_anchored_extraction.json": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7416_v650_anchored_extraction.json",
+      "sha256": "sha256:a67c9e94f7b3a23d53a5b27dfaa6975912e6f10ae9df5d32ecd1677c1fac98ce",
+      "source_kind": "terminal_artifact"
+    },
+    "results/experiment_7417_extraction_audit.json": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7417_extraction_audit.json",
+      "sha256": "sha256:31310dc50d9ae4d3fc406f7a1dcd8f1548e471ae5aebeb00a5b2291446bd7a3b",
+      "source_kind": "conductor_pre_gate_record"
+    },
+    "results/experiment_7418_v650_revision_memory.json": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7418_v650_revision_memory.json",
+      "sha256": "sha256:d72e23acee8fac56295aa2991ca6b8481193442b86358b8679450c5b53a4ab88",
+      "source_kind": "terminal_artifact"
+    },
+    "results/experiment_7419_v650_precision_placement.json": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7419_v650_precision_placement.json",
+      "sha256": "sha256:bb4c7fb4e041b5a0b454dbcfbe90c069b0243a47ac8712bf7bc9b80eb046529c",
+      "source_kind": "terminal_artifact"
+    },
+    "results/experiment_7420_v650_capstone.json": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7420_v650_capstone.json",
+      "sha256": "sha256:1acdff1b3b4a95d671815cdf229298a536a22425904d75dbb34ada937eeeb347",
+      "source_kind": "terminal_artifact"
+    },
+    "scripts/experiment_template.py": {
+      "path": "scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+      "source_kind": "authority_or_code"
+    },
+    "scripts/experiments/experiment_7421_v651_contract_ingestion.py": {
+      "path": "scripts/experiments/experiment_7421_v651_contract_ingestion.py",
+      "sha256": "sha256:77abc1f2fc9e9c3dcb0a109942170e8c21cecc65f3a7e901bf944c7b625646d8",
+      "source_kind": "authority_or_code"
+    },
+    "scripts/sweep_clusters.py": {
+      "path": "scripts/sweep_clusters.py",
+      "sha256": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0",
+      "source_kind": "authority_or_code"
+    },
+    "scripts/sweep_semscholar.py": {
+      "path": "scripts/sweep_semscholar.py",
+      "sha256": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351",
+      "source_kind": "authority_or_code"
+    },
+    "tests/python/test_experiment_7421_v651_contract_ingestion.py": {
+      "path": "tests/python/test_experiment_7421_v651_contract_ingestion.py",
+      "sha256": "sha256:dc73d9d35531bb0ec0be9faf3711e8eca142f43ff902b6c74ed443ed60cba905",
+      "source_kind": "authority_or_code"
+    }
+  },
+  "spline_logit_equivalence": {
+    "additive_spline_energy_logits": [
+      0.35,
+      0.3,
+      0.55
+    ],
+    "basis_row_count": 3,
+    "coefficient_count": 4,
+    "maximum_absolute_difference": 0.0,
+    "passed": true,
+    "principle": "With a fixed basis phi(x), both models compute beta dot phi(x). Spline locality changes which basis coefficients update, not the linear logit form.",
+    "same_basis_logistic_logits": [
+      0.35,
+      0.3,
+      0.55
+    ]
+  },
+  "started_at_utc": "2026-09-19T14:56:10.872840+00:00",
+  "status": "complete_disqualified_contract_authority",
+  "task_contract_rows": [
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": true,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7409_v650_evidence_custody.json",
+        "gates": [],
+        "id": "exp7409-evidence-custody",
+        "order": 1,
+        "phase": 1,
+        "substrate": "aggregation",
+        "title": "Bind twelve tasks and diagnose missing terminal evidence"
+      },
+      "order": 1,
+      "passed": false,
+      "producer_declarations": [],
+      "unit_id": "exp7421-contract-ingestion",
+      "yaml": {
+        "deliverable": "results/experiment_7421_v651_contract_ingestion.json",
+        "gates": [],
+        "id": "exp7421-contract-ingestion",
+        "order": 1,
+        "phase": 1,
+        "substrate": "aggregation",
+        "title": "Bind thirteen tasks and ingest methods against V650 evidence"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": true,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7410_v650_source_corpus.json",
+        "gates": [],
+        "id": "exp7410-source-corpus",
+        "order": 2,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Seal an attributed source-context calibration corpus"
+      },
+      "order": 2,
+      "passed": false,
+      "producer_declarations": [],
+      "unit_id": "exp7422-runtime-ownership",
+      "yaml": {
+        "deliverable": "results/experiment_7422_v651_runtime_ownership.json",
+        "gates": [],
+        "id": "exp7422-runtime-ownership",
+        "order": 2,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Repair GPU capacity checks and prove one owned lease"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": true,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7411_v650_arc_call_budget.json",
+        "gates": [],
+        "id": "exp7411-arc-call-budget",
+        "order": 3,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Enforce ARC request budgets at the live callback boundary"
+      },
+      "order": 3,
+      "passed": false,
+      "producer_declarations": [],
+      "unit_id": "exp7423-annotated-protocol",
+      "yaml": {
+        "deliverable": "results/experiment_7423_v651_annotated_protocol.json",
+        "gates": [],
+        "id": "exp7423-annotated-protocol",
+        "order": 3,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Seal human-annotated source groups and calibration partitions"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": true,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7412_v650_source_features.json",
+        "gates": [
+          {
+            "artifact_field": "source_corpus_ready_score",
+            "op": "==",
+            "upstream": "exp7410-source-corpus",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7410-source-corpus",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7410-source-corpus",
+            "value": false
+          }
+        ],
+        "id": "exp7412-source-features",
+        "order": 4,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Prototype source-aware energy inputs and freeze decision tests"
+      },
+      "order": 4,
+      "passed": false,
+      "producer_declarations": [],
+      "unit_id": "exp7424-arc-receipt-boundary",
+      "yaml": {
+        "deliverable": "results/experiment_7424_v651_arc_receipt_boundary.json",
+        "gates": [],
+        "id": "exp7424-arc-receipt-boundary",
+        "order": 4,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Qualify ARC request accounting with isolated scripted evidence"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": true,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7413_v650_source_calibration.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7413-source-calibration",
+        "order": 5,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure source-grounded Gibbs calibration against simple controls"
+      },
+      "order": 5,
+      "passed": false,
+      "producer_declarations": [],
+      "unit_id": "exp7425-spline-prototype",
+      "yaml": {
+        "deliverable": "results/experiment_7425_v651_spline_prototype.json",
+        "gates": [],
+        "id": "exp7425-spline-prototype",
+        "order": 5,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Prototype sparse local energy updates with dense-basis parity"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": true,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7414_v650_selected_feedback.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7414-selected-feedback",
+        "order": 6,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure continuous energy calibration under selected feedback"
+      },
+      "order": 6,
+      "passed": false,
+      "producer_declarations": [
+        {
+          "artifact_field": "annotated_protocol_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7423-annotated-protocol"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7423-annotated-protocol"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7423-annotated-protocol"
+        },
+        {
+          "artifact_field": "spline_prototype_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7425-spline-prototype"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7425-spline-prototype"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7425-spline-prototype"
+        }
+      ],
+      "unit_id": "exp7426-static-decisions",
+      "yaml": {
+        "deliverable": "results/experiment_7426_v651_static_decisions.json",
+        "gates": [
+          {
+            "artifact_field": "annotated_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7423-annotated-protocol",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7423-annotated-protocol",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7423-annotated-protocol",
+            "value": false
+          },
+          {
+            "artifact_field": "spline_prototype_ready_score",
+            "op": "==",
+            "upstream": "exp7425-spline-prototype",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7425-spline-prototype",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7425-spline-prototype",
+            "value": false
+          }
+        ],
+        "id": "exp7426-static-decisions",
+        "order": 6,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure calibrated Gibbs and spline decisions on human source labels"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7415_v650_decision_audit.json",
+        "gates": [],
+        "id": "exp7415-decision-audit",
+        "order": 7,
+        "phase": 2,
+        "substrate": "aggregation",
+        "title": "Independently audit calibrated decisions and feedback causality"
+      },
+      "order": 7,
+      "passed": false,
+      "producer_declarations": [
+        {
+          "artifact_field": "decision_capture_complete_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7426-static-decisions"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7426-static-decisions"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7426-static-decisions"
+        }
+      ],
+      "unit_id": "exp7427-randomized-feedback",
+      "yaml": {
+        "deliverable": "results/experiment_7427_v651_randomized_feedback.json",
+        "gates": [
+          {
+            "artifact_field": "decision_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7426-static-decisions",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7426-static-decisions",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7426-static-decisions",
+            "value": false
+          }
+        ],
+        "id": "exp7427-randomized-feedback",
+        "order": 7,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure continuous local learning under randomized label audits"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7416_v650_anchored_extraction.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7416-anchored-extraction",
+        "order": 8,
+        "phase": 3,
+        "substrate": "model_bounded_generation",
+        "title": "Compare bounded Qwen claim extraction with preserved source spans"
+      },
+      "order": 8,
+      "passed": false,
+      "producer_declarations": [],
+      "unit_id": "exp7428-decision-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7428_v651_decision_audit.json",
+        "gates": [],
+        "id": "exp7428-decision-audit",
+        "order": 8,
+        "phase": 2,
+        "substrate": "aggregation",
+        "title": "Independently test source-label leakage and learning causality"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7417_v650_extraction_audit.json",
+        "gates": [
+          {
+            "artifact_field": "extraction_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7416-anchored-extraction",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7416-anchored-extraction",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7416-anchored-extraction",
+            "value": false
+          }
+        ],
+        "id": "exp7417-extraction-audit",
+        "order": 9,
+        "phase": 3,
+        "substrate": "aggregation",
+        "title": "Audit extraction coverage and semantic preservation independently"
+      },
+      "order": 9,
+      "passed": false,
+      "producer_declarations": [
+        {
+          "artifact_field": "runtime_ownership_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7422-runtime-ownership"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7422-runtime-ownership"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7422-runtime-ownership"
+        }
+      ],
+      "unit_id": "exp7429-anchored-capture",
+      "yaml": {
+        "deliverable": "results/experiment_7429_v651_anchored_capture.json",
+        "gates": [
+          {
+            "artifact_field": "runtime_ownership_ready_score",
+            "op": "==",
+            "upstream": "exp7422-runtime-ownership",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7422-runtime-ownership",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7422-runtime-ownership",
+            "value": false
+          }
+        ],
+        "id": "exp7429-anchored-capture",
+        "order": 9,
+        "phase": 3,
+        "substrate": "model_bounded_generation",
+        "title": "Capture the sealed Qwen span comparison after lease repair"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7418_v650_revision_memory.json",
+        "gates": [],
+        "id": "exp7418-revision-memory",
+        "order": 10,
+        "phase": 3,
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Measure certified memory under source revision and eviction"
+      },
+      "order": 10,
+      "passed": false,
+      "producer_declarations": [
+        {
+          "artifact_field": "extraction_capture_complete_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7429-anchored-capture"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7429-anchored-capture"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7429-anchored-capture"
+        }
+      ],
+      "unit_id": "exp7430-extraction-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7430_v651_extraction_audit.json",
+        "gates": [
+          {
+            "artifact_field": "extraction_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7429-anchored-capture",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7429-anchored-capture",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7429-anchored-capture",
+            "value": false
+          }
+        ],
+        "id": "exp7430-extraction-audit",
+        "order": 10,
+        "phase": 3,
+        "substrate": "aggregation",
+        "title": "Audit Qwen claim coverage and qualifier preservation from raw replies"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7419_v650_precision_placement.json",
+        "gates": [],
+        "id": "exp7419-precision-placement",
+        "order": 11,
+        "phase": 4,
+        "substrate": "no_model_load",
+        "title": "Measure decision stability at reduced precision and preserve board states"
+      },
+      "order": 11,
+      "passed": false,
+      "producer_declarations": [
+        {
+          "artifact_field": "runtime_ownership_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7422-runtime-ownership"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7422-runtime-ownership"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7422-runtime-ownership"
+        },
+        {
+          "artifact_field": "arc_receipt_boundary_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7424-arc-receipt-boundary"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7424-arc-receipt-boundary"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared_verbatim": true,
+          "passed": true,
+          "producer_precedes_consumer": true,
+          "upstream": "exp7424-arc-receipt-boundary"
+        }
+      ],
+      "unit_id": "exp7431-arc-live-sentinel",
+      "yaml": {
+        "deliverable": "results/experiment_7431_v651_arc_live_sentinel.json",
+        "gates": [
+          {
+            "artifact_field": "runtime_ownership_ready_score",
+            "op": "==",
+            "upstream": "exp7422-runtime-ownership",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7422-runtime-ownership",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7422-runtime-ownership",
+            "value": false
+          },
+          {
+            "artifact_field": "arc_receipt_boundary_ready_score",
+            "op": "==",
+            "upstream": "exp7424-arc-receipt-boundary",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7424-arc-receipt-boundary",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7424-arc-receipt-boundary",
+            "value": false
+          }
+        ],
+        "id": "exp7431-arc-live-sentinel",
+        "order": 11,
+        "phase": 3,
+        "substrate": "model_bounded_generation",
+        "title": "Measure owned callback reachability in two adapter-withheld ARC episodes"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": true,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "substrate"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7420_v650_capstone.json",
+        "gates": [],
+        "id": "exp7420-capstone",
+        "order": 12,
+        "phase": 4,
+        "substrate": "aggregation",
+        "title": "Reconcile twelve dispositions and decide each research branch"
+      },
+      "order": 12,
+      "passed": false,
+      "producer_declarations": [],
+      "unit_id": "exp7432-update-placement",
+      "yaml": {
+        "deliverable": "results/experiment_7432_v651_update_placement.json",
+        "gates": [],
+        "id": "exp7432-update-placement",
+        "order": 12,
+        "phase": 4,
+        "substrate": "no_model_load",
+        "title": "Measure fixed-point local updates and preserve board prerequisites"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "producer_fields": true,
+        "quarantine_status": true,
+        "substrate": false,
+        "title": false
+      },
+      "failures": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 13,
+      "passed": false,
+      "producer_declarations": [],
+      "unit_id": "exp7433-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7433_v651_capstone.json",
+        "gates": [],
+        "id": "exp7433-capstone",
+        "order": 13,
+        "phase": 4,
+        "substrate": "aggregation",
+        "title": "Reconcile thirteen dispositions and decide calibrated-learning continuation"
+      }
+    }
+  ],
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7421_v651_contract_ingestion",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7421_v651_contract_ingestion"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.6019407268613577,
+      "ended_at_utc": "2026-09-19T14:56:13.286832+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7421_v651_contract_ingestion/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:82aab97986b322808e0fb4e0044f94c252bf92521a80ae064178d167628df819",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7421_v651_contract_ingestion\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7421_v651_contract_ingestion.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7421_v651_contract_ingestion": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7421_v651_contract_ingestion.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T14:56:12.684545+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7421-validation-9wmqvz9l/basetemp/focused tests/python/test_experiment_7421_v651_contract_ingestion.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7421-validation-9wmqvz9l/basetemp/focused",
+        "tests/python/test_experiment_7421_v651_contract_ingestion.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 23.591989933978766,
+      "ended_at_utc": "2026-09-19T14:56:36.879107+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7421_v651_contract_ingestion/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:176519c04f431db724aedc22256c14e7e0b13a8d8fa024526475a303472edf48",
+      "name": "focused_pytest",
+      "output_tail": "..........                                                               [100%]\n10 passed in 21.83s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T14:56:13.286867+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7421-validation-9wmqvz9l/coverage/.coverage '--include=*/experiment_7421_v651_contract_ingestion.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7421-validation-9wmqvz9l/basetemp/coverage tests/python/test_experiment_7421_v651_contract_ingestion.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7421-validation-9wmqvz9l/coverage/.coverage",
+        "--include=*/experiment_7421_v651_contract_ingestion.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7421-validation-9wmqvz9l/basetemp/coverage",
+        "tests/python/test_experiment_7421_v651_contract_ingestion.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 44.92092618113384,
+      "ended_at_utc": "2026-09-19T14:57:21.800311+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7421_v651_contract_ingestion/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:3269ba4b8986c24f75decf37e3582be15344b20ddbc2db0f1d4b4103ba69aabd",
+      "name": "changed_module_coverage",
+      "output_tail": "..........                                                               [100%]\n10 passed in 42.03s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-19T14:56:36.879138+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7421_v651_contract_ingestion.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7421_v651_contract_ingestion.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7421-validation-9wmqvz9l/coverage/.coverage"
+      },
+      "duration_s": 0.07285784417763352,
+      "ended_at_utc": "2026-09-19T14:57:21.873605+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7421_v651_contract_ingestion/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:8951309347f5c6996fc4fc8c6aceb8bb9df1944dfe8445a634c0afe47937fd1e",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                       Stmts   Miss  Cover   Missing\n----------------------------------------------------------------------------------------\npython/carnot/experiment_7421_v651_contract_ingestion.py     371      0   100%\n----------------------------------------------------------------------------------------\nTOTAL                                                        371      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T14:57:21.800342+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7421_v651_contract_ingestion.py scripts/experiments/experiment_7421_v651_contract_ingestion.py tests/python/test_experiment_7421_v651_contract_ingestion.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7421_v651_contract_ingestion.py",
+        "scripts/experiments/experiment_7421_v651_contract_ingestion.py",
+        "tests/python/test_experiment_7421_v651_contract_ingestion.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.015870718751102686,
+      "ended_at_utc": "2026-09-19T14:57:21.889857+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7421_v651_contract_ingestion/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T14:57:21.873659+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7421_v651_contract_ingestion.py scripts/experiments/experiment_7421_v651_contract_ingestion.py tests/python/test_experiment_7421_v651_contract_ingestion.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7421_v651_contract_ingestion.py",
+        "scripts/experiments/experiment_7421_v651_contract_ingestion.py",
+        "tests/python/test_experiment_7421_v651_contract_ingestion.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.009085434023290873,
+      "ended_at_utc": "2026-09-19T14:57:21.899279+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7421_v651_contract_ingestion/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T14:57:21.889900+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7421_v651_contract_ingestion.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7421_v651_contract_ingestion.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.15023824200034142,
+      "ended_at_utc": "2026-09-19T14:57:22.049924+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7421_v651_contract_ingestion/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T14:57:21.899305+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7421_v651_contract_ingestion.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7421_v651_contract_ingestion.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.021596573758870363,
+      "ended_at_utc": "2026-09-19T14:57:22.071893+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7421_v651_contract_ingestion/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T14:57:22.049989+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7421_v651_contract_ingestion.py --date 20260919 --validate /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7421_v651_contract_ingestion/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7421_v651_contract_ingestion.py",
+        "--date",
+        "20260919",
+        "--validate",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7421_v651_contract_ingestion/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 1.3041417677886784,
+      "ended_at_utc": "2026-09-19T14:57:27.892868+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7421_v651_contract_ingestion/validation/terminal/00_declared_entrypoint_cold_replay/00_declared_entrypoint_cold_replay.log",
+      "log_sha256": "sha256:a72bde47668d07b22bf2c23de201734e26273e3577a87f5ee9ad62ff8dbbb766",
+      "name": "declared_entrypoint_cold_replay",
+      "output_tail": "[exp7421] phase=startup event=flushed\n{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_capability_e2e",
+      "started_at_utc": "2026-09-19T14:57:26.588479+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7421_v651_contract_ingestion import validate_artifact;p=pathlib.Path(sys.argv[1]);v=json.loads(p.read_text());e=validate_artifact(v,require_terminal=False);print(json.dumps({'\"'\"'errors'\"'\"':e},sort_keys=True),flush=True);raise SystemExit(bool(e))' /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7421_v651_contract_ingestion/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,pathlib,sys;from carnot.experiment_7421_v651_contract_ingestion import validate_artifact;p=pathlib.Path(sys.argv[1]);v=json.loads(p.read_text());e=validate_artifact(v,require_terminal=False);print(json.dumps({'errors':e},sort_keys=True),flush=True);raise SystemExit(bool(e))",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7421_v651_contract_ingestion/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 1.221957546658814,
+      "ended_at_utc": "2026-09-19T14:57:29.115105+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7421_v651_contract_ingestion/validation/terminal/01_independent_cold_reducer/00_independent_cold_reducer.log",
+      "log_sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+      "name": "independent_cold_reducer",
+      "output_tail": "{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_raw_reduction",
+      "started_at_utc": "2026-09-19T14:57:27.892898+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7421_v651_contract_ingestion/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7421_v651_contract_ingestion/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5530808032490313,
+      "ended_at_utc": "2026-09-19T14:57:29.668597+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7421_v651_contract_ingestion/validation/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_safety",
+      "started_at_utc": "2026-09-19T14:57:29.115135+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7421_v651_contract_ingestion/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7421_v651_contract_ingestion/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.024613969959318638,
+      "ended_at_utc": "2026-09-19T14:57:29.693596+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7421_v651_contract_ingestion/validation/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_row_consistency",
+      "started_at_utc": "2026-09-19T14:57:29.668652+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false
+}

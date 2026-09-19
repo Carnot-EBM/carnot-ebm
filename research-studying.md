@@ -10,6 +10,23 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP7421-V651-METHOD-INGESTION-START -->
+## Exp 7421 - V651 focused method ingestion - INGESTED
+
+- These sources were already indexed in the 2026-09-19 V651 planning review.
+  This entry does not claim a new discovery.
+- Spline locality maps to sparse updates with dense-basis and logistic parity.
+- Partial feedback maps to randomized audits with recorded reveal probability.
+- Claim attribution maps to source IDs, spans, coverage, qualifiers, and
+  contradiction checks with independent human labels.
+- Semantic Scholar citation access remains an explicit access outcome. No
+  citation census or completeness claim follows from a failed endpoint.
+- Note: `docs/research-notes/v651-method-ingestion.md`.
+- Deferred: unchanged proof memory, external-text reranking, generic Ising
+  sweeps, and foundation-model training.
+- Publication gate definitions G1-G4 remain unchanged.
+<!-- EXP7421-V651-METHOD-INGESTION-END -->
+
 <!-- EXP6515-V564-SOURCE-METHOD-CONTRACT-START -->
 ## Exp 6515 - V564 source method contract - INGESTED
 
