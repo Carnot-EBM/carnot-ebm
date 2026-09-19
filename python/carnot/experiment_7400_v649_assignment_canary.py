@@ -230,6 +230,41 @@ def gate_row(
     }
 
 
+def rtx3090_capacity_gate_rows(
+    query_receipts: Sequence[Mapping[str, Any]],
+    available_gpu_uuids: Sequence[str],
+) -> list[JsonDict]:
+    """Check inventory transport and device capacity as different facts.
+
+    A successful inventory query says that the count is trustworthy. The count
+    can exceed the one-device minimum, so it must use an integer lower bound.
+    Neither check claims that this task owns a device; ownership starts only
+    after the lease protocol succeeds.
+    """
+
+    query_ok = len(query_receipts) == 2 and all(
+        row.get("returncode") == 0 for row in query_receipts
+    )
+    return [
+        gate_row(
+            "rtx3090_inventory_query_succeeded",
+            "nvidia-smi",
+            "query_ok",
+            "==",
+            True,
+            query_ok,
+        ),
+        gate_row(
+            "minimum_available_rtx3090_capacity",
+            "nvidia-smi_and_gpu_lease_journal",
+            "available_rtx3090_slots",
+            ">=",
+            1,
+            len(available_gpu_uuids),
+        ),
+    ]
+
+
 def gate_check_summary(checks: Sequence[Mapping[str, Any]]) -> JsonDict:
     """Name the first exact failure while retaining every failed check name."""
 
@@ -532,18 +567,8 @@ def _runtime_preconditions(
         if row.get("gpu_name") == "NVIDIA GeForce RTX 3090"
     }
     available = [uuid for uuid in available_all if uuid in rtx3090]
-    query_ok = all(row.get("returncode") == 0 for row in query_receipts)
     progress(started, "preconditions", "after_subprocess", operation="gpu_inventory")
-    checks.append(
-        gate_row(
-            "one_owned_rtx3090_slot",
-            "nvidia-smi_and_gpu_lease_journal",
-            "owned_runtime_receipt",
-            "==",
-            {"query_ok": True, "minimum_rtx3090_slots": 1},
-            {"query_ok": query_ok, "minimum_rtx3090_slots": len(available)},
-        )
-    )
+    checks.extend(rtx3090_capacity_gate_rows(query_receipts, available))
     context.update(
         {
             "model_path": model_path,

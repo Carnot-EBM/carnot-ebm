@@ -1,0 +1,56 @@
+{
+  "lease_rows": [
+    {
+      "acquired_monotonic_ns": 2122909670784982,
+      "acquisition_races": [],
+      "child_readback_monotonic_ns": 2122910090060518,
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "fresh_child_command_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,sys,time;from pathlib import Path;from carnot import gpu_lease_phase_journal as g;p=Path(sys.argv[1]);e=json.loads(sys.argv[2]);d=g.read_journal(p);x=g.validate_journal_document(d,expected_pid=e['\"'\"'pid'\"'\"'],expected_pid_start_ticks=e['\"'\"'pid_start_ticks'\"'\"'],expected_device_uuid=e['\"'\"'device_uuid'\"'\"'],expected_model=e['\"'\"'expected_model'\"'\"']);o={'\"'\"'lease_id'\"'\"':d.get('\"'\"'lease_id'\"'\"'),'\"'\"'task_id'\"'\"':d.get('\"'\"'task_id'\"'\"'),'\"'\"'pid'\"'\"':d.get('\"'\"'owner'\"'\"',{}).get('\"'\"'pid'\"'\"'),'\"'\"'pid_start_ticks'\"'\"':d.get('\"'\"'owner'\"'\"',{}).get('\"'\"'pid_start_ticks'\"'\"'),'\"'\"'device_uuid'\"'\"':d.get('\"'\"'device_uuid'\"'\"'),'\"'\"'errors'\"'\"':x,'\"'\"'owner_process_matches'\"'\"':g.process_start_matches(e['\"'\"'pid'\"'\"'],e['\"'\"'pid_start_ticks'\"'\"']),'\"'\"'read_monotonic_ns'\"'\"':time.monotonic_ns()};print(json.dumps(o,sort_keys=True),flush=True);raise SystemExit(bool(x))' /tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json '{\"device_uuid\": \"GPU-b52387a2-c625-de87-8d34-e6f64e684bab\", \"expected_model\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169\", \"pid\": 4051318, \"pid_start_ticks\": 212290912}'",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import json,sys,time;from pathlib import Path;from carnot import gpu_lease_phase_journal as g;p=Path(sys.argv[1]);e=json.loads(sys.argv[2]);d=g.read_journal(p);x=g.validate_journal_document(d,expected_pid=e['pid'],expected_pid_start_ticks=e['pid_start_ticks'],expected_device_uuid=e['device_uuid'],expected_model=e['expected_model']);o={'lease_id':d.get('lease_id'),'task_id':d.get('task_id'),'pid':d.get('owner',{}).get('pid'),'pid_start_ticks':d.get('owner',{}).get('pid_start_ticks'),'device_uuid':d.get('device_uuid'),'errors':x,'owner_process_matches':g.process_start_matches(e['pid'],e['pid_start_ticks']),'read_monotonic_ns':time.monotonic_ns()};print(json.dumps(o,sort_keys=True),flush=True);raise SystemExit(bool(x))",
+          "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+          "{\"device_uuid\": \"GPU-b52387a2-c625-de87-8d34-e6f64e684bab\", \"expected_model\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169\", \"pid\": 4051318, \"pid_start_ticks\": 212290912}"
+        ],
+        "duration_s": 0.5112322559580207,
+        "exit_code": 0,
+        "identity_passed": true,
+        "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/child_readback/00_fresh_child_lease_readback.log",
+        "log_sha256": "sha256:5d704da399378071a16c2d9a1c7f566a46ef0fb11fcafb30ec13fadfed2f9695",
+        "name": "fresh_child_lease_readback",
+        "output_tail": "{\"device_uuid\": \"GPU-b52387a2-c625-de87-8d34-e6f64e684bab\", \"errors\": [], \"lease_id\": \"lease:167a96d3225501677a360fab193c8da5e7981983d2d839ebde8f67cb3796bd60\", \"owner_process_matches\": true, \"pid\": 4051318, \"pid_start_ticks\": 212290912, \"read_monotonic_ns\": 2122910090060518, \"task_id\": \"experiment_7422_v651_runtime_ownership\"}\n",
+        "passed": true,
+        "scope": "owned_lease_identity",
+        "timed_out": false
+      },
+      "fresh_child_readback": {
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "errors": [],
+        "lease_id": "lease:167a96d3225501677a360fab193c8da5e7981983d2d839ebde8f67cb3796bd60",
+        "owner_process_matches": true,
+        "pid": 4051318,
+        "pid_start_ticks": 212290912,
+        "read_monotonic_ns": 2122910090060518,
+        "task_id": "experiment_7422_v651_runtime_ownership"
+      },
+      "fresh_child_readback_passed": true,
+      "lease_id": "lease:167a96d3225501677a360fab193c8da5e7981983d2d839ebde8f67cb3796bd60",
+      "owner_pid": 4051318,
+      "owner_pid_start_ticks": 212290912,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "release_duration_s": 0.00015145493671298027,
+      "release_passed": true,
+      "released_monotonic_ns": null,
+      "row_kind": "lease_lifecycle",
+      "signals_sent": [],
+      "task_id": "experiment_7422_v651_runtime_ownership",
+      "terminal_phase": "terminal_blocked"
+    }
+  ]
+}

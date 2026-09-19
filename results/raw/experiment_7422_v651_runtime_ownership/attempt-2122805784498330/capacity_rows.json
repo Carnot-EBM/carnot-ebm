@@ -1,0 +1,890 @@
+{
+  "capacity_rows": [
+    {
+      "available_capacity": 2,
+      "available_gpu_uuids": [
+        "GPU-0",
+        "GPU-1"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": false,
+      "fixture_expectation_passed": true,
+      "fixture_id": "failed_inventory",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": false,
+          "operator": "==",
+          "passed": false,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 2,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": false,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 2,
+        "query_ok": false
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [],
+      "passed": false,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        },
+        {
+          "gpu_index": 1,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-1",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": false,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 9
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 0,
+      "available_gpu_uuids": [],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": false,
+      "expected_capacity_passed": false,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "zero_free_devices",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 0,
+          "operator": ">=",
+          "passed": false,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": false,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 0,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [],
+      "passed": false,
+      "process_rows": [],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 1,
+      "available_gpu_uuids": [
+        "GPU-0"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "one_free_device",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 1,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": true,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [],
+      "passed": true,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 2,
+      "available_gpu_uuids": [
+        "GPU-0",
+        "GPU-1"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "two_free_devices",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 2,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": false,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 2,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [],
+      "passed": true,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        },
+        {
+          "gpu_index": 1,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-1",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 1,
+      "available_gpu_uuids": [
+        "GPU-1"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "one_busy_device",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 1,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": true,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [
+        {
+          "device_uuid": "GPU-0",
+          "lease_id": null,
+          "owner_live": true,
+          "owner_pid": 50,
+          "owner_start_ticks": 1234,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "current_canonical_lease_missing"
+          ],
+          "recovery_eligible": false
+        }
+      ],
+      "passed": true,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 12576,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 12000,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 11996,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "current_canonical_lease_missing"
+          ],
+          "pid": 50,
+          "proc_exists": true,
+          "start_time_ticks": 1234
+        },
+        {
+          "gpu_index": 1,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-1",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 0,
+      "available_gpu_uuids": [],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": false,
+      "expected_capacity_passed": false,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "unknown_process_state",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 0,
+          "operator": ">=",
+          "passed": false,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": false,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 0,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [
+        {
+          "device_uuid": "GPU-0",
+          "lease_id": null,
+          "owner_live": false,
+          "owner_pid": 50,
+          "owner_start_ticks": null,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "current_canonical_lease_missing"
+          ],
+          "recovery_eligible": false
+        }
+      ],
+      "passed": false,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 12576,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 12000,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 11996,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "current_canonical_lease_missing"
+          ],
+          "pid": 50,
+          "proc_exists": false,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 1,
+      "available_gpu_uuids": [
+        "GPU-0"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "stale_owner_identity",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 1,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [
+        {
+          "canonical": true,
+          "device_uuid": "GPU-0",
+          "error": null,
+          "fresh": true,
+          "lease_id": "lease:stale-owner",
+          "owner_live": false,
+          "owner_pid": 50,
+          "owner_start_ticks": 1,
+          "readable": true,
+          "released": false
+        }
+      ],
+      "legacy_dictionary_equality_passed": true,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [
+        {
+          "canonical": true,
+          "device_uuid": "GPU-0",
+          "error": null,
+          "fresh": true,
+          "lease_id": "lease:stale-owner",
+          "owner_live": false,
+          "owner_pid": 50,
+          "owner_start_ticks": 1,
+          "recovery_eligible": true,
+          "released": false
+        }
+      ],
+      "passed": true,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 1,
+      "available_gpu_uuids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "host",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 1,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [
+        {
+          "canonical": true,
+          "checksum_valid": true,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "error": null,
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "expires_monotonic_ns": 2110607214040435,
+          "fresh": false,
+          "lease_id": "lease:87aedeb8adfa66b5a90d6d27a262ebdd0f3a2f05a4be70aeb6d1b267424684c2",
+          "lease_path": "/tmp/carnot-gpu-leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.journal.json",
+          "model_sha256": null,
+          "owner_argv_digest": "sha256:7a0ef7ed86591406bdab1993cec1db68752fa23cb9b0df8a39193351914ecde9",
+          "owner_executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "owner_live": false,
+          "owner_pid": 3885305,
+          "owner_start_ticks": 210816323,
+          "phase": "inferencing",
+          "port": null,
+          "readable": true,
+          "released": false,
+          "schema": "carnot.gpu_lease_phase_journal.v1",
+          "signals_sent": [],
+          "task_id": "experiment_7416_v650_anchored_extraction"
+        },
+        {
+          "canonical": true,
+          "checksum_valid": true,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "error": null,
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "expires_monotonic_ns": 2122820100707035,
+          "fresh": false,
+          "lease_id": "lease:5c45fa7f8d0a34eda12e02cb2a7e39f434e30dab66a4951e6afbfdf7127dc0a6",
+          "lease_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+          "model_sha256": null,
+          "owner_argv_digest": "sha256:bad38e9310562fa521abefe51ecdd3f35f6a278db1ef203545cc7911cccc28a8",
+          "owner_executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "owner_live": false,
+          "owner_pid": 4049045,
+          "owner_start_ticks": 212269957,
+          "phase": "terminal_blocked",
+          "port": null,
+          "readable": true,
+          "released": true,
+          "schema": "carnot.gpu_lease_phase_journal.v1",
+          "signals_sent": [],
+          "task_id": "experiment_7422_v651_runtime_ownership"
+        }
+      ],
+      "legacy_dictionary_equality_passed": true,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [
+        {
+          "canonical": true,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "error": null,
+          "fresh": false,
+          "lease_id": "lease:87aedeb8adfa66b5a90d6d27a262ebdd0f3a2f05a4be70aeb6d1b267424684c2",
+          "owner_live": false,
+          "owner_pid": 3885305,
+          "owner_start_ticks": 210816323,
+          "recovery_eligible": true,
+          "released": false
+        },
+        {
+          "canonical": true,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "error": null,
+          "fresh": false,
+          "lease_id": "lease:5c45fa7f8d0a34eda12e02cb2a7e39f434e30dab66a4951e6afbfdf7127dc0a6",
+          "owner_live": false,
+          "owner_pid": 4049045,
+          "owner_start_ticks": 212269957,
+          "recovery_eligible": false,
+          "released": true
+        },
+        {
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "lease_id": null,
+          "owner_live": true,
+          "owner_pid": 3885400,
+          "owner_start_ticks": 210816568,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "lease_not_fresh",
+            "lease_owner_not_live",
+            "lease_owner_pid_mismatch",
+            "lease_owner_start_mismatch",
+            "lease_port_missing",
+            "lease_port_mismatch",
+            "lease_model_hash_missing",
+            "lease_model_hash_mismatch"
+          ],
+          "recovery_eligible": false
+        }
+      ],
+      "passed": true,
+      "process_rows": [
+        {
+          "age_s": null,
+          "command": [],
+          "command_sha256": null,
+          "command_text": "",
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24120,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "matching_lease_id": null,
+          "model_path": null,
+          "model_sha256": null,
+          "open_port": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "ppid": null,
+          "proc_exists": null,
+          "process_group_id": null,
+          "process_start_utc": null,
+          "session_id": null,
+          "start_time_ticks": null
+        },
+        {
+          "age_s": 14640.17,
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--model",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "36127",
+            "--ctx-size",
+            "4096",
+            "--n-gpu-layers",
+            "all",
+            "--split-mode",
+            "none",
+            "--parallel",
+            "1",
+            "--batch-size",
+            "512",
+            "--ubatch-size",
+            "512",
+            "--cache-type-k",
+            "q8_0",
+            "--cache-type-v",
+            "q8_0",
+            "--fit",
+            "off",
+            "--offline",
+            "--jinja",
+            "--reasoning",
+            "off",
+            "--no-webui",
+            "--log-verbosity",
+            "3"
+          ],
+          "command_sha256": "sha256:6a622e81e81aa1381af8cf929798d8396edd11b31b51dc452d246397bac37962",
+          "command_text": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --model /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf --host 127.0.0.1 --port 36127 --ctx-size 4096 --n-gpu-layers all --split-mode none --parallel 1 --batch-size 512 --ubatch-size 512 --cache-type-k q8_0 --cache-type-v q8_0 --fit off --offline --jinja --reasoning off --no-webui --log-verbosity 3",
+          "gpu_index": 1,
+          "gpu_memory_free_mb": 7753,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 16372,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 16362,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "matching_lease_id": null,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "nvidia_process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "open_port": 36127,
+          "open_ports": [
+            36127
+          ],
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "lease_not_fresh",
+            "lease_owner_not_live",
+            "lease_owner_pid_mismatch",
+            "lease_owner_start_mismatch",
+            "lease_port_missing",
+            "lease_port_mismatch",
+            "lease_model_hash_missing",
+            "lease_model_hash_mismatch"
+          ],
+          "pid": 3885400,
+          "ppid": 1232,
+          "proc_exists": true,
+          "process_group_id": 3885400,
+          "process_start_utc": "2026-09-19T11:14:25.450179Z",
+          "session_id": 3885400,
+          "start_time_ticks": 210816568
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "command": [
+            "nvidia-smi",
+            "--query-gpu=index,uuid,name,utilization.gpu,memory.total,memory.used,memory.free",
+            "--format=csv,noheader,nounits"
+          ],
+          "duration_s": 0.03564,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 0, 24576, 4, 24120\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 0, 24576, 16372, 7753\n"
+        },
+        {
+          "command": [
+            "nvidia-smi",
+            "--query-compute-apps=gpu_uuid,pid,process_name,used_memory",
+            "--format=csv,noheader,nounits"
+          ],
+          "duration_s": 0.0293,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "GPU-7971baff-9583-eaa6-2292-393f930a28f9, 3885400, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 16362\n"
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    }
+  ]
+}

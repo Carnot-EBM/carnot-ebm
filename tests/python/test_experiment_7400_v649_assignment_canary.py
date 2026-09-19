@@ -203,6 +203,34 @@ def test_scenario_report_7400_gate_keeps_schedule_error(
     assert context["schedule"] == []
 
 
+def test_req_verify_7422_shared_capacity_gates_are_independent() -> None:
+    """REQ-VERIFY-7422 checks query success and minimum capacity separately."""
+
+    success = [{"returncode": 0}, {"returncode": 0}]
+    failed = [{"returncode": 0}, {"returncode": 9}]
+
+    two_free = mod.rtx3090_capacity_gate_rows(success, ["GPU-0", "GPU-1"])
+    assert [row["check"] for row in two_free] == [
+        "rtx3090_inventory_query_succeeded",
+        "minimum_available_rtx3090_capacity",
+    ]
+    assert [row["operator"] for row in two_free] == ["==", ">="]
+    assert [row["observed_value"] for row in two_free] == [True, 2]
+    assert all(row["passed"] for row in two_free)
+
+    no_free = mod.rtx3090_capacity_gate_rows(success, [])
+    assert no_free[0]["passed"] is True
+    assert no_free[1]["passed"] is False
+
+    failed_query = mod.rtx3090_capacity_gate_rows(failed, ["GPU-0"])
+    assert failed_query[0]["passed"] is False
+    assert failed_query[1]["passed"] is True
+
+    missing_query = mod.rtx3090_capacity_gate_rows([], ["GPU-0"])
+    assert missing_query[0]["observed_value"] is False
+    assert missing_query[0]["passed"] is False
+
+
 def test_scenario_report_7400_transport_keeps_sat_separate() -> None:
     """SCENARIO-REPORT-7400-TRANSPORT counts faithful syntax, not SAT success."""
 

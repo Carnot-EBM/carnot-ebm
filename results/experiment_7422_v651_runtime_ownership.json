@@ -1,0 +1,2839 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "artifact_field": "preconditions_checked",
+      "category": "validity",
+      "check": "branch_local_preconditions",
+      "expected_value": true,
+      "observed_value": true,
+      "operator": "==",
+      "passed": true,
+      "path": "exp7422-v651-runtime-ownership",
+      "principle": "The declared operands determine this check.",
+      "upstream": "exp7422-v651-runtime-ownership"
+    },
+    {
+      "artifact_field": "capacity_rows",
+      "category": "validity",
+      "check": "private_capacity_controls",
+      "expected_value": true,
+      "observed_value": true,
+      "operator": "==",
+      "passed": true,
+      "path": "exp7422-v651-runtime-ownership",
+      "principle": "The declared operands determine this check.",
+      "upstream": "exp7422-v651-runtime-ownership"
+    },
+    {
+      "artifact_field": "available_rtx3090_slots",
+      "category": "capacity",
+      "check": "host_available_capacity",
+      "expected_value": true,
+      "observed_value": true,
+      "operator": "==",
+      "passed": true,
+      "path": "nvidia-smi_and_gpu_lease_journal",
+      "principle": "The declared operands determine this check.",
+      "upstream": "nvidia-smi_and_gpu_lease_journal"
+    },
+    {
+      "artifact_field": "lease_rows",
+      "category": "ownership",
+      "check": "owned_lease_lifecycle",
+      "expected_value": true,
+      "observed_value": true,
+      "operator": "==",
+      "passed": true,
+      "path": "gpu_lease_phase_journal.GpuLease",
+      "principle": "The declared operands determine this check.",
+      "upstream": "gpu_lease_phase_journal.GpuLease"
+    },
+    {
+      "artifact_field": "required_checks_passed",
+      "category": "validation",
+      "check": "affected_validation",
+      "expected_value": true,
+      "observed_value": true,
+      "operator": "==",
+      "passed": true,
+      "path": "validation_receipts",
+      "principle": "The declared operands determine this check.",
+      "upstream": "validation_receipts"
+    },
+    {
+      "artifact_field": "terminal_checks_passed",
+      "category": "validation",
+      "check": "terminal_readers",
+      "expected_value": true,
+      "observed_value": true,
+      "operator": "==",
+      "passed": true,
+      "path": "validation_receipts",
+      "principle": "The declared operands determine this check.",
+      "upstream": "validation_receipts"
+    },
+    {
+      "artifact_field": "model_invoked",
+      "category": "safety",
+      "check": "no_current_model_invocation",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "passed": true,
+      "path": "current_work_receipt",
+      "principle": "The declared operands determine this check.",
+      "upstream": "current_work_receipt"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "category": "safety",
+      "check": "adversarial_clean",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "passed": true,
+      "path": "adversarial_verify",
+      "principle": "The declared operands determine this check.",
+      "upstream": "adversarial_verify"
+    },
+    {
+      "artifact_field": "promotion_score",
+      "category": "promotion",
+      "check": "promotion_disabled",
+      "expected_value": 0,
+      "observed_value": 0,
+      "operator": "==",
+      "passed": true,
+      "path": "exp7422-v651-runtime-ownership",
+      "principle": "The declared operands determine this check.",
+      "upstream": "exp7422-v651-runtime-ownership"
+    }
+  ],
+  "capability_e2e_checks": [
+    "declared_entrypoint",
+    "fresh_process_cold_replay"
+  ],
+  "capacity_rows": [
+    {
+      "available_capacity": 2,
+      "available_gpu_uuids": [
+        "GPU-0",
+        "GPU-1"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": false,
+      "fixture_expectation_passed": true,
+      "fixture_id": "failed_inventory",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": false,
+          "operator": "==",
+          "passed": false,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 2,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": false,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 2,
+        "query_ok": false
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [],
+      "passed": false,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        },
+        {
+          "gpu_index": 1,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-1",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": false,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 9
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 0,
+      "available_gpu_uuids": [],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": false,
+      "expected_capacity_passed": false,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "zero_free_devices",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 0,
+          "operator": ">=",
+          "passed": false,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": false,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 0,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [],
+      "passed": false,
+      "process_rows": [],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 1,
+      "available_gpu_uuids": [
+        "GPU-0"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "one_free_device",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 1,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": true,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [],
+      "passed": true,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 2,
+      "available_gpu_uuids": [
+        "GPU-0",
+        "GPU-1"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "two_free_devices",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 2,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": false,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 2,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [],
+      "passed": true,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        },
+        {
+          "gpu_index": 1,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-1",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 1,
+      "available_gpu_uuids": [
+        "GPU-1"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "one_busy_device",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 1,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": true,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [
+        {
+          "device_uuid": "GPU-0",
+          "lease_id": null,
+          "owner_live": true,
+          "owner_pid": 50,
+          "owner_start_ticks": 1234,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "current_canonical_lease_missing"
+          ],
+          "recovery_eligible": false
+        }
+      ],
+      "passed": true,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 12576,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 12000,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 11996,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "current_canonical_lease_missing"
+          ],
+          "pid": 50,
+          "proc_exists": true,
+          "start_time_ticks": 1234
+        },
+        {
+          "gpu_index": 1,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-1",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 0,
+      "available_gpu_uuids": [],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": false,
+      "expected_capacity_passed": false,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "unknown_process_state",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 0,
+          "operator": ">=",
+          "passed": false,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": false,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 0,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [
+        {
+          "device_uuid": "GPU-0",
+          "lease_id": null,
+          "owner_live": false,
+          "owner_pid": 50,
+          "owner_start_ticks": null,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "current_canonical_lease_missing"
+          ],
+          "recovery_eligible": false
+        }
+      ],
+      "passed": false,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 12576,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 12000,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 11996,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "current_canonical_lease_missing"
+          ],
+          "pid": 50,
+          "proc_exists": false,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 1,
+      "available_gpu_uuids": [
+        "GPU-0"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "stale_owner_identity",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 1,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [
+        {
+          "canonical": true,
+          "device_uuid": "GPU-0",
+          "error": null,
+          "fresh": true,
+          "lease_id": "lease:stale-owner",
+          "owner_live": false,
+          "owner_pid": 50,
+          "owner_start_ticks": 1,
+          "readable": true,
+          "released": false
+        }
+      ],
+      "legacy_dictionary_equality_passed": true,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [
+        {
+          "canonical": true,
+          "device_uuid": "GPU-0",
+          "error": null,
+          "fresh": true,
+          "lease_id": "lease:stale-owner",
+          "owner_live": false,
+          "owner_pid": 50,
+          "owner_start_ticks": 1,
+          "recovery_eligible": true,
+          "released": false
+        }
+      ],
+      "passed": true,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 1,
+      "available_gpu_uuids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "host",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 1,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [
+        {
+          "canonical": true,
+          "checksum_valid": true,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "error": null,
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "expires_monotonic_ns": 2110607214040435,
+          "fresh": false,
+          "lease_id": "lease:87aedeb8adfa66b5a90d6d27a262ebdd0f3a2f05a4be70aeb6d1b267424684c2",
+          "lease_path": "/tmp/carnot-gpu-leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.journal.json",
+          "model_sha256": null,
+          "owner_argv_digest": "sha256:7a0ef7ed86591406bdab1993cec1db68752fa23cb9b0df8a39193351914ecde9",
+          "owner_executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "owner_live": false,
+          "owner_pid": 3885305,
+          "owner_start_ticks": 210816323,
+          "phase": "inferencing",
+          "port": null,
+          "readable": true,
+          "released": false,
+          "schema": "carnot.gpu_lease_phase_journal.v1",
+          "signals_sent": [],
+          "task_id": "experiment_7416_v650_anchored_extraction"
+        },
+        {
+          "canonical": true,
+          "checksum_valid": true,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "error": null,
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "expires_monotonic_ns": 2122925858156996,
+          "fresh": false,
+          "lease_id": "lease:9c96e3557d6a7369f900413dc838e74ae9994c0b8c1e63caf979b7196cb9050c",
+          "lease_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+          "model_sha256": null,
+          "owner_argv_digest": "sha256:bad38e9310562fa521abefe51ecdd3f35f6a278db1ef203545cc7911cccc28a8",
+          "owner_executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "owner_live": false,
+          "owner_pid": 4050167,
+          "owner_start_ticks": 212280531,
+          "phase": "terminal_blocked",
+          "port": null,
+          "readable": true,
+          "released": true,
+          "schema": "carnot.gpu_lease_phase_journal.v1",
+          "signals_sent": [],
+          "task_id": "experiment_7422_v651_runtime_ownership"
+        }
+      ],
+      "legacy_dictionary_equality_passed": true,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [
+        {
+          "canonical": true,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "error": null,
+          "fresh": false,
+          "lease_id": "lease:87aedeb8adfa66b5a90d6d27a262ebdd0f3a2f05a4be70aeb6d1b267424684c2",
+          "owner_live": false,
+          "owner_pid": 3885305,
+          "owner_start_ticks": 210816323,
+          "recovery_eligible": true,
+          "released": false
+        },
+        {
+          "canonical": true,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "error": null,
+          "fresh": false,
+          "lease_id": "lease:9c96e3557d6a7369f900413dc838e74ae9994c0b8c1e63caf979b7196cb9050c",
+          "owner_live": false,
+          "owner_pid": 4050167,
+          "owner_start_ticks": 212280531,
+          "recovery_eligible": false,
+          "released": true
+        },
+        {
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "lease_id": null,
+          "owner_live": true,
+          "owner_pid": 3885400,
+          "owner_start_ticks": 210816568,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "lease_not_fresh",
+            "lease_owner_not_live",
+            "lease_owner_pid_mismatch",
+            "lease_owner_start_mismatch",
+            "lease_port_missing",
+            "lease_port_mismatch",
+            "lease_model_hash_missing",
+            "lease_model_hash_mismatch"
+          ],
+          "recovery_eligible": false
+        }
+      ],
+      "passed": true,
+      "process_rows": [
+        {
+          "age_s": null,
+          "command": [],
+          "command_sha256": null,
+          "command_text": "",
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24120,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "matching_lease_id": null,
+          "model_path": null,
+          "model_sha256": null,
+          "open_port": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "ppid": null,
+          "proc_exists": null,
+          "process_group_id": null,
+          "process_start_utc": null,
+          "session_id": null,
+          "start_time_ticks": null
+        },
+        {
+          "age_s": 14743.98,
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--model",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "36127",
+            "--ctx-size",
+            "4096",
+            "--n-gpu-layers",
+            "all",
+            "--split-mode",
+            "none",
+            "--parallel",
+            "1",
+            "--batch-size",
+            "512",
+            "--ubatch-size",
+            "512",
+            "--cache-type-k",
+            "q8_0",
+            "--cache-type-v",
+            "q8_0",
+            "--fit",
+            "off",
+            "--offline",
+            "--jinja",
+            "--reasoning",
+            "off",
+            "--no-webui",
+            "--log-verbosity",
+            "3"
+          ],
+          "command_sha256": "sha256:6a622e81e81aa1381af8cf929798d8396edd11b31b51dc452d246397bac37962",
+          "command_text": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --model /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf --host 127.0.0.1 --port 36127 --ctx-size 4096 --n-gpu-layers all --split-mode none --parallel 1 --batch-size 512 --ubatch-size 512 --cache-type-k q8_0 --cache-type-v q8_0 --fit off --offline --jinja --reasoning off --no-webui --log-verbosity 3",
+          "gpu_index": 1,
+          "gpu_memory_free_mb": 7753,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 16372,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 16362,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "matching_lease_id": null,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "nvidia_process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "open_port": 36127,
+          "open_ports": [
+            36127
+          ],
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "lease_not_fresh",
+            "lease_owner_not_live",
+            "lease_owner_pid_mismatch",
+            "lease_owner_start_mismatch",
+            "lease_port_missing",
+            "lease_port_mismatch",
+            "lease_model_hash_missing",
+            "lease_model_hash_mismatch"
+          ],
+          "pid": 3885400,
+          "ppid": 1232,
+          "proc_exists": true,
+          "process_group_id": 3885400,
+          "process_start_utc": "2026-09-19T11:14:25.452893Z",
+          "session_id": 3885400,
+          "start_time_ticks": 210816568
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "command": [
+            "nvidia-smi",
+            "--query-gpu=index,uuid,name,utilization.gpu,memory.total,memory.used,memory.free",
+            "--format=csv,noheader,nounits"
+          ],
+          "duration_s": 0.035238,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 0, 24576, 4, 24120\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 0, 24576, 16372, 7753\n"
+        },
+        {
+          "command": [
+            "nvidia-smi",
+            "--query-compute-apps=gpu_uuid,pid,process_name,used_memory",
+            "--format=csv,noheader,nounits"
+          ],
+          "duration_s": 0.026986,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "GPU-7971baff-9583-eaa6-2292-393f930a28f9, 3885400, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 16362\n"
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    }
+  ],
+  "cold_start_duration_s": 1.486989294178784,
+  "completed_at_utc": "2026-09-19T15:20:21.961337Z",
+  "current_invocation_events": [],
+  "current_owner_pid": 4051318,
+  "current_run_id": "experiment_7422_v651_runtime_ownership:0",
+  "duration_s": 12.597639578,
+  "ended_monotonic_ns": 12597639578,
+  "event_count": 0,
+  "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "execution_venue": "host",
+  "experiment_id": "exp7422-v651-runtime-ownership",
+  "field_principles": {
+    "MODEL_SPECS": "Use an empty list because this audit invokes no current LLM.",
+    "acceptance_gate_results": "Keep validity, capacity, ownership, validation, safety, and promotion checks separate.",
+    "capacity_rows": "Separate query success, integer capacity, predicate outcome, and owner state for each fixture and host.",
+    "duration_s": "Measure current work monotonically and separate resource, validation, and cold-reader time.",
+    "execution_venue": "Use the closed host value; CUDA and device identities are details.",
+    "field_principles": "Explain field intent separately and keep gate scalars as plain values.",
+    "flagged_adversarial": "Preserve critical findings; flagged evidence cannot supply readiness.",
+    "gate_check_summary": "Name the exact upstream, path, field, operator, expected value, and observed value.",
+    "honest_verdict": "Start completed findings with complete_ and unchanged unavailable inputs with blocked_.",
+    "inference_substrate": "Name the no-model host resource audit; keep device facts in substrate details.",
+    "inference_substrate_class": "Use no_model_load because this task never opens model weights.",
+    "invocation_counts": "Keep each current owned load and generation disposition explicit and zero here.",
+    "lease_rows": "Keep actual acquisition, child readback, terminal transition, release identity, and timestamps.",
+    "model_invoked": "Set true only after an actual current model load or generation attempt.",
+    "phase_spans": "Keep real phase boundaries, completed units, and checkpoint references.",
+    "preconditions_checked": "Record exact source, path, identity, inventory, and owner observations before dependent work.",
+    "promotion_score": "Keep zero; this audit changes no rollout, publication, or generator weight.",
+    "random_seed": "Use null because this deterministic ownership audit has no sampling.",
+    "reproducibility_checksum": "Bind code, protocol, inputs, rows, lease identity, and validation scope.",
+    "rows": "Keep every capacity fixture, host observation, and lease lifecycle disposition.",
+    "run_date": "Use 20260919 and retain actual UTC and monotonic boundaries.",
+    "runtime_ownership_ready_score": "Set one only after repaired capacity checks and one current acquire-read-release lifecycle pass.",
+    "sample_size_budget": "Predeclare planned, attempted, completed, failed, censored, and unstarted independent units.",
+    "schema": "Use a versioned plain top-level schema with experiment, milestone, and terminal state.",
+    "source_artifact_hashes": "Hash exact input bytes and label historical model-shaped evidence as non-current.",
+    "validation_receipts": "Retain exact scoped commands, environments, exits, durations, and hashed logs.",
+    "verdict_class": "Use only positive, circular_positive, null, blocked, disqualified, or partial.",
+    "verifier_is_oracle": "Use true because the lease protocol and journal validator define ownership correctness."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "all_passed": true,
+    "artifact_field": "gate_check_summary",
+    "check": "all_required_checks",
+    "expected_value": true,
+    "failed_checks": [],
+    "failed_count": 0,
+    "observed_value": true,
+    "operator": "==",
+    "passed": true,
+    "path": "results/experiment_7422_v651_runtime_ownership.json",
+    "upstream": "exp7422-v651-runtime-ownership"
+  },
+  "generator_weights_changed": false,
+  "honest_verdict": "complete_null_runtime_ownership_ready_no_reservation",
+  "inference_substrate": "deterministic_runtime_receipt_validation_no_llm",
+  "inference_substrate_class": "no_model_load",
+  "inference_substrate_details": {
+    "lease_protocol": "gpu_lease_phase_journal.v1"
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "learning_claim": false,
+  "lease_rows": [
+    {
+      "acquired_monotonic_ns": 2122909670784982,
+      "acquisition_races": [],
+      "child_readback_monotonic_ns": 2122910090060518,
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "fresh_child_command_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,sys,time;from pathlib import Path;from carnot import gpu_lease_phase_journal as g;p=Path(sys.argv[1]);e=json.loads(sys.argv[2]);d=g.read_journal(p);x=g.validate_journal_document(d,expected_pid=e['\"'\"'pid'\"'\"'],expected_pid_start_ticks=e['\"'\"'pid_start_ticks'\"'\"'],expected_device_uuid=e['\"'\"'device_uuid'\"'\"'],expected_model=e['\"'\"'expected_model'\"'\"']);o={'\"'\"'lease_id'\"'\"':d.get('\"'\"'lease_id'\"'\"'),'\"'\"'task_id'\"'\"':d.get('\"'\"'task_id'\"'\"'),'\"'\"'pid'\"'\"':d.get('\"'\"'owner'\"'\"',{}).get('\"'\"'pid'\"'\"'),'\"'\"'pid_start_ticks'\"'\"':d.get('\"'\"'owner'\"'\"',{}).get('\"'\"'pid_start_ticks'\"'\"'),'\"'\"'device_uuid'\"'\"':d.get('\"'\"'device_uuid'\"'\"'),'\"'\"'errors'\"'\"':x,'\"'\"'owner_process_matches'\"'\"':g.process_start_matches(e['\"'\"'pid'\"'\"'],e['\"'\"'pid_start_ticks'\"'\"']),'\"'\"'read_monotonic_ns'\"'\"':time.monotonic_ns()};print(json.dumps(o,sort_keys=True),flush=True);raise SystemExit(bool(x))' /tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json '{\"device_uuid\": \"GPU-b52387a2-c625-de87-8d34-e6f64e684bab\", \"expected_model\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169\", \"pid\": 4051318, \"pid_start_ticks\": 212290912}'",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import json,sys,time;from pathlib import Path;from carnot import gpu_lease_phase_journal as g;p=Path(sys.argv[1]);e=json.loads(sys.argv[2]);d=g.read_journal(p);x=g.validate_journal_document(d,expected_pid=e['pid'],expected_pid_start_ticks=e['pid_start_ticks'],expected_device_uuid=e['device_uuid'],expected_model=e['expected_model']);o={'lease_id':d.get('lease_id'),'task_id':d.get('task_id'),'pid':d.get('owner',{}).get('pid'),'pid_start_ticks':d.get('owner',{}).get('pid_start_ticks'),'device_uuid':d.get('device_uuid'),'errors':x,'owner_process_matches':g.process_start_matches(e['pid'],e['pid_start_ticks']),'read_monotonic_ns':time.monotonic_ns()};print(json.dumps(o,sort_keys=True),flush=True);raise SystemExit(bool(x))",
+          "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+          "{\"device_uuid\": \"GPU-b52387a2-c625-de87-8d34-e6f64e684bab\", \"expected_model\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169\", \"pid\": 4051318, \"pid_start_ticks\": 212290912}"
+        ],
+        "duration_s": 0.5112322559580207,
+        "exit_code": 0,
+        "identity_passed": true,
+        "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/child_readback/00_fresh_child_lease_readback.log",
+        "log_sha256": "sha256:5d704da399378071a16c2d9a1c7f566a46ef0fb11fcafb30ec13fadfed2f9695",
+        "name": "fresh_child_lease_readback",
+        "output_tail": "{\"device_uuid\": \"GPU-b52387a2-c625-de87-8d34-e6f64e684bab\", \"errors\": [], \"lease_id\": \"lease:167a96d3225501677a360fab193c8da5e7981983d2d839ebde8f67cb3796bd60\", \"owner_process_matches\": true, \"pid\": 4051318, \"pid_start_ticks\": 212290912, \"read_monotonic_ns\": 2122910090060518, \"task_id\": \"experiment_7422_v651_runtime_ownership\"}\n",
+        "passed": true,
+        "scope": "owned_lease_identity",
+        "timed_out": false
+      },
+      "fresh_child_readback": {
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "errors": [],
+        "lease_id": "lease:167a96d3225501677a360fab193c8da5e7981983d2d839ebde8f67cb3796bd60",
+        "owner_process_matches": true,
+        "pid": 4051318,
+        "pid_start_ticks": 212290912,
+        "read_monotonic_ns": 2122910090060518,
+        "task_id": "experiment_7422_v651_runtime_ownership"
+      },
+      "fresh_child_readback_passed": true,
+      "lease_id": "lease:167a96d3225501677a360fab193c8da5e7981983d2d839ebde8f67cb3796bd60",
+      "owner_pid": 4051318,
+      "owner_pid_start_ticks": 212290912,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "release_duration_s": 0.00015145493671298027,
+      "release_passed": true,
+      "released_monotonic_ns": null,
+      "row_kind": "lease_lifecycle",
+      "signals_sent": [],
+      "task_id": "experiment_7422_v651_runtime_ownership",
+      "terminal_phase": "terminal_blocked"
+    }
+  ],
+  "milestone": "2026.09.651",
+  "model_file_metadata": {
+    "bytes": 17106775008,
+    "exists": true,
+    "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+    "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "weights_opened": false
+  },
+  "model_invoked": false,
+  "numbered_e2e_applicable": false,
+  "phase": 1,
+  "phase_spans": [
+    {
+      "checkpoint_reference": "preconditions_checked",
+      "completed_units": 23,
+      "duration_s": 0.003034842200577259,
+      "end_s": 0.003130971919745207,
+      "phase": "preconditions",
+      "progress_events_flushed": true,
+      "start_s": 9.612971916794777e-05
+    },
+    {
+      "checkpoint_reference": "lease_rows",
+      "completed_units": 9,
+      "duration_s": 0.5788792329840362,
+      "end_s": 0.5847374889999628,
+      "phase": "resource_audit",
+      "progress_events_flushed": true,
+      "start_s": 0.0058582560159265995
+    },
+    {
+      "checkpoint_reference": "affected_logs",
+      "completed_units": 8,
+      "duration_s": 10.519017630722374,
+      "end_s": 11.10574038978666,
+      "phase": "affected_validation",
+      "progress_events_flushed": true,
+      "start_s": 0.586722759064287
+    },
+    {
+      "checkpoint_reference": "terminal_logs",
+      "completed_units": 4,
+      "duration_s": 1.4869925803504884,
+      "end_s": 12.59717789106071,
+      "phase": "terminal_validation",
+      "progress_events_flushed": true,
+      "start_s": 11.110185310710222
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "run_date",
+      "category": "precondition",
+      "check": "run_date",
+      "expected_value": "20260919",
+      "observed_value": "20260919",
+      "operator": "==",
+      "passed": true,
+      "path": "execution_contract",
+      "principle": "The declared operands determine this check.",
+      "upstream": "execution_contract"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:AGENTS.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "AGENTS.md",
+      "principle": "The declared operands determine this check.",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:CLAUDE.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "principle": "The declared operands determine this check.",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:CODEX.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "CODEX.md",
+      "principle": "The declared operands determine this check.",
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:research-program.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "research-program.md",
+      "principle": "The declared operands determine this check.",
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "principle": "The declared operands determine this check.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "principle": "The declared operands determine this check.",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "principle": "The declared operands determine this check.",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/reporting/current_work_receipt.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "principle": "The declared operands determine this check.",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "principle": "The declared operands determine this check.",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "principle": "The declared operands determine this check.",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7400_v649_assignment_canary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7400_v649_assignment_canary.py",
+      "principle": "The declared operands determine this check.",
+      "upstream": "python/carnot/experiment_7400_v649_assignment_canary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7416_v650_anchored_extraction.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7416_v650_anchored_extraction.py",
+      "principle": "The declared operands determine this check.",
+      "upstream": "python/carnot/experiment_7416_v650_anchored_extraction.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/inference/sota_models.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/inference/sota_models.py",
+      "principle": "The declared operands determine this check.",
+      "upstream": "python/carnot/inference/sota_models.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:openspec/capabilities/constraint-verification/spec.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "openspec/capabilities/constraint-verification/spec.md",
+      "principle": "The declared operands determine this check.",
+      "upstream": "openspec/capabilities/constraint-verification/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/experiment_7416_v650_anchored_extraction.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7416_v650_anchored_extraction.json",
+      "principle": "The declared operands determine this check.",
+      "upstream": "results/experiment_7416_v650_anchored_extraction.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7422_v651_runtime_ownership.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7422_v651_runtime_ownership.py",
+      "principle": "The declared operands determine this check.",
+      "upstream": "python/carnot/experiment_7422_v651_runtime_ownership.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiments/experiment_7422_v651_runtime_ownership.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "scripts/experiments/experiment_7422_v651_runtime_ownership.py",
+      "principle": "The declared operands determine this check.",
+      "upstream": "scripts/experiments/experiment_7422_v651_runtime_ownership.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:tests/python/test_experiment_7422_v651_runtime_ownership.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "tests/python/test_experiment_7422_v651_runtime_ownership.py",
+      "principle": "The declared operands determine this check.",
+      "upstream": "tests/python/test_experiment_7422_v651_runtime_ownership.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:tests/python/test_experiment_7400_v649_assignment_canary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "tests/python/test_experiment_7400_v649_assignment_canary.py",
+      "principle": "The declared operands determine this check.",
+      "upstream": "tests/python/test_experiment_7400_v649_assignment_canary.py"
+    },
+    {
+      "artifact_field": "REQ-*",
+      "category": "precondition",
+      "check": "driving_requirement",
+      "expected_value": "REQ-VERIFY-7422",
+      "observed_value": "REQ-VERIFY-7422",
+      "operator": "==",
+      "passed": true,
+      "path": "openspec/capabilities/constraint-verification/spec.md",
+      "principle": "The declared operands determine this check.",
+      "upstream": "openspec/capabilities/constraint-verification/spec.md"
+    },
+    {
+      "artifact_field": "experiment_id",
+      "category": "precondition",
+      "check": "current_task_not_quarantined",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "principle": "The declared operands determine this check.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "model_file_metadata",
+      "category": "precondition",
+      "check": "current_model_path_metadata",
+      "expected_value": {
+        "exists": true,
+        "hash_present": true,
+        "weights_opened": false
+      },
+      "observed_value": {
+        "exists": true,
+        "hash_present": true,
+        "weights_opened": false
+      },
+      "operator": "==",
+      "passed": true,
+      "path": "cached_current_model",
+      "principle": "The declared operands determine this check.",
+      "upstream": "cached_current_model"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "random_seed": null,
+  "raw_row_manifest": [
+    {
+      "field": "capacity_rows",
+      "path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/capacity_rows.json",
+      "sha256": "sha256:5dca9d999c5d5b5a880bcc66242ef467dc20b3f45de66c9058c90d2bf2e519f9"
+    },
+    {
+      "field": "lease_rows",
+      "path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/lease_rows.json",
+      "sha256": "sha256:3b1364f4c7c0f57f1a4cc468cad33df8464bfbbfad1e0463c7caf3fb47d46d2b"
+    }
+  ],
+  "receipt_sidecars": [
+    {
+      "path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/historical_exp7416_receipt.json",
+      "scope": "historical_model_receipts",
+      "sha256": "sha256:ca21b1b9b106d286019afb45af58d7777d9f8100f96e52716c2ae563332db659"
+    }
+  ],
+  "repository_health": {
+    "affected_reduction": {
+      "duplicate_required_commands": [],
+      "expected_import_count": 2,
+      "failed_required_commands": [],
+      "installed_imports": [],
+      "missing_required_commands": [],
+      "observed_import_count": 2,
+      "passed": true,
+      "required_checks_passed": true
+    },
+    "affects_required_checks": false,
+    "status": "healthy",
+    "unrelated_known_failures": []
+  },
+  "reproducibility_checksum": "sha256:cc0416a1f878e0804b44cfec66e0aa4db71413bb86029a24b846f9c82faeb993",
+  "research_conductor_changed": false,
+  "resource_audit_duration_s": 0.578880104701966,
+  "rows": [
+    {
+      "available_capacity": 2,
+      "available_gpu_uuids": [
+        "GPU-0",
+        "GPU-1"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": false,
+      "fixture_expectation_passed": true,
+      "fixture_id": "failed_inventory",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": false,
+          "operator": "==",
+          "passed": false,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 2,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": false,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 2,
+        "query_ok": false
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [],
+      "passed": false,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        },
+        {
+          "gpu_index": 1,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-1",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": false,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 9
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 0,
+      "available_gpu_uuids": [],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": false,
+      "expected_capacity_passed": false,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "zero_free_devices",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 0,
+          "operator": ">=",
+          "passed": false,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": false,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 0,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [],
+      "passed": false,
+      "process_rows": [],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 1,
+      "available_gpu_uuids": [
+        "GPU-0"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "one_free_device",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 1,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": true,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [],
+      "passed": true,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 2,
+      "available_gpu_uuids": [
+        "GPU-0",
+        "GPU-1"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "two_free_devices",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 2,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": false,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 2,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [],
+      "passed": true,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        },
+        {
+          "gpu_index": 1,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-1",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 1,
+      "available_gpu_uuids": [
+        "GPU-1"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "one_busy_device",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 1,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": true,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [
+        {
+          "device_uuid": "GPU-0",
+          "lease_id": null,
+          "owner_live": true,
+          "owner_pid": 50,
+          "owner_start_ticks": 1234,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "current_canonical_lease_missing"
+          ],
+          "recovery_eligible": false
+        }
+      ],
+      "passed": true,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 12576,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 12000,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 11996,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "current_canonical_lease_missing"
+          ],
+          "pid": 50,
+          "proc_exists": true,
+          "start_time_ticks": 1234
+        },
+        {
+          "gpu_index": 1,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-1",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 0,
+      "available_gpu_uuids": [],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": false,
+      "expected_capacity_passed": false,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "unknown_process_state",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 0,
+          "operator": ">=",
+          "passed": false,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [],
+      "legacy_dictionary_equality_passed": false,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 0,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [
+        {
+          "device_uuid": "GPU-0",
+          "lease_id": null,
+          "owner_live": false,
+          "owner_pid": 50,
+          "owner_start_ticks": null,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "current_canonical_lease_missing"
+          ],
+          "recovery_eligible": false
+        }
+      ],
+      "passed": false,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 12576,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 12000,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 11996,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "current_canonical_lease_missing"
+          ],
+          "pid": 50,
+          "proc_exists": false,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 1,
+      "available_gpu_uuids": [
+        "GPU-0"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "stale_owner_identity",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 1,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [
+        {
+          "canonical": true,
+          "device_uuid": "GPU-0",
+          "error": null,
+          "fresh": true,
+          "lease_id": "lease:stale-owner",
+          "owner_live": false,
+          "owner_pid": 50,
+          "owner_start_ticks": 1,
+          "readable": true,
+          "released": false
+        }
+      ],
+      "legacy_dictionary_equality_passed": true,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [
+        {
+          "canonical": true,
+          "device_uuid": "GPU-0",
+          "error": null,
+          "fresh": true,
+          "lease_id": "lease:stale-owner",
+          "owner_live": false,
+          "owner_pid": 50,
+          "owner_start_ticks": 1,
+          "recovery_eligible": true,
+          "released": false
+        }
+      ],
+      "passed": true,
+      "process_rows": [
+        {
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24572,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-0",
+          "matching_lease_id": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "proc_exists": null,
+          "start_time_ticks": null
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "returncode": 0
+        },
+        {
+          "returncode": 0
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "available_capacity": 1,
+      "available_gpu_uuids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      ],
+      "capacity_operator": ">=",
+      "capacity_predicate_passed": true,
+      "expected_capacity_passed": true,
+      "expected_query_passed": true,
+      "fixture_expectation_passed": true,
+      "fixture_id": "host",
+      "gate_rows": [
+        {
+          "artifact_field": "query_ok",
+          "category": "precondition",
+          "check": "rtx3090_inventory_query_succeeded",
+          "expected_value": true,
+          "observed_value": true,
+          "operator": "==",
+          "passed": true,
+          "upstream": "nvidia-smi"
+        },
+        {
+          "artifact_field": "available_rtx3090_slots",
+          "category": "precondition",
+          "check": "minimum_available_rtx3090_capacity",
+          "expected_value": 1,
+          "observed_value": 1,
+          "operator": ">=",
+          "passed": true,
+          "upstream": "nvidia-smi_and_gpu_lease_journal"
+        }
+      ],
+      "lease_observations": [
+        {
+          "canonical": true,
+          "checksum_valid": true,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "error": null,
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "expires_monotonic_ns": 2110607214040435,
+          "fresh": false,
+          "lease_id": "lease:87aedeb8adfa66b5a90d6d27a262ebdd0f3a2f05a4be70aeb6d1b267424684c2",
+          "lease_path": "/tmp/carnot-gpu-leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.journal.json",
+          "model_sha256": null,
+          "owner_argv_digest": "sha256:7a0ef7ed86591406bdab1993cec1db68752fa23cb9b0df8a39193351914ecde9",
+          "owner_executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "owner_live": false,
+          "owner_pid": 3885305,
+          "owner_start_ticks": 210816323,
+          "phase": "inferencing",
+          "port": null,
+          "readable": true,
+          "released": false,
+          "schema": "carnot.gpu_lease_phase_journal.v1",
+          "signals_sent": [],
+          "task_id": "experiment_7416_v650_anchored_extraction"
+        },
+        {
+          "canonical": true,
+          "checksum_valid": true,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "error": null,
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "expires_monotonic_ns": 2122925858156996,
+          "fresh": false,
+          "lease_id": "lease:9c96e3557d6a7369f900413dc838e74ae9994c0b8c1e63caf979b7196cb9050c",
+          "lease_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+          "model_sha256": null,
+          "owner_argv_digest": "sha256:bad38e9310562fa521abefe51ecdd3f35f6a278db1ef203545cc7911cccc28a8",
+          "owner_executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "owner_live": false,
+          "owner_pid": 4050167,
+          "owner_start_ticks": 212280531,
+          "phase": "terminal_blocked",
+          "port": null,
+          "readable": true,
+          "released": true,
+          "schema": "carnot.gpu_lease_phase_journal.v1",
+          "signals_sent": [],
+          "task_id": "experiment_7422_v651_runtime_ownership"
+        }
+      ],
+      "legacy_dictionary_equality_passed": true,
+      "legacy_expected": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "legacy_observed": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "minimum_required_capacity": 1,
+      "observed_owner_state": [
+        {
+          "canonical": true,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "error": null,
+          "fresh": false,
+          "lease_id": "lease:87aedeb8adfa66b5a90d6d27a262ebdd0f3a2f05a4be70aeb6d1b267424684c2",
+          "owner_live": false,
+          "owner_pid": 3885305,
+          "owner_start_ticks": 210816323,
+          "recovery_eligible": true,
+          "released": false
+        },
+        {
+          "canonical": true,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "error": null,
+          "fresh": false,
+          "lease_id": "lease:9c96e3557d6a7369f900413dc838e74ae9994c0b8c1e63caf979b7196cb9050c",
+          "owner_live": false,
+          "owner_pid": 4050167,
+          "owner_start_ticks": 212280531,
+          "recovery_eligible": false,
+          "released": true
+        },
+        {
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "lease_id": null,
+          "owner_live": true,
+          "owner_pid": 3885400,
+          "owner_start_ticks": 210816568,
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "lease_not_fresh",
+            "lease_owner_not_live",
+            "lease_owner_pid_mismatch",
+            "lease_owner_start_mismatch",
+            "lease_port_missing",
+            "lease_port_mismatch",
+            "lease_model_hash_missing",
+            "lease_model_hash_mismatch"
+          ],
+          "recovery_eligible": false
+        }
+      ],
+      "passed": true,
+      "process_rows": [
+        {
+          "age_s": null,
+          "command": [],
+          "command_sha256": null,
+          "command_text": "",
+          "gpu_index": 0,
+          "gpu_memory_free_mb": 24120,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 4,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 0,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "matching_lease_id": null,
+          "model_path": null,
+          "model_sha256": null,
+          "open_port": null,
+          "ownership_classification": "idle",
+          "ownership_evidence_errors": [],
+          "pid": null,
+          "ppid": null,
+          "proc_exists": null,
+          "process_group_id": null,
+          "process_start_utc": null,
+          "session_id": null,
+          "start_time_ticks": null
+        },
+        {
+          "age_s": 14743.98,
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--model",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "36127",
+            "--ctx-size",
+            "4096",
+            "--n-gpu-layers",
+            "all",
+            "--split-mode",
+            "none",
+            "--parallel",
+            "1",
+            "--batch-size",
+            "512",
+            "--ubatch-size",
+            "512",
+            "--cache-type-k",
+            "q8_0",
+            "--cache-type-v",
+            "q8_0",
+            "--fit",
+            "off",
+            "--offline",
+            "--jinja",
+            "--reasoning",
+            "off",
+            "--no-webui",
+            "--log-verbosity",
+            "3"
+          ],
+          "command_sha256": "sha256:6a622e81e81aa1381af8cf929798d8396edd11b31b51dc452d246397bac37962",
+          "command_text": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --model /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf --host 127.0.0.1 --port 36127 --ctx-size 4096 --n-gpu-layers all --split-mode none --parallel 1 --batch-size 512 --ubatch-size 512 --cache-type-k q8_0 --cache-type-v q8_0 --fit off --offline --jinja --reasoning off --no-webui --log-verbosity 3",
+          "gpu_index": 1,
+          "gpu_memory_free_mb": 7753,
+          "gpu_memory_total_mb": 24576,
+          "gpu_memory_used_mb": 16372,
+          "gpu_name": "NVIDIA GeForce RTX 3090",
+          "gpu_process_memory_mb": 16362,
+          "gpu_utilization_pct": 0,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "matching_lease_id": null,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "nvidia_process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "open_port": 36127,
+          "open_ports": [
+            36127
+          ],
+          "ownership_classification": "conflicting",
+          "ownership_evidence_errors": [
+            "lease_not_fresh",
+            "lease_owner_not_live",
+            "lease_owner_pid_mismatch",
+            "lease_owner_start_mismatch",
+            "lease_port_missing",
+            "lease_port_mismatch",
+            "lease_model_hash_missing",
+            "lease_model_hash_mismatch"
+          ],
+          "pid": 3885400,
+          "ppid": 1232,
+          "proc_exists": true,
+          "process_group_id": 3885400,
+          "process_start_utc": "2026-09-19T11:14:25.452893Z",
+          "session_id": 3885400,
+          "start_time_ticks": 210816568
+        }
+      ],
+      "query_ok": true,
+      "query_receipts": [
+        {
+          "command": [
+            "nvidia-smi",
+            "--query-gpu=index,uuid,name,utilization.gpu,memory.total,memory.used,memory.free",
+            "--format=csv,noheader,nounits"
+          ],
+          "duration_s": 0.035238,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 0, 24576, 4, 24120\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 0, 24576, 16372, 7753\n"
+        },
+        {
+          "command": [
+            "nvidia-smi",
+            "--query-compute-apps=gpu_uuid,pid,process_name,used_memory",
+            "--format=csv,noheader,nounits"
+          ],
+          "duration_s": 0.026986,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "GPU-7971baff-9583-eaa6-2292-393f930a28f9, 3885400, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 16362\n"
+        }
+      ],
+      "row_kind": "capacity",
+      "unknown_unreleased_lease": false
+    },
+    {
+      "acquired_monotonic_ns": 2122909670784982,
+      "acquisition_races": [],
+      "child_readback_monotonic_ns": 2122910090060518,
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "fresh_child_command_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,sys,time;from pathlib import Path;from carnot import gpu_lease_phase_journal as g;p=Path(sys.argv[1]);e=json.loads(sys.argv[2]);d=g.read_journal(p);x=g.validate_journal_document(d,expected_pid=e['\"'\"'pid'\"'\"'],expected_pid_start_ticks=e['\"'\"'pid_start_ticks'\"'\"'],expected_device_uuid=e['\"'\"'device_uuid'\"'\"'],expected_model=e['\"'\"'expected_model'\"'\"']);o={'\"'\"'lease_id'\"'\"':d.get('\"'\"'lease_id'\"'\"'),'\"'\"'task_id'\"'\"':d.get('\"'\"'task_id'\"'\"'),'\"'\"'pid'\"'\"':d.get('\"'\"'owner'\"'\"',{}).get('\"'\"'pid'\"'\"'),'\"'\"'pid_start_ticks'\"'\"':d.get('\"'\"'owner'\"'\"',{}).get('\"'\"'pid_start_ticks'\"'\"'),'\"'\"'device_uuid'\"'\"':d.get('\"'\"'device_uuid'\"'\"'),'\"'\"'errors'\"'\"':x,'\"'\"'owner_process_matches'\"'\"':g.process_start_matches(e['\"'\"'pid'\"'\"'],e['\"'\"'pid_start_ticks'\"'\"']),'\"'\"'read_monotonic_ns'\"'\"':time.monotonic_ns()};print(json.dumps(o,sort_keys=True),flush=True);raise SystemExit(bool(x))' /tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json '{\"device_uuid\": \"GPU-b52387a2-c625-de87-8d34-e6f64e684bab\", \"expected_model\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169\", \"pid\": 4051318, \"pid_start_ticks\": 212290912}'",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import json,sys,time;from pathlib import Path;from carnot import gpu_lease_phase_journal as g;p=Path(sys.argv[1]);e=json.loads(sys.argv[2]);d=g.read_journal(p);x=g.validate_journal_document(d,expected_pid=e['pid'],expected_pid_start_ticks=e['pid_start_ticks'],expected_device_uuid=e['device_uuid'],expected_model=e['expected_model']);o={'lease_id':d.get('lease_id'),'task_id':d.get('task_id'),'pid':d.get('owner',{}).get('pid'),'pid_start_ticks':d.get('owner',{}).get('pid_start_ticks'),'device_uuid':d.get('device_uuid'),'errors':x,'owner_process_matches':g.process_start_matches(e['pid'],e['pid_start_ticks']),'read_monotonic_ns':time.monotonic_ns()};print(json.dumps(o,sort_keys=True),flush=True);raise SystemExit(bool(x))",
+          "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+          "{\"device_uuid\": \"GPU-b52387a2-c625-de87-8d34-e6f64e684bab\", \"expected_model\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169\", \"pid\": 4051318, \"pid_start_ticks\": 212290912}"
+        ],
+        "duration_s": 0.5112322559580207,
+        "exit_code": 0,
+        "identity_passed": true,
+        "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/child_readback/00_fresh_child_lease_readback.log",
+        "log_sha256": "sha256:5d704da399378071a16c2d9a1c7f566a46ef0fb11fcafb30ec13fadfed2f9695",
+        "name": "fresh_child_lease_readback",
+        "output_tail": "{\"device_uuid\": \"GPU-b52387a2-c625-de87-8d34-e6f64e684bab\", \"errors\": [], \"lease_id\": \"lease:167a96d3225501677a360fab193c8da5e7981983d2d839ebde8f67cb3796bd60\", \"owner_process_matches\": true, \"pid\": 4051318, \"pid_start_ticks\": 212290912, \"read_monotonic_ns\": 2122910090060518, \"task_id\": \"experiment_7422_v651_runtime_ownership\"}\n",
+        "passed": true,
+        "scope": "owned_lease_identity",
+        "timed_out": false
+      },
+      "fresh_child_readback": {
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "errors": [],
+        "lease_id": "lease:167a96d3225501677a360fab193c8da5e7981983d2d839ebde8f67cb3796bd60",
+        "owner_process_matches": true,
+        "pid": 4051318,
+        "pid_start_ticks": 212290912,
+        "read_monotonic_ns": 2122910090060518,
+        "task_id": "experiment_7422_v651_runtime_ownership"
+      },
+      "fresh_child_readback_passed": true,
+      "lease_id": "lease:167a96d3225501677a360fab193c8da5e7981983d2d839ebde8f67cb3796bd60",
+      "owner_pid": 4051318,
+      "owner_pid_start_ticks": 212290912,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "release_duration_s": 0.00015145493671298027,
+      "release_passed": true,
+      "released_monotonic_ns": null,
+      "row_kind": "lease_lifecycle",
+      "signals_sent": [],
+      "task_id": "experiment_7422_v651_runtime_ownership",
+      "terminal_phase": "terminal_blocked"
+    }
+  ],
+  "run_date": "20260919",
+  "runtime_ownership_ready_score": 1,
+  "runtime_reservation_retained": false,
+  "sample_size_budget": {
+    "attempted": 9,
+    "censored": 0,
+    "completed": 9,
+    "failed": 0,
+    "independent_groups": 9,
+    "lease_wait_timeout_s": 120.0,
+    "planned": 9,
+    "release_timeout_s": 5.0,
+    "stop_rule": "run seven frozen capacity controls and one current owned lease lifecycle once",
+    "unstarted": 0
+  },
+  "schema": "carnot.exp7422.v651.runtime_ownership.v1",
+  "small_ebm_training": {
+    "performed": false
+  },
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "historical_receipt_sidecar": {
+      "path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/historical_exp7416_receipt.json",
+      "scope": "historical_model_receipts",
+      "sha256": "sha256:ca21b1b9b106d286019afb45af58d7777d9f8100f96e52716c2ae563332db659"
+    },
+    "model_file_metadata": {
+      "bytes": 17106775008,
+      "exists": true,
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "weights_opened": false
+    },
+    "openspec/capabilities/constraint-verification/spec.md": "sha256:b99df1cf07c3171eb926bdbd0a5f2ee72bc52cc85af36197dad7180a1c052c87",
+    "ops/e2e-test-plan.md": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+    "ops/exclusion_manifest.yaml": "sha256:fdab7b9ef47aa3f8be8902e30d96cd096f361d1abbe7c6de7624101383bf968e",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7400_v649_assignment_canary.py": "sha256:abefe6f64cb2109a39ee99e4d5011ed85648f7fbee2d8d143f0536066469eb6b",
+    "python/carnot/experiment_7416_v650_anchored_extraction.py": "sha256:4c7333913fe9eb84099ad43239878a035fd3b5da115e18e5bd61f1ec71cd0aa3",
+    "python/carnot/experiment_7422_v651_runtime_ownership.py": "sha256:b756120dbdb9fa99084de76e632d110d4e8b445b7c04890a1a047325bef97ef2",
+    "python/carnot/inference/sota_models.py": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "raw_rows": [
+      {
+        "field": "capacity_rows",
+        "path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/capacity_rows.json",
+        "sha256": "sha256:5dca9d999c5d5b5a880bcc66242ef467dc20b3f45de66c9058c90d2bf2e519f9"
+      },
+      {
+        "field": "lease_rows",
+        "path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/lease_rows.json",
+        "sha256": "sha256:3b1364f4c7c0f57f1a4cc468cad33df8464bfbbfad1e0463c7caf3fb47d46d2b"
+      }
+    ],
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_7416_v650_anchored_extraction.json": "sha256:a67c9e94f7b3a23d53a5b27dfaa6975912e6f10ae9df5d32ecd1677c1fac98ce",
+    "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+    "scripts/experiments/experiment_7422_v651_runtime_ownership.py": "sha256:188bc5759300522bf19f7d6a70068a623ed35015c11790bdc97b1d80ab2e8a0b",
+    "tests/python/test_experiment_7400_v649_assignment_canary.py": "sha256:f58593bfaf07554b3d0200e9b7af458a1fd33b07f4abc0ac96736cd92a89e6c3",
+    "tests/python/test_experiment_7422_v651_runtime_ownership.py": "sha256:38e7da361814ab0deb9d6d6e8de77a6c1a0f546e98288a2809eb01c69aca62f1"
+  },
+  "started_at_utc": "2026-09-19T15:20:09.363596Z",
+  "started_monotonic_ns": 0,
+  "status": "complete_runtime_ownership_ready",
+  "validation_duration_s": 12.011027526576072,
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7422_v651_runtime_ownership carnot.experiment_7400_v649_assignment_canary",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7422_v651_runtime_ownership",
+        "carnot.experiment_7400_v649_assignment_canary"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.4407431590370834,
+      "ended_at_utc": "2026-09-19T15:20:10.392107+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:c0873bdd737152850cf8dfdc7884d1fbf062e6e3663efd1691fea13b3fe55675",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7400_v649_assignment_canary\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7400_v649_assignment_canary.py\", \"carnot.experiment_7422_v651_runtime_ownership\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7422_v651_runtime_ownership.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7400_v649_assignment_canary": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7400_v649_assignment_canary.py",
+        "carnot.experiment_7422_v651_runtime_ownership": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7422_v651_runtime_ownership.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T15:20:09.950921+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7422-validation-l5rho1lr/basetemp/focused tests/python/test_experiment_7422_v651_runtime_ownership.py tests/python/test_experiment_7400_v649_assignment_canary.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7422-validation-l5rho1lr/basetemp/focused",
+        "tests/python/test_experiment_7422_v651_runtime_ownership.py",
+        "tests/python/test_experiment_7400_v649_assignment_canary.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 3.4268403882160783,
+      "ended_at_utc": "2026-09-19T15:20:13.819353+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:5b221b05770e29d8f32650cd5733c1926f1ac47f4a067273a9ec76d40705d787",
+      "name": "focused_pytest",
+      "output_tail": "........................                                                 [100%]\n24 passed in 1.70s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T15:20:10.392174+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/exp7422-validation-l5rho1lr/coverage/.coverage '--include=*/experiment_7422_v651_runtime_ownership.py,*/experiment_7400_v649_assignment_canary.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7422-validation-l5rho1lr/basetemp/coverage tests/python/test_experiment_7422_v651_runtime_ownership.py tests/python/test_experiment_7400_v649_assignment_canary.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7422-validation-l5rho1lr/coverage/.coverage",
+        "--include=*/experiment_7422_v651_runtime_ownership.py,*/experiment_7400_v649_assignment_canary.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7422-validation-l5rho1lr/basetemp/coverage",
+        "tests/python/test_experiment_7422_v651_runtime_ownership.py",
+        "tests/python/test_experiment_7400_v649_assignment_canary.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 6.019252689089626,
+      "ended_at_utc": "2026-09-19T15:20:19.839122+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:a845097e67a3f965c7adce3d943a02b8b4d1d4bb0284e119d6c3dee5e195a609",
+      "name": "changed_module_coverage",
+      "output_tail": "........................                                                 [100%]\n24 passed in 3.25s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-19T15:20:13.819385+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7422_v651_runtime_ownership.py,*/experiment_7400_v649_assignment_canary.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7422_v651_runtime_ownership.py,*/experiment_7400_v649_assignment_canary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7422-validation-l5rho1lr/coverage/.coverage"
+      },
+      "duration_s": 0.11723965220153332,
+      "ended_at_utc": "2026-09-19T15:20:19.956822+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:58a600ad5656ab56f7d18543ab7b13c012459d23de55464d0e1b658dad34fac3",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                      Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------------\npython/carnot/experiment_7400_v649_assignment_canary.py     273      0   100%\npython/carnot/experiment_7422_v651_runtime_ownership.py     344      0   100%\n---------------------------------------------------------------------------------------\nTOTAL                                                       617      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T15:20:19.839183+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7422_v651_runtime_ownership.py python/carnot/experiment_7400_v649_assignment_canary.py scripts/experiments/experiment_7422_v651_runtime_ownership.py tests/python/test_experiment_7422_v651_runtime_ownership.py tests/python/test_experiment_7400_v649_assignment_canary.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7422_v651_runtime_ownership.py",
+        "python/carnot/experiment_7400_v649_assignment_canary.py",
+        "scripts/experiments/experiment_7422_v651_runtime_ownership.py",
+        "tests/python/test_experiment_7422_v651_runtime_ownership.py",
+        "tests/python/test_experiment_7400_v649_assignment_canary.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.01060468377545476,
+      "ended_at_utc": "2026-09-19T15:20:19.967694+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T15:20:19.956852+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7422_v651_runtime_ownership.py python/carnot/experiment_7400_v649_assignment_canary.py scripts/experiments/experiment_7422_v651_runtime_ownership.py tests/python/test_experiment_7422_v651_runtime_ownership.py tests/python/test_experiment_7400_v649_assignment_canary.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7422_v651_runtime_ownership.py",
+        "python/carnot/experiment_7400_v649_assignment_canary.py",
+        "scripts/experiments/experiment_7422_v651_runtime_ownership.py",
+        "tests/python/test_experiment_7422_v651_runtime_ownership.py",
+        "tests/python/test_experiment_7400_v649_assignment_canary.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011855314020067453,
+      "ended_at_utc": "2026-09-19T15:20:19.979927+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1",
+      "name": "ruff_format",
+      "output_tail": "5 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T15:20:19.967724+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7422_v651_runtime_ownership.py python/carnot/experiment_7400_v649_assignment_canary.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7422_v651_runtime_ownership.py",
+        "python/carnot/experiment_7400_v649_assignment_canary.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.46503003826364875,
+      "ended_at_utc": "2026-09-19T15:20:20.445468+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:76c9a44efe110cfb1712fa4f833cba3e42e6040f6bfe58dff16a27211c8fd15d",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 2 source files\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T15:20:19.979973+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7422_v651_runtime_ownership.py tests/python/test_experiment_7400_v649_assignment_canary.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7422_v651_runtime_ownership.py",
+        "tests/python/test_experiment_7400_v649_assignment_canary.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.023011424113065004,
+      "ended_at_utc": "2026-09-19T15:20:20.468971+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T15:20:20.445523+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7422_v651_runtime_ownership.py --date 20260919 --validate /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7422_v651_runtime_ownership.py",
+        "--date",
+        "20260919",
+        "--validate",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.446355642285198,
+      "ended_at_utc": "2026-09-19T15:20:20.920542+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/validation/terminal/00_declared_entrypoint_cold_replay/00_declared_entrypoint_cold_replay.log",
+      "log_sha256": "sha256:dcec29d6f6cc6f18636e5228542dfb4670cf072f5d1c58f90343e0c65b26be08",
+      "name": "declared_entrypoint_cold_replay",
+      "output_tail": "[exp7422] phase=entrypoint event=start elapsed_s=0.000 date=20260919\n{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-19T15:20:20.473809+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7422_v651_runtime_ownership import independent_reduce_artifact;v=json.loads(pathlib.Path(sys.argv[1]).read_text());e=independent_reduce_artifact(v);print(json.dumps({'\"'\"'errors'\"'\"':e}),flush=True);raise SystemExit(bool(e))' /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,pathlib,sys;from carnot.experiment_7422_v651_runtime_ownership import independent_reduce_artifact;v=json.loads(pathlib.Path(sys.argv[1]).read_text());e=independent_reduce_artifact(v);print(json.dumps({'errors':e}),flush=True);raise SystemExit(bool(e))",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.42837948724627495,
+      "ended_at_utc": "2026-09-19T15:20:21.349279+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/validation/terminal/01_independent_cold_reducer/00_independent_cold_reducer.log",
+      "log_sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+      "name": "independent_cold_reducer",
+      "output_tail": "{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-19T15:20:20.920599+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/measured_terminal_candidate.json"
+      ],
+      "command_category": "safety",
+      "command_environment": {},
+      "duration_s": 0.5632650428451598,
+      "ended_at_utc": "2026-09-19T15:20:21.912975+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/validation/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-19T15:20:21.349306+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.046998290810734034,
+      "ended_at_utc": "2026-09-19T15:20:21.960682+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7422_v651_runtime_ownership/attempt-2122909598591574/validation/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-19T15:20:21.913038+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": true
+}

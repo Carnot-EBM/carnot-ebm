@@ -8150,3 +8150,108 @@ And promotion stays zero without a correctness or repair claim.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7416 and SCENARIO-VERIFY-7416-* | Planned in a focused experiment module and thin entrypoint that reuse the shipped native runtime and scoped validation helpers. | Planned in focused tests before implementation and one live capability replay. |
+
+## V651 runtime ownership repair — 2026-09-19
+
+**Status:** Specified. This phase separates device capacity from lease ownership and loads no model.
+
+### REQ-VERIFY-7422: Runtime Capacity And Ownership SHALL Be Independent Checks
+
+Exp7422 SHALL reproduce the inherited Exp7400 precondition failure with zero,
+one, and two-device fixtures. The shared precondition SHALL check GPU inventory
+query success as a Boolean. It SHALL check the available RTX 3090 count as an
+integer greater than or equal to one. It SHALL not compare an availability
+dictionary by equality. It SHALL not treat available inventory as proof of
+lease ownership.
+
+The fixture audit SHALL cover failed inventory, no free device, two free
+devices, one busy device, a stale owner PID or start tick, acquisition races,
+and bounded release. Unknown or conflicting process state SHALL fail closed.
+The audit SHALL use the lease helper imported by Exp7400 through Exp7347. It
+SHALL not change a historical result artifact or generalize dictionary
+comparison operators.
+
+On the current host, Exp7422 SHALL use the existing lease protocol to acquire
+exactly one available RTX 3090. The wait SHALL not exceed 120 seconds. A fresh
+child process SHALL read the journal and validate the task PID, process start
+tick, device UUID, and lease identity. The owner SHALL make the no-model lease
+terminal and release only that lease. It SHALL not load model weights,
+generate text, install a runtime, change the conductor, signal another owner,
+or retain a reservation for later work.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate_class=no_model_load`, and
+`execution_venue=host`. A cached model file MAY appear only as a hashed path
+prerequisite. Archived or scripted model events SHALL remain typed hash-bound
+sidecars and SHALL not contribute to current invocation counts. Small energy
+head work, if any, SHALL use a separate `small_ebm_training` receipt.
+
+`capacity_rows` SHALL keep query success, available count, and the capacity
+predicate separate for every fixture and the live host. `lease_rows` SHALL
+keep acquisition, fresh-child readback, terminal transition, and release
+identity with timestamps. `runtime_ownership_ready_score` SHALL equal one only
+when the repaired predicates, current owned lease lifecycle, affected checks,
+and terminal readers all pass. Genuine contention SHALL publish a blocked
+artifact with the exact observed capacity and owner state. The score is
+readiness evidence and is not a reservation or a scientific benefit claim.
+
+The producer SHALL freeze the Exp7358 affected-file manifest before checks.
+It SHALL run that plan through Exp7303 with command-local `COVERAGE_FILE`, a
+private existing base-temp parent, exact affected tests, separate changed-module
+coverage, scoped Ruff, changed-module mypy, and exact-test spec coverage. It
+SHALL not run `full_python_suite`. The entrypoint, fresh-process replay,
+independent raw-row reduction, adversarial verifier, and strict row consistency
+reader SHALL pass before atomic terminal publication. No numbered E2E applies
+because this audit changes no ARC, training, sampling, serialization, PyO3, or
+Rust behavior.
+
+#### SCENARIO-VERIFY-7422-CAPACITY: Two Free Devices Satisfy A One-Device Minimum
+
+**Given** successful inventory fixtures with zero, one, and two free RTX 3090 devices
+**When** the shared Exp7400 precondition builds its capacity gates
+**Then** query success is checked as a Boolean and counts zero, one, and two are checked with `>= 1`
+**And** the two-device observation passes without claiming ownership.
+
+**Spec traces:** REQ-VERIFY-7422
+
+#### SCENARIO-VERIFY-7422-FAIL-CLOSED: Unknown Or Busy Inventory Cannot Become Capacity
+
+**Given** a failed inventory query, busy process, stale owner identity, or acquisition race
+**When** device availability and lease evidence are reduced
+**Then** unavailable or conflicting state remains explicit and cannot satisfy readiness
+**And** no unrelated process receives a signal.
+
+**Spec traces:** REQ-VERIFY-7422
+
+#### SCENARIO-VERIFY-7422-OWNERSHIP: One Current Lease Is Read Back And Released
+
+**Given** at least one available current RTX 3090 and the shipped lease protocol
+**When** Exp7422 acquires one lease and a fresh child reads its journal
+**Then** task PID, start tick, device UUID, and lease ID match the owner receipt
+**And** the owner makes the journal terminal and releases only that lease within the bound.
+
+**Spec traces:** REQ-VERIFY-7422
+
+#### SCENARIO-VERIFY-7422-NO-MODEL: Resource Proof Does Not Count As Inference
+
+**Given** a completed capacity and ownership audit
+**When** the current-work receipt and terminal artifact are reduced
+**Then** every current model load and generation count is zero and the substrate class is `no_model_load`
+**And** model metadata is only a path prerequisite while promotion remains zero.
+
+**Spec traces:** REQ-VERIFY-7422
+
+#### SCENARIO-VERIFY-7422-TERMINAL: Exact Evidence Controls Atomic Publication
+
+**Given** raw capacity rows, lease rows, affected validation, and terminal commands
+**When** a fresh process independently reduces the candidate
+**Then** source, identity, row, score, receipt, or checksum drift fails closed
+**And** only the complete validated JSON is published at the declared result path.
+
+**Spec traces:** REQ-VERIFY-7422
+
+## Implementation Status (REQ-VERIFY-7422)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7422 and SCENARIO-VERIFY-7422-* | Implemented in the shared Exp7400 capacity predicates, `python/carnot/experiment_7422_v651_runtime_ownership.py`, and its thin entrypoint. | Verified by spec-linked private fixtures, one current host lease lifecycle, 100% changed-module coverage, scoped affected checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency recorded in the terminal artifact. |
