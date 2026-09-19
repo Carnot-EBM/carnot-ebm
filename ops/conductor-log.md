@@ -18208,3 +18208,4 @@ code |
 | 2026-09-19 06:55 UTC | Milestone 2026.09.650 activated | OK | 12 tasks queued |
 | 2026-09-19 07:25 UTC | Bind twelve tasks and diagnose missing terminal ev | OK | 95 passed, 1 warning in 19.37s |
 | 2026-09-19 07:52 UTC | Seal an attributed source-context calibration corp | OK | 103 passed, 1 warning in 9.43s |
+| 2026-09-19 08:48 UTC | Enforce ARC request budgets at the live callback b | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 105 passed, 1 warning in 18.77s |
