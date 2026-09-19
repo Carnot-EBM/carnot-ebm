@@ -49,6 +49,7 @@ def test_historical_overflow_is_authenticated_and_explained() -> None:
     assert diagnosis["boundary_that_bypassed_budget"] == "generation_dispatch"
     assert diagnosis["old_enforcement_boundary"] == "terminal_reducer_only"
     assert diagnosis["eligible_science"] is False
+    assert diagnosis["scope"] == "historical"
 
 
 def test_callback_matrix_covers_all_branches_and_never_exceeds_two(tmp_path: Path) -> None:

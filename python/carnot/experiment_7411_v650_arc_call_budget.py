@@ -233,6 +233,7 @@ def diagnose_exp7406_overflow(root: Path) -> JsonDict:
         and planned == 12
     )
     return {
+        "scope": "historical",
         "experiment_id": artifact.get("experiment_id"),
         "artifact_path": HISTORICAL_PATH.as_posix(),
         "artifact_sha256": sha256_file(root / HISTORICAL_PATH),

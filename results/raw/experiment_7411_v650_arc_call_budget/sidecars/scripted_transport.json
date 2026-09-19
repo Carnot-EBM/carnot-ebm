@@ -1,0 +1,1026 @@
+{
+  "callback_panel": {
+    "all_controls_passed": true,
+    "branches_exercised": [
+      "concurrent",
+      "nested",
+      "parser_retry",
+      "primary",
+      "refinement",
+      "repair",
+      "supervisor"
+    ],
+    "budget_violations": 0,
+    "callback_rows": [
+      {
+        "branch": "primary",
+        "cancel_reason": null,
+        "case": "success_parser_retry",
+        "disposition": "completed",
+        "elapsed_s": 1.4657620340585709e-05,
+        "episode_id": "guarded-sequential",
+        "error": null,
+        "recovered_after_restart": false,
+        "request_id": "sequential-0",
+        "reservation_index": 0,
+        "reserved_monotonic": 2099201.776801551,
+        "terminal_monotonic": 2099201.776816209
+      },
+      {
+        "branch": "parser_retry",
+        "cancel_reason": null,
+        "case": "success_parser_retry",
+        "disposition": "completed",
+        "elapsed_s": 9.256880730390549e-06,
+        "episode_id": "guarded-sequential",
+        "error": null,
+        "recovered_after_restart": false,
+        "request_id": "sequential-1",
+        "reservation_index": 1,
+        "reserved_monotonic": 2099201.776831077,
+        "terminal_monotonic": 2099201.776840334
+      },
+      {
+        "branch": "primary",
+        "cancel_reason": null,
+        "case": "parser_failure_retry",
+        "disposition": "failed",
+        "elapsed_s": 3.2261013984680176e-06,
+        "episode_id": "failure",
+        "error": "ValueError: parser failure",
+        "recovered_after_restart": false,
+        "request_id": "failure-primary",
+        "reservation_index": 0,
+        "reserved_monotonic": 2099201.776902461,
+        "terminal_monotonic": 2099201.776905687
+      },
+      {
+        "branch": "parser_retry",
+        "cancel_reason": null,
+        "case": "parser_failure_retry",
+        "disposition": "completed",
+        "elapsed_s": 1.4118850231170654e-06,
+        "episode_id": "failure",
+        "error": null,
+        "recovered_after_restart": false,
+        "request_id": "failure-retry",
+        "reservation_index": 1,
+        "reserved_monotonic": 2099201.776911408,
+        "terminal_monotonic": 2099201.77691282
+      },
+      {
+        "branch": "refinement",
+        "cancel_reason": "episode_closed",
+        "case": "cancellation_late_completion",
+        "disposition": "cancelled",
+        "elapsed_s": 1.9837170839309692e-06,
+        "episode_id": "late",
+        "error": null,
+        "recovered_after_restart": false,
+        "request_id": "late-response",
+        "reservation_index": 0,
+        "reserved_monotonic": 2099201.776929702,
+        "terminal_monotonic": 2099201.776931686
+      },
+      {
+        "branch": "primary",
+        "cancel_reason": null,
+        "case": "nested_supervisor",
+        "disposition": "completed",
+        "elapsed_s": 1.0221265256404877e-06,
+        "episode_id": "nested",
+        "error": null,
+        "recovered_after_restart": false,
+        "request_id": "nested-outer",
+        "reservation_index": 0,
+        "reserved_monotonic": 2099201.776946383,
+        "terminal_monotonic": 2099201.776947405
+      },
+      {
+        "branch": "nested",
+        "cancel_reason": null,
+        "case": "nested_supervisor",
+        "disposition": "completed",
+        "elapsed_s": 1.0319054126739502e-06,
+        "episode_id": "nested",
+        "error": null,
+        "recovered_after_restart": false,
+        "request_id": "nested-inner",
+        "reservation_index": 1,
+        "reserved_monotonic": 2099201.776948107,
+        "terminal_monotonic": 2099201.776949139
+      },
+      {
+        "branch": "concurrent",
+        "cancel_reason": null,
+        "case": "concurrent",
+        "disposition": "completed",
+        "elapsed_s": 1.3756100088357925e-05,
+        "episode_id": "concurrent",
+        "error": null,
+        "recovered_after_restart": false,
+        "request_id": "concurrent-5",
+        "reservation_index": 0,
+        "reserved_monotonic": 2099201.778724103,
+        "terminal_monotonic": 2099201.778737859
+      },
+      {
+        "branch": "concurrent",
+        "cancel_reason": null,
+        "case": "concurrent",
+        "disposition": "completed",
+        "elapsed_s": 1.966673880815506e-05,
+        "episode_id": "concurrent",
+        "error": null,
+        "recovered_after_restart": false,
+        "request_id": "concurrent-2",
+        "reservation_index": 1,
+        "reserved_monotonic": 2099201.77889295,
+        "terminal_monotonic": 2099201.778912617
+      },
+      {
+        "branch": "repair",
+        "cancel_reason": null,
+        "case": "cold_restart",
+        "disposition": "completed",
+        "elapsed_s": 5.049165338277817e-06,
+        "episode_id": "restart",
+        "error": null,
+        "recovered_after_restart": true,
+        "request_id": "durable-complete",
+        "reservation_index": 0,
+        "reserved_monotonic": 2099201.780066154,
+        "terminal_monotonic": 2099201.780071203
+      },
+      {
+        "branch": "supervisor",
+        "cancel_reason": null,
+        "case": "cold_restart",
+        "disposition": "completed",
+        "elapsed_s": 1.8030405044555664e-06,
+        "episode_id": "restart",
+        "error": null,
+        "recovered_after_restart": false,
+        "request_id": "after-restart",
+        "reservation_index": 1,
+        "reserved_monotonic": 2099201.780096761,
+        "terminal_monotonic": 2099201.780098564
+      }
+    ],
+    "cold_restart_parity": true,
+    "control_rows": [
+      {
+        "accounting_valid": true,
+        "attempted": 2,
+        "callback_rows": [
+          {
+            "branch": "primary",
+            "cancel_reason": null,
+            "disposition": "completed",
+            "elapsed_s": 1.4657620340585709e-05,
+            "episode_id": "guarded-sequential",
+            "error": null,
+            "recovered_after_restart": false,
+            "request_id": "sequential-0",
+            "reservation_index": 0,
+            "reserved_monotonic": 2099201.776801551,
+            "terminal_monotonic": 2099201.776816209
+          },
+          {
+            "branch": "parser_retry",
+            "cancel_reason": null,
+            "disposition": "completed",
+            "elapsed_s": 9.256880730390549e-06,
+            "episode_id": "guarded-sequential",
+            "error": null,
+            "recovered_after_restart": false,
+            "request_id": "sequential-1",
+            "reservation_index": 1,
+            "reserved_monotonic": 2099201.776831077,
+            "terminal_monotonic": 2099201.776840334
+          }
+        ],
+        "cancel_reason": null,
+        "cancelled": 0,
+        "case": "success_parser_retry",
+        "closed": false,
+        "completed": 2,
+        "deadline_exceeded": false,
+        "deadline_violations": 0,
+        "elapsed_s": 9.922683238983154e-05,
+        "episode_id": "guarded-sequential",
+        "failed": 0,
+        "in_flight": 0,
+        "late_completions_discarded": 0,
+        "late_write_violations": 0,
+        "limit": 2,
+        "remaining": 0,
+        "replayed_completed_refusals": 0,
+        "schema": "carnot.arc_episode_request_budget.v1"
+      },
+      {
+        "accounting_valid": true,
+        "attempted": 2,
+        "callback_rows": [
+          {
+            "branch": "primary",
+            "cancel_reason": null,
+            "disposition": "failed",
+            "elapsed_s": 3.2261013984680176e-06,
+            "episode_id": "failure",
+            "error": "ValueError: parser failure",
+            "recovered_after_restart": false,
+            "request_id": "failure-primary",
+            "reservation_index": 0,
+            "reserved_monotonic": 2099201.776902461,
+            "terminal_monotonic": 2099201.776905687
+          },
+          {
+            "branch": "parser_retry",
+            "cancel_reason": null,
+            "disposition": "completed",
+            "elapsed_s": 1.4118850231170654e-06,
+            "episode_id": "failure",
+            "error": null,
+            "recovered_after_restart": false,
+            "request_id": "failure-retry",
+            "reservation_index": 1,
+            "reserved_monotonic": 2099201.776911408,
+            "terminal_monotonic": 2099201.77691282
+          }
+        ],
+        "cancel_reason": null,
+        "cancelled": 0,
+        "case": "parser_failure_retry",
+        "closed": false,
+        "completed": 1,
+        "deadline_exceeded": false,
+        "deadline_violations": 0,
+        "elapsed_s": 1.4306977391242981e-05,
+        "episode_id": "failure",
+        "failed": 1,
+        "in_flight": 0,
+        "late_completions_discarded": 0,
+        "late_write_violations": 0,
+        "limit": 2,
+        "remaining": 0,
+        "replayed_completed_refusals": 0,
+        "schema": "carnot.arc_episode_request_budget.v1"
+      },
+      {
+        "accounting_valid": true,
+        "attempted": 1,
+        "callback_rows": [
+          {
+            "branch": "refinement",
+            "cancel_reason": "episode_closed",
+            "disposition": "cancelled",
+            "elapsed_s": 1.9837170839309692e-06,
+            "episode_id": "late",
+            "error": null,
+            "recovered_after_restart": false,
+            "request_id": "late-response",
+            "reservation_index": 0,
+            "reserved_monotonic": 2099201.776929702,
+            "terminal_monotonic": 2099201.776931686
+          }
+        ],
+        "cancel_reason": "episode_closed",
+        "cancelled": 1,
+        "case": "cancellation_late_completion",
+        "closed": true,
+        "completed": 0,
+        "deadline_exceeded": false,
+        "deadline_violations": 0,
+        "elapsed_s": 9.057112038135529e-06,
+        "episode_id": "late",
+        "failed": 0,
+        "in_flight": 0,
+        "late_completions_discarded": 1,
+        "late_write_violations": 0,
+        "limit": 2,
+        "remaining": 1,
+        "replayed_completed_refusals": 0,
+        "schema": "carnot.arc_episode_request_budget.v1"
+      },
+      {
+        "accounting_valid": true,
+        "attempted": 2,
+        "callback_rows": [
+          {
+            "branch": "primary",
+            "cancel_reason": null,
+            "disposition": "completed",
+            "elapsed_s": 1.0221265256404877e-06,
+            "episode_id": "nested",
+            "error": null,
+            "recovered_after_restart": false,
+            "request_id": "nested-outer",
+            "reservation_index": 0,
+            "reserved_monotonic": 2099201.776946383,
+            "terminal_monotonic": 2099201.776947405
+          },
+          {
+            "branch": "nested",
+            "cancel_reason": null,
+            "disposition": "completed",
+            "elapsed_s": 1.0319054126739502e-06,
+            "episode_id": "nested",
+            "error": null,
+            "recovered_after_restart": false,
+            "request_id": "nested-inner",
+            "reservation_index": 1,
+            "reserved_monotonic": 2099201.776948107,
+            "terminal_monotonic": 2099201.776949139
+          }
+        ],
+        "cancel_reason": null,
+        "cancelled": 0,
+        "case": "nested_supervisor",
+        "closed": false,
+        "completed": 2,
+        "deadline_exceeded": false,
+        "deadline_violations": 0,
+        "elapsed_s": 5.710870027542114e-06,
+        "episode_id": "nested",
+        "failed": 0,
+        "in_flight": 0,
+        "late_completions_discarded": 0,
+        "late_write_violations": 0,
+        "limit": 2,
+        "remaining": 0,
+        "replayed_completed_refusals": 0,
+        "schema": "carnot.arc_episode_request_budget.v1"
+      },
+      {
+        "accounting_valid": true,
+        "attempted": 2,
+        "callback_rows": [
+          {
+            "branch": "concurrent",
+            "cancel_reason": null,
+            "disposition": "completed",
+            "elapsed_s": 1.3756100088357925e-05,
+            "episode_id": "concurrent",
+            "error": null,
+            "recovered_after_restart": false,
+            "request_id": "concurrent-5",
+            "reservation_index": 0,
+            "reserved_monotonic": 2099201.778724103,
+            "terminal_monotonic": 2099201.778737859
+          },
+          {
+            "branch": "concurrent",
+            "cancel_reason": null,
+            "disposition": "completed",
+            "elapsed_s": 1.966673880815506e-05,
+            "episode_id": "concurrent",
+            "error": null,
+            "recovered_after_restart": false,
+            "request_id": "concurrent-2",
+            "reservation_index": 1,
+            "reserved_monotonic": 2099201.77889295,
+            "terminal_monotonic": 2099201.778912617
+          }
+        ],
+        "cancel_reason": null,
+        "cancelled": 0,
+        "case": "concurrent",
+        "closed": false,
+        "completed": 2,
+        "deadline_exceeded": false,
+        "deadline_violations": 0,
+        "elapsed_s": 0.0030738338828086853,
+        "episode_id": "concurrent",
+        "failed": 0,
+        "in_flight": 0,
+        "late_completions_discarded": 0,
+        "late_write_violations": 0,
+        "limit": 2,
+        "remaining": 0,
+        "replayed_completed_refusals": 0,
+        "schema": "carnot.arc_episode_request_budget.v1"
+      },
+      {
+        "accounting_valid": true,
+        "attempted": 2,
+        "callback_rows": [
+          {
+            "branch": "repair",
+            "cancel_reason": null,
+            "disposition": "completed",
+            "elapsed_s": 5.049165338277817e-06,
+            "episode_id": "restart",
+            "error": null,
+            "recovered_after_restart": true,
+            "request_id": "durable-complete",
+            "reservation_index": 0,
+            "reserved_monotonic": 2099201.780066154,
+            "terminal_monotonic": 2099201.780071203
+          },
+          {
+            "branch": "supervisor",
+            "cancel_reason": null,
+            "disposition": "completed",
+            "elapsed_s": 1.8030405044555664e-06,
+            "episode_id": "restart",
+            "error": null,
+            "recovered_after_restart": false,
+            "request_id": "after-restart",
+            "reservation_index": 1,
+            "reserved_monotonic": 2099201.780096761,
+            "terminal_monotonic": 2099201.780098564
+          }
+        ],
+        "cancel_reason": null,
+        "cancelled": 0,
+        "case": "cold_restart",
+        "closed": false,
+        "completed": 2,
+        "deadline_exceeded": false,
+        "deadline_violations": 0,
+        "elapsed_s": 2.2802967578172684e-05,
+        "episode_id": "restart",
+        "failed": 0,
+        "in_flight": 0,
+        "late_completions_discarded": 0,
+        "late_write_violations": 0,
+        "limit": 2,
+        "remaining": 0,
+        "replayed_completed_refusals": 1,
+        "schema": "carnot.arc_episode_request_budget.v1"
+      }
+    ],
+    "deadline_violations": 0,
+    "factory": {
+      "adapter_disabled": true,
+      "cascade": true,
+      "denied_inputs": [
+        "banked_solutions",
+        "game_adapter",
+        "game_source",
+        "ground_truth_state",
+        "registry_contents",
+        "solved_trajectories"
+      ],
+      "factory": "make_carnot_agent",
+      "policy_class": "E3AgentPolicy",
+      "policy_inputs": [
+        "public_frames",
+        "available_actions",
+        "own_transitions"
+      ],
+      "submitted_config": {
+        "action_effect_expansion_prior_enabled": true,
+        "action_effect_expansion_prior_mode": "persistent_aem_plus_optional_cnn_frontier_prior",
+        "active_reward_machine_enabled": false,
+        "active_reward_machine_wired": true,
+        "amortized_first_contact_prior_enabled": false,
+        "amortized_first_contact_prior_mode": "frequency_prior_from_cross_game_first_contact_traces",
+        "auto_hud_mask_enabled": true,
+        "auto_hud_mask_mode": "rule_based_status_bar_classifier_single_frame",
+        "bare_control_config": {
+          "action_effect_expansion_prior_enabled": false,
+          "candidate_router": null,
+          "goal_energy_candidate_guidance_enabled": false,
+          "goal_energy_enabled": false,
+          "navigation_cost_tiebreak": false,
+          "policy": "E3AgentPolicy",
+          "search_mode": "depth_first_ride",
+          "target_levels": 1,
+          "value_weight": 0.0
+        },
+        "belief_aware_selector_enabled": false,
+        "belief_aware_selector_wired": true,
+        "budget_aware_search_enabled": true,
+        "budget_aware_search_wired": true,
+        "candidate_router": "cross_game_discriminative_v3_tiebreaker",
+        "cascade": true,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_sampling": false,
+        "color_blob_salience_enabled": false,
+        "color_blob_salience_mode": "single_color_connected_component_tiers",
+        "controllable_novelty_proposal_enabled": false,
+        "controllable_novelty_proposal_mode": "episodic_knn_plus_rnd_action_effect_embedding",
+        "dense_curiosity_discount": 0.5,
+        "dense_curiosity_progress_loop_enabled": false,
+        "dense_curiosity_weight": 0.15,
+        "discriminative_candidate_router_enabled": true,
+        "discriminative_router_wired": true,
+        "early_stop_grace": 1300,
+        "edge_bar_hud_mask_enabled": true,
+        "edge_bar_hud_mask_mode": "orientation_complete_edge_bar_geometry_single_frame",
+        "epistemic_ledger_enabled": true,
+        "epistemic_ledger_mode": "agent_owned_visible_state_hypothesis_ledger",
+        "explore_diversity_default": false,
+        "factored_planner_enabled": false,
+        "factored_trust_threshold": 0.75,
+        "feature_router_enabled": false,
+        "frame_change_predictor_enabled": true,
+        "frame_change_prune_threshold": null,
+        "frame_change_ranking_mode": "persistent_aem_plus_optional_cnn",
+        "frontier_batch_size": 1,
+        "frontier_distance_gradient": false,
+        "frontier_distance_gradient_mode": "multi_source_reverse_bfs_over_known_working_edges",
+        "frontier_tier_click_vocab_only": true,
+        "frontier_tier_count": 5,
+        "frontier_tier_exhaustion": true,
+        "frontier_tier_exhaustion_mode": "just_explore_global_priority_group_exhaustion",
+        "frontier_tier_uniform_random": true,
+        "frozen_generator": {
+          "binary_not_wheel": true,
+          "forbidden_gpu_targets": [
+            "3090"
+          ],
+          "forbidden_models": [
+            "gemma-8919"
+          ],
+          "gpu_target": "kaggle_cuda_gpu_not_3090",
+          "kaggle_dataset_slug": "iancblenke/carnot-qwen38-27b-gguf",
+          "kaggle_dataset_uploaded": true,
+          "kaggle_mtp_head_dataset_slug": null,
+          "kaggle_mtp_head_dataset_uploaded": false,
+          "kv_quant": "q8_0",
+          "llama_server_kind": "cuda-12.8-binary",
+          "max_tokens": 2560,
+          "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+          "model_id": "unsloth/Qwen3.8-27B-GGUF",
+          "model_path_env": "CARNOT_ARC_GGUF_PATH",
+          "mtp": false,
+          "mtp_head_arch": "gemma4-assistant",
+          "mtp_head_filename": "mtp-gemma-4-31B-it-Q8_0.gguf",
+          "mtp_head_path_env": "CARNOT_ARC_MTP_GGUF_PATH",
+          "n_predict_min": 2048,
+          "no_think_prefix": "",
+          "port_strategy": "free_non_8919",
+          "props_verify_endpoint": "/props",
+          "repo_substr": "Qwen3.8-27B",
+          "required_shared_libraries": [
+            "libllama-common",
+            "libllama",
+            "libggml",
+            "libggml-cuda"
+          ],
+          "server_path_env": "CARNOT_LLAMA_SERVER",
+          "spec_type": null,
+          "think_mode": true,
+          "wheel_fallback_allowed": false
+        },
+        "go_explore_archive_enabled": false,
+        "go_explore_archive_mode": "return_then_explore_replayable_prefix_archive",
+        "goal_energy_alpha": 0.9,
+        "goal_energy_beta": 0.1,
+        "goal_energy_candidate_guidance_alpha": 0.0,
+        "goal_energy_candidate_guidance_beta": 1.0,
+        "goal_energy_candidate_guidance_enabled": true,
+        "goal_energy_enabled": true,
+        "goal_energy_source": "exp4020_graded_goal_satisfaction_energy",
+        "goal_energy_wired": true,
+        "goal_guidance_lambda": 1.0,
+        "graph_explore_budget": 80,
+        "hazard_move_pruner_enabled": false,
+        "hazard_move_pruner_mode": "online_charger_hazard_fit_from_own_deaths_trust_and_specificity_gated",
+        "hazard_move_pruner_wired": true,
+        "hierarchical_subgoal_budget": 3,
+        "hierarchical_subgoal_search_enabled": false,
+        "hud_mask_collapse_guard_enabled": true,
+        "hud_mask_collapse_guard_mode": "per_node_successor_branching_proof_with_unmasked_control",
+        "hud_mask_stage2_confirm_enabled": true,
+        "hud_mask_stage2_confirm_mode": "region_behavioural_evidence_before_activation",
+        "ige_cell_selection_enabled": false,
+        "ige_cell_selection_mode": "llm_promisingness_go_explore",
+        "inert_click_pruner_enabled": false,
+        "inert_label_defer_enabled": false,
+        "inert_label_defer_min_observations": 1,
+        "inert_label_defer_mode": "exact_action_label_online_raw_frame_inertness_deferral",
+        "inert_label_defer_wired": true,
+        "lazy_value_top_k": 4,
+        "live_submit_package_path": "results/experiment_4643_submission_package_operator_resubmit.json",
+        "live_submit_source": "experiment_4643_refresh_submission_package",
+        "matm_similarity_retrieval_enabled": false,
+        "matm_similarity_retrieval_mode": "within_game_lsh_cross_game_features_v2",
+        "mechanic_class_router_enabled": false,
+        "mechanic_class_router_wired": true,
+        "navigation_cost_tiebreak": true,
+        "object_centric_proposal_enabled": false,
+        "object_centric_proposal_mode": "connected_component_slots_plus_relational_gaps",
+        "object_history_salience_enabled": false,
+        "object_relative_trajectory_transfer_enabled": true,
+        "object_relative_trajectory_transfer_wired": true,
+        "online_discriminative": true,
+        "policy": "E3AgentPolicy",
+        "program_synthesis_proposal_filter_enabled": false,
+        "program_synthesis_proposal_filter_trust_threshold": 0.75,
+        "qd_generation_enabled": false,
+        "qd_generation_mode": "energy_fitness_map_elites_sequence_generator",
+        "routed_explore_budget": 24,
+        "router_wired": true,
+        "search_mode": "depth_first_ride",
+        "sge_candidate_router_enabled": false,
+        "sge_candidate_router_wired": true,
+        "solve_learning_router_wired": true,
+        "strategy_router_enabled": true,
+        "structured_evidence_memory_enabled": false,
+        "structured_evidence_memory_mode": "agent_owned_event_tape_plus_identical_byte_index",
+        "target_levels": 8,
+        "think_arm_fallback_enabled": false,
+        "think_arm_fallback_wired": true,
+        "two_sided_goal_contract_enabled": false,
+        "two_sided_goal_contract_wired": true,
+        "typed_obligation_shadow_monitor_enabled": false,
+        "typed_obligation_shadow_monitor_wired": true,
+        "value_head_checkpoint": "models/arc_dagger_value_routing_v3.json",
+        "value_head_distribution_corrected": true,
+        "value_head_feature_subset": "cross_game_features_v3:v2_plus_frame_delta",
+        "value_weight": 1e-12,
+        "verifier_is_oracle": false,
+        "world_model_dsl_wired": true
+      },
+      "submitted_config_sha256": "sha256:413451013a49063995e770aa9adb38443539670991c1435a9f235fa22e0f1fdc"
+    },
+    "late_write_violations": 0,
+    "overflow_diagnostic": {
+      "boundary": "generation_dispatch",
+      "budget_declared": 2,
+      "dispatches": 4,
+      "eligible_science": false
+    }
+  },
+  "counts_as_current": false,
+  "scope": "development_proxy",
+  "scored_panel": {
+    "action_violations": 0,
+    "budget_violations": 0,
+    "deadline_violations": 0,
+    "late_write_violations": 0,
+    "rows": [
+      {
+        "action_limit": 12,
+        "adapter_disabled": true,
+        "callback_receipt": {
+          "accounting_valid": true,
+          "attempted": 1,
+          "callback_rows": [
+            {
+              "branch": "primary",
+              "cancel_reason": null,
+              "disposition": "completed",
+              "elapsed_s": 4.777032881975174e-05,
+              "episode_id": "bp35",
+              "error": null,
+              "recovered_after_restart": false,
+              "request_id": "bp35-scripted-probe",
+              "reservation_index": 0,
+              "reserved_monotonic": 2099202.270141361,
+              "terminal_monotonic": 2099202.270189131
+            }
+          ],
+          "cancel_reason": "episode_closed",
+          "cancelled": 0,
+          "closed": true,
+          "completed": 1,
+          "deadline_exceeded": false,
+          "deadline_violations": 0,
+          "elapsed_s": 1.34350826125592,
+          "episode_id": "bp35",
+          "failed": 0,
+          "in_flight": 0,
+          "late_completions_discarded": 0,
+          "late_write_violations": 0,
+          "limit": 2,
+          "remaining": 1,
+          "replayed_completed_refusals": 0,
+          "schema": "carnot.arc_episode_request_budget.v1"
+        },
+        "disposition": "complete",
+        "elapsed_s": 0.8803963805548847,
+        "environment_actions": 11,
+        "episode_id": "bp35:seed-7411650",
+        "error": null,
+        "factory": "make_carnot_agent",
+        "game": "bp35",
+        "game_source_withheld": true,
+        "ground_truth_search_withheld": true,
+        "levels": 0,
+        "model_invoked": false,
+        "observed_dispatches": 1,
+        "policy_class": "E3AgentPolicy",
+        "redirect_firings": 0,
+        "request_limit": 2,
+        "row_type": "scored_policy_plumbing",
+        "saved_engines_withheld": true,
+        "scripted_transport": true,
+        "seed": 7411650,
+        "solve_credit": 0,
+        "solve_lookup_withheld": true,
+        "solve_provenance": "development_proxy",
+        "trajectory_supervisor": {
+          "actions_observed": 11,
+          "arms_enabled": [
+            "drop_goal_bias",
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "arms_used": [],
+          "enabled": false,
+          "mode": "shadow",
+          "observe_errors": 0,
+          "stagnations_unredirected": 0,
+          "unredirected_windows": [],
+          "unredirected_windows_dropped": 0,
+          "window": 120,
+          "would_have_arm_credit": {
+            "allow_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "drop_goal_bias": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "force_exploration_diversity": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "tool_loop_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            }
+          },
+          "would_have_arm_outcomes": {
+            "allow_reinduction": {
+              "fired": 0,
+              "helped": 0
+            },
+            "drop_goal_bias": {
+              "fired": 0,
+              "helped": 0
+            },
+            "force_exploration_diversity": {
+              "fired": 0,
+              "helped": 0
+            },
+            "tool_loop_reinduction": {
+              "fired": 0,
+              "helped": 0
+            }
+          },
+          "would_have_redirects": []
+        },
+        "withheld_inputs": [
+          "banked_solutions",
+          "game_adapter",
+          "game_source",
+          "ground_truth_state",
+          "registry_contents",
+          "solved_trajectories"
+        ]
+      },
+      {
+        "action_limit": 12,
+        "adapter_disabled": true,
+        "callback_receipt": {
+          "accounting_valid": true,
+          "attempted": 1,
+          "callback_rows": [
+            {
+              "branch": "primary",
+              "cancel_reason": null,
+              "disposition": "completed",
+              "elapsed_s": 3.354297950863838e-05,
+              "episode_id": "cn04",
+              "error": null,
+              "recovered_after_restart": false,
+              "request_id": "cn04-scripted-probe",
+              "reservation_index": 0,
+              "reserved_monotonic": 2099203.585321602,
+              "terminal_monotonic": 2099203.585355145
+            }
+          ],
+          "cancel_reason": "episode_closed",
+          "cancelled": 0,
+          "closed": true,
+          "completed": 1,
+          "deadline_exceeded": false,
+          "deadline_violations": 0,
+          "elapsed_s": 0.6502754110842943,
+          "episode_id": "cn04",
+          "failed": 0,
+          "in_flight": 0,
+          "late_completions_discarded": 0,
+          "late_write_violations": 0,
+          "limit": 2,
+          "remaining": 1,
+          "replayed_completed_refusals": 0,
+          "schema": "carnot.arc_episode_request_budget.v1"
+        },
+        "disposition": "complete",
+        "elapsed_s": 0.239336880389601,
+        "environment_actions": 11,
+        "episode_id": "cn04:seed-7411651",
+        "error": null,
+        "factory": "make_carnot_agent",
+        "game": "cn04",
+        "game_source_withheld": true,
+        "ground_truth_search_withheld": true,
+        "levels": 0,
+        "model_invoked": false,
+        "observed_dispatches": 1,
+        "policy_class": "E3AgentPolicy",
+        "redirect_firings": 0,
+        "request_limit": 2,
+        "row_type": "scored_policy_plumbing",
+        "saved_engines_withheld": true,
+        "scripted_transport": true,
+        "seed": 7411651,
+        "solve_credit": 0,
+        "solve_lookup_withheld": true,
+        "solve_provenance": "development_proxy",
+        "trajectory_supervisor": {
+          "actions_observed": 11,
+          "arms_enabled": [
+            "drop_goal_bias",
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "arms_used": [],
+          "enabled": false,
+          "mode": "shadow",
+          "observe_errors": 0,
+          "stagnations_unredirected": 0,
+          "unredirected_windows": [],
+          "unredirected_windows_dropped": 0,
+          "window": 120,
+          "would_have_arm_credit": {
+            "allow_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "drop_goal_bias": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "force_exploration_diversity": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "tool_loop_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            }
+          },
+          "would_have_arm_outcomes": {
+            "allow_reinduction": {
+              "fired": 0,
+              "helped": 0
+            },
+            "drop_goal_bias": {
+              "fired": 0,
+              "helped": 0
+            },
+            "force_exploration_diversity": {
+              "fired": 0,
+              "helped": 0
+            },
+            "tool_loop_reinduction": {
+              "fired": 0,
+              "helped": 0
+            }
+          },
+          "would_have_redirects": []
+        },
+        "withheld_inputs": [
+          "banked_solutions",
+          "game_adapter",
+          "game_source",
+          "ground_truth_state",
+          "registry_contents",
+          "solved_trajectories"
+        ]
+      },
+      {
+        "action_limit": 12,
+        "adapter_disabled": true,
+        "callback_receipt": {
+          "accounting_valid": true,
+          "attempted": 1,
+          "callback_rows": [
+            {
+              "branch": "primary",
+              "cancel_reason": null,
+              "disposition": "completed",
+              "elapsed_s": 3.0386727303266525e-05,
+              "episode_id": "dc22",
+              "error": null,
+              "recovered_after_restart": false,
+              "request_id": "dc22-scripted-probe",
+              "reservation_index": 0,
+              "reserved_monotonic": 2099204.273929485,
+              "terminal_monotonic": 2099204.273959872
+            }
+          ],
+          "cancel_reason": "episode_closed",
+          "cancelled": 0,
+          "closed": true,
+          "completed": 1,
+          "deadline_exceeded": false,
+          "deadline_violations": 0,
+          "elapsed_s": 0.7106731687672436,
+          "episode_id": "dc22",
+          "failed": 0,
+          "in_flight": 0,
+          "late_completions_discarded": 0,
+          "late_write_violations": 0,
+          "limit": 2,
+          "remaining": 1,
+          "replayed_completed_refusals": 0,
+          "schema": "carnot.arc_episode_request_budget.v1"
+        },
+        "disposition": "complete",
+        "elapsed_s": 0.2863308619707823,
+        "environment_actions": 11,
+        "episode_id": "dc22:seed-7411652",
+        "error": null,
+        "factory": "make_carnot_agent",
+        "game": "dc22",
+        "game_source_withheld": true,
+        "ground_truth_search_withheld": true,
+        "levels": 0,
+        "model_invoked": false,
+        "observed_dispatches": 1,
+        "policy_class": "E3AgentPolicy",
+        "redirect_firings": 0,
+        "request_limit": 2,
+        "row_type": "scored_policy_plumbing",
+        "saved_engines_withheld": true,
+        "scripted_transport": true,
+        "seed": 7411652,
+        "solve_credit": 0,
+        "solve_lookup_withheld": true,
+        "solve_provenance": "development_proxy",
+        "trajectory_supervisor": {
+          "actions_observed": 11,
+          "arms_enabled": [
+            "drop_goal_bias",
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "arms_used": [],
+          "enabled": false,
+          "mode": "shadow",
+          "observe_errors": 0,
+          "stagnations_unredirected": 0,
+          "unredirected_windows": [],
+          "unredirected_windows_dropped": 0,
+          "window": 120,
+          "would_have_arm_credit": {
+            "allow_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "drop_goal_bias": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "force_exploration_diversity": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "tool_loop_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            }
+          },
+          "would_have_arm_outcomes": {
+            "allow_reinduction": {
+              "fired": 0,
+              "helped": 0
+            },
+            "drop_goal_bias": {
+              "fired": 0,
+              "helped": 0
+            },
+            "force_exploration_diversity": {
+              "fired": 0,
+              "helped": 0
+            },
+            "tool_loop_reinduction": {
+              "fired": 0,
+              "helped": 0
+            }
+          },
+          "would_have_redirects": []
+        },
+        "withheld_inputs": [
+          "banked_solutions",
+          "game_adapter",
+          "game_source",
+          "ground_truth_state",
+          "registry_contents",
+          "solved_trajectories"
+        ]
+      }
+    ]
+  }
+}
