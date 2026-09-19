@@ -18062,3 +18062,115 @@ candidate before atomic publication. No numbered E2E check applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7405 and SCENARIO-CL-7405-* | Implemented: independent proof-audit module, thin entrypoint, hash-bound source sidecar, compact rows, mutation records, and terminal artifact. | Verified: 31 focused tests, 100 percent changed-module coverage, all eight scoped affected checks, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and scoped specification coverage. |
+
+## REQ-CL-7418: Certified Proof Memory SHALL Track Source Revision
+
+Exp7418 SHALL freeze 32 deterministic 2-CNF streams before it measures an arm.
+Each stream SHALL contain 48 requests over at most 12 variables. Four equal
+epochs SHALL expose an initial source, deletion, addition, and recurrence of
+the initial source. The schedule SHALL use seed `6501801` and preserve both
+satisfiable and unsatisfiable cases. Source changes SHALL be public. Future
+requests and their exact answers SHALL remain hidden from every memory arm.
+
+Five equal-input arms SHALL compare reset exact solving, persistent incremental
+solving with rebuild on deletion, persistent graph reachability, full memory
+flush on each source change, and version-checked proof retention. Retained
+proofs SHALL transfer only after every supporting clause matches the new source
+bytes. Memory SHALL retain no more than 128 paths or 65,536 serialized bytes.
+It SHALL add no more than eight verified paths after one request. Each request
+SHALL read one committed snapshot before later verified paths are committed.
+
+A retained path MAY reject an inconsistent assumption set. It SHALL not certify
+satisfiability. An independent evaluator SHALL enumerate the current original
+formula for every arm decision. The evaluation SHALL cover revoked clauses,
+reused clause identifiers, renamed variables, corrupted hashes, interruption
+during commit, eviction, and recurrence. It SHALL require zero unsafe
+rejections, zero stale-proof acceptances, and exact equality after cold restart.
+A deliberately stale control SHALL be rejected and SHALL never enter a deployed
+snapshot.
+
+Every row SHALL record paid exact queries, useful retained paths, bytes, and
+complete service time. Service time SHALL include discovery, invalidation,
+clause checks, rebuild, persistence, and reload. Causal erasure rows SHALL show
+whether registered benefits disappear after one supporting path is removed.
+Paired stream bootstrap SHALL use 10,000 draws with seed `6501807`.
+
+The value gate SHALL require a paid-query ratio upper bound below `0.90` and a
+full-cost ratio upper bound at most `1.0` against both persistent controls. It
+SHALL also require zero safety failures and at least eight erasure witnesses
+across four streams. A safe complete run that misses a value threshold SHALL
+use `verdict_class=null`. A safety failure SHALL disqualify the result. A
+positive oracle-defined result SHALL use `verdict_class=circular_positive`.
+
+`memory_revision_capture_complete_score` SHALL describe complete valid stream
+evidence independently of benefit. `memory_revision_value_score` SHALL equal
+one only when all safety, erasure, query, and full-cost gates pass. The artifact
+SHALL set `continuous_self_learning_task=true`, `verifier_is_oracle=true`, and
+`promotion_score=0`. It SHALL describe CPU sparse proof checking and only
+potential FPGA placement. It SHALL not claim physical speedup or live-model
+benefit.
+
+The artifact SHALL use milestone `2026.09.650`, phase 3, and run date
+`20260919`. It SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+LLM counts, `inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. Historical evidence SHALL remain in hash-bound
+sidecars. The terminal artifact SHALL bind source bytes, the frozen schedule,
+raw rows, and code in its reproducibility checksum.
+
+The affected command list SHALL come from Exp7358 and run through Exp7303. It
+SHALL contain worktree imports, focused serial pytest with cleared addopts and
+no coverage, separate 100 percent changed-module coverage, scoped Ruff check
+and format, changed-module mypy, and exact-test specification coverage. It
+SHALL preserve command-local `COVERAGE_FILE`, use a private existing base-temp
+parent, and omit the full Python suite. The entrypoint and fresh-process cold
+replay SHALL serve as the capability E2E. The unchanged adversarial verifier
+and strict row-consistency reader SHALL inspect the candidate before atomic
+terminal publication. No numbered E2E test applies.
+
+### SCENARIO-CL-7418-SCHEDULE: Revision epochs are frozen before measurement
+
+- GIVEN seed `6501801` and the fixed stream budget
+- WHEN the schedule is generated before any arm runs
+- THEN it contains 32 streams with four ordered 12-request epochs
+- AND every arm receives the same current source and hidden request order.
+
+### SCENARIO-CL-7418-AUTHORITY: Retention follows current source bytes
+
+- GIVEN a proof from an earlier source and a later source revision
+- WHEN version-checked retention considers the proof
+- THEN every supporting clause is checked against the new canonical source
+- AND a revoked, renamed, corrupt, or identifier-reused proof cannot reject.
+
+### SCENARIO-CL-7418-COMMIT: One snapshot controls each request
+
+- GIVEN bounded committed proof memory and one request
+- WHEN the request starts and later exact feedback is available
+- THEN only the entry snapshot can influence its decision
+- AND verified additions commit afterward with safe interruption and eviction.
+
+### SCENARIO-CL-7418-TRUTH: Original clauses control every decision
+
+- GIVEN any epoch, arm, or retained proof decision
+- WHEN the independent evaluator enumerates the current formula
+- THEN a proof can reject only an actual assumption conflict
+- AND restart, stale-cache, and satisfiability controls fail closed.
+
+### SCENARIO-CL-7418-VALUE: Safety and complete cost control circular value
+
+- GIVEN complete per-stream rows and registered erasure interventions
+- WHEN paired bootstrap bounds and safety counts are reduced
+- THEN completion stays separate from benefit
+- AND value passes only under both comparator bounds and every safety gate.
+
+### SCENARIO-CL-7418-ARTIFACT: Fresh readers control atomic publication
+
+- GIVEN revision rows, erasure rows, attacks, hashes, and scoped receipts
+- WHEN a fresh process recomputes the result and strict readers inspect it
+- THEN changed evidence, scores, hashes, or validation scope fails closed
+- AND only a valid terminal artifact is published atomically.
+
+## Implementation Status (REQ-CL-7418)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7418 and SCENARIO-CL-7418-* | Implemented: focused revision-memory module, thin entrypoint, frozen schedule, revision-aware proof retention, and terminal artifact producer. | Verified by 31 spec-linked tests, 100 percent changed-module coverage, the eight scoped affected checks, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test specification coverage. |
