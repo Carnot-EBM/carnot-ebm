@@ -3066,3 +3066,112 @@ Given the frozen affected-file manifest, when the thin entrypoint runs for
 `20260919`, then it streams scoped checks and terminal readers, records actual
 UTC and monotonic durations, and atomically publishes a complete artifact with
 no model load, no promotion, and no real-data efficacy claim.
+
+## REQ-KAN-7432: Sparse Online Update Placement And Persistence
+
+Exp7432 MUST authenticate the Exp7425 spline prototype and the numeric
+checkpoints and complete online journal from Exp7426 and Exp7427. Missing
+numeric inputs MUST block only the numeric branch. Board accounting MUST stay
+present. The experiment MUST use host arithmetic only. It MUST declare
+`MODEL_SPECS=[]`, `model_invoked=false`, zero current LLM invocation counts,
+`inference_substrate_class="no_model_load"`, and `execution_venue="host"`.
+Small coefficient updates MUST appear only in `small_ebm_training` receipts.
+
+The experiment MUST freeze a float64 dense reference. It MUST compare float32
+dense, float32 sparse, and signed 16-bit fixed-point sparse updates. Fixed-point
+scale MUST use training-only coefficient and feature bounds. Multiplication and
+addition MUST use explicit signed 32-bit accumulation with overflow detection.
+The implementation MUST not tune scales or policy thresholds on test outcomes.
+It MUST report saturation and MUST require zero unsafe wraparound.
+
+The complete eligible Exp7427 journal MUST be replayed in its recorded order.
+The experiment MUST not change feedback masks. Each update row MUST retain the
+event identity, precision arm, action, coefficient error, probability error,
+Brier change, log-loss change, touched coefficient bytes, saturation count,
+overflow status, and timing components. Development fixtures MUST cover values
+near both action thresholds, spline-knot boundaries, overflow, delayed event
+order, and restart from a durable checkpoint. Any fixed-point action flip is an
+honest numeric null.
+
+The timing protocol MUST use 30 paired rotated-order blocks at batch sizes 1,
+32, and 128. Complete-service time MUST include feature evaluation, coefficient
+update, journal write, `fsync`, and checkpoint cost. Cold setup MUST remain
+separate. A host speed-value claim requires action parity, Brier increase no
+more than `0.001`, and a paired whole-service time-ratio 95% confidence upper
+bound below one against float32 dense for every batch size. The artifact MUST
+report locality and bytes even when no speed benefit exists.
+
+The experiment MUST preserve separate authenticated KV260, GateMate, and
+PolarFire rows. KV260 access MUST remain SSH-only with `k_max<=5`. GateMate MUST
+remain blocked unless an operator-authored cable, port, power, or JTAG change
+follows its recorded block. PolarFire MUST preserve the hash-verified CPU
+dispatch disposition. The artifact MUST map touched coefficient bytes,
+precision, and transfer frequency to an explicit future KV260 budget. It MUST
+report the CPU update target below one microsecond and lookup target below one
+millisecond as met or unmet. It MUST report that 100x service acceleration
+requires an unaccelerated fraction no greater than one percent. Host results
+MUST NOT qualify Extropic Z1, NPU, FPGA, TSU, power, latency, or purchase claims.
+
+The experiment MUST publish
+`results/experiment_7432_v651_update_placement.json` only after the frozen
+affected validation plan, the declared entrypoint, a fresh-process cold replay,
+independent raw-row reduction, `scripts/adversarial_verify.py`, and strict
+verdict-row consistency checks pass. `update_placement_complete_score` MAY equal
+one only for independently valid numeric placement evidence.
+`update_placement_value_score` MAY equal one only when every registered parity,
+quality, and complete-service timing gate passes. `promotion_score`,
+`hardware_ready_score`, and `hardware_value_score` MUST remain zero.
+
+### SCENARIO-KAN-7432-01: Numeric Inputs Fail Closed By Branch
+
+Given the dated upstream artifacts, checkpoints, journal shards, and board
+records, when exact paths, hashes, schemas, and terminal fields are checked,
+then missing numeric evidence blocks only numeric placement and all three board
+rows remain explicit.
+
+### SCENARIO-KAN-7432-02: Fixed-Point Bounds Precede Replay
+
+Given training-only spline support and coefficient bounds, when the signed
+16-bit scale is frozen, then every accumulator uses checked signed 32-bit
+arithmetic and no held-out label or action outcome changes that scale.
+
+### SCENARIO-KAN-7432-03: Replay Preserves Order And Actions
+
+Given the complete eligible online journal, when all four arithmetic arms replay
+the unchanged feedback masks, then prediction precedes each delayed update and
+every coefficient error, probability error, score change, saturation, overflow,
+and action flip is retained.
+
+### SCENARIO-KAN-7432-04: Boundary And Restart Controls Fail Closed
+
+Given near-threshold values, spline-knot boundaries, an overflow fixture, a
+delayed event, and a committed midpoint checkpoint, when controls and restart
+run, then boundary behavior is explicit, overflow cannot wrap, event order is
+unchanged, and restarted state equals uninterrupted state.
+
+### SCENARIO-KAN-7432-05: Complete-Service Timing Uses Paired Rotation
+
+Given batch sizes 1, 32, and 128, when 30 paired rotated-order blocks run, then
+each arm includes feature evaluation, update, journal write, `fsync`, and
+checkpoint cost, while cold setup remains separate and confidence intervals use
+paired blocks.
+
+### SCENARIO-KAN-7432-06: Value Is Stricter Than Completion
+
+Given valid raw placement rows, when any action flips, unsafe wraparound occurs,
+Brier increase exceeds `0.001`, or a timing-ratio upper bound is not below one,
+then completion can remain one but value MUST equal zero and the verdict MUST be
+a complete null.
+
+### SCENARIO-KAN-7432-07: Board Accounting Does Not Become Execution
+
+Given authenticated historical board records, when host placement results are
+assembled, then KV260, GateMate, and PolarFire keep separate dispositions and
+all fresh hardware readiness, value, power, latency, and purchase claims remain
+zero or false.
+
+### SCENARIO-KAN-7432-08: Independent Readers Bind Terminal Evidence
+
+Given the raw replay and timing rows plus the frozen validation manifest, when
+fresh processes reduce and lint the candidate, then changed rows, hashes, gates,
+scores, or invocation claims make publication fail closed.
