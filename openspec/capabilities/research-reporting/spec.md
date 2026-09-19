@@ -73825,3 +73825,128 @@ atomic terminal publication.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7401 and SCENARIO-REPORT-7401-* | Planned: independent audit module, thin entrypoint, source sidecar, compact rows, and terminal artifact | Planned: spec-linked RED tests, 100 percent changed-module coverage, exact affected checks, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and scoped spec coverage |
+
+## V649 complete decision-service cost capture — 2026-09-19
+
+**Status:** Specified. This host measurement loads no LLM and performs no board operation.
+
+### REQ-REPORT-7407: Measure the complete fixed decision service before any hardware port
+
+Exp7407 SHALL authenticate the exact clean Exp7385 terminal artifact, its
+selected `natural_prevalence_bernoulli_gibbs` seed 7382001 numeric checkpoint,
+and the fixed source-text corpus before timing. The Exp7385 scientific null
+SHALL remain eligible for this cost fixture. Exp7399 MAY supply a separately
+labeled adaptive service only when its current numeric state is present and
+eligible. Its absence SHALL not suppress the fixed-service measurement. A
+missing or invalid mandatory fixture SHALL produce a terminal `blocked_*`
+artifact before dependent timing.
+
+The fixed service SHALL measure raw source text through PCIB feature extraction,
+numeric energy and probability, typed policy action, journal and state
+serialization, and complete return materialization. It SHALL compare scalar and
+vectorized NumPy scoring for batches 1, 32, and 128. Each batch SHALL use 30
+paired blocks, seed 7407307, an explicit warm-up, and a fixed alternating arm
+order. Every service row SHALL retain the block, batch, arm, each stage duration,
+complete wall duration, measured byte counts, and parity fields.
+
+Scalar and vectorized paths SHALL agree on energy and probability within the
+predeclared float64 tolerance `1e-10`. They SHALL emit identical actions for
+the same thresholds. Boundary fixtures at, immediately below, and immediately
+above both policy thresholds SHALL also agree. Paired full-service and scoring
+ratios SHALL retain resampled intervals. A faster scoring kernel without a
+paired full-service benefit SHALL remain a completed null finding.
+
+Exp7407 SHALL compute measured stage fractions from the complete service wall
+time. It SHALL report finite 100-fold and infinite-device Amdahl bounds for the
+scoring stage. A 100-fold whole-service target SHALL require an unaccelerated
+fraction no greater than 0.01. Device dispositions SHALL keep the current CPU
+counter and affine-update path separate from possible batched GPU or NPU scoring
+and sparse proof-check FPGA work. All device rates SHALL remain assumptions
+until measured. The task SHALL not port a kernel only to occupy a hardware slot.
+
+Exp7407 SHALL authenticate the original KV260 fabric transcript and PolarFire
+CPU-dispatch transcript in the Exp7393 evidence chain. Their claim boundaries
+SHALL remain different. It SHALL inspect only approved tracked operator sources
+for a dated GateMate cable, port, power, board, JTAG, or DirtyJTAG change after
+Exp6559. If none exists, the GateMate row SHALL use
+`blocked_changed_physical_state`, retain the exact failed gate summary, and set
+`hardware_ready_score=0`. The task SHALL perform no SSH, flash, install,
+purchase, download, vendor contact, or other physical attempt. Future KV260
+access SHALL remain SSH-only with `k_max<=5`.
+
+The CPU cost verdict SHALL remain independent from the expected blocked
+GateMate row. This task SHALL make no current hardware-readiness or
+hardware-value claim. It SHALL declare `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current LLM invocation counts,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`.
+`inference_substrate` SHALL be a string. Device and software facts SHALL live
+in `inference_substrate_details`. Historical or scripted model receipts SHALL
+remain in hash-bound sidecars and SHALL not supply current invocation counters.
+
+The terminal artifact SHALL include actual UTC boundaries, monotonic duration,
+phase spans, exact source hashes and eligibility, raw service and board rows,
+sample budgets, categorized gates, a precise gate summary, validation receipts,
+repository health, field principles, and a checksum that binds code,
+configuration, protocol, sources, and raw rows. `service_cost_capture_complete_score`
+SHALL equal one only for complete paired timing and parity.
+`hardware_ready_score`, `hardware_value_score`, and `promotion_score` SHALL
+remain zero. Completed findings SHALL use a `complete_` verdict. Unchanged
+external absence SHALL use a blocked board state, not partial current work.
+
+The affected command plan SHALL come from Exp7358 and execute through Exp7303.
+It SHALL freeze worktree imports, focused pytest with `-n 0 -o addopts=
+--no-cov` and a private existing base-temp parent, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy, and
+exact-test spec coverage. It SHALL preserve command-local `COVERAGE_FILE` and
+SHALL not add or launch `full_python_suite`. No numbered E2E applies. The
+declared entrypoint and a fresh-process cold replay SHALL serve as the capability
+E2E. Independent recomputation, adversarial verification, and strict row
+consistency SHALL control atomic terminal publication.
+
+#### SCENARIO-REPORT-7407-FIXTURE: A clean scientific null remains a valid cost fixture
+
+**Given** the exact clean Exp7385 artifact, selected numeric checkpoint, and fixed source texts
+**When** Exp7407 authenticates mandatory and optional inputs
+**Then** the Exp7385 null supplies the fixed service without new training or LLM work
+**And** an absent Exp7399 state is reported separately without blocking fixed timing.
+
+#### SCENARIO-REPORT-7407-TIMING: Paired blocks retain the complete service boundary
+
+**Given** three fixed batch sizes, two scoring arms, and 30 paired blocks
+**When** the warmed service runs in fixed alternating order
+**Then** 180 rows retain every stage, complete wall time, bytes, parity, and order
+**And** paired full-service ratio intervals decide benefit independently of kernel speed.
+
+#### SCENARIO-REPORT-7407-PARITY: Float64 and action boundaries agree
+
+**Given** scalar and vectorized scoring with the same checkpoint and policy
+**When** measured texts and exact threshold-boundary fixtures are scored
+**Then** energy and probability deltas are at most `1e-10`
+**And** typed actions match at and around both thresholds.
+
+#### SCENARIO-REPORT-7407-PLACEMENT: Complete measured fractions bound acceleration
+
+**Given** measured complete-service stage costs
+**When** Exp7407 computes 100-fold and infinite-device Amdahl bounds
+**Then** it retains the measured unaccelerated fraction and necessary `<=0.01` condition
+**And** it recommends CPU retention or batching unless measured whole-service evidence supports a port.
+
+#### SCENARIO-REPORT-7407-BOARDS: Historical board claims remain scoped
+
+**Given** hash-matched KV260 fabric and PolarFire CPU-dispatch transcripts
+**When** no qualifying changed GateMate state is present after Exp6559
+**Then** three independent board rows authenticate with GateMate blocked
+**And** hardware readiness, hardware value, current board operations, and promotion stay zero.
+
+#### SCENARIO-REPORT-7407-ARTIFACT: Exact affected and terminal readers control publication
+
+**Given** the measured candidate, raw rows, exact affected receipts, and source hashes
+**When** a fresh process independently recomputes rows and runs both strict readers
+**Then** changed identity, timing rows, parity, ratios, board scope, gates, scores, or checksum fail
+**And** only a valid terminal JSON is written atomically.
+
+## Implementation Status (REQ-REPORT-7407)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7407 and SCENARIO-REPORT-7407-* | Planned: compact host service-cost module, thin entrypoint, measured sidecars, and terminal artifact | Planned: spec-linked RED tests, exact affected checks, 100 percent changed-module coverage, entrypoint E2E, fresh-process replay, adversarial verification, strict row consistency, and exact-test spec coverage |
