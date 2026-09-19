@@ -18220,3 +18220,4 @@ code |
 | 2026-09-19 11:21 UTC | Audit extraction coverage and semantic preservatio | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp7416-anchored-extraction.extraction_capture_complete_score (actual=0 == expected=1) |
 | 2026-09-19 11:51 UTC | Measure certified memory under source revision and | OK | 112 passed, 1 warning in 65.98s (0:01:05) |
 | 2026-09-19 12:20 UTC | Measure decision stability at reduced precision an | OK | 95 passed, 1 warning in 12.63s |
+| 2026-09-19 12:48 UTC | Reconcile twelve dispositions and decide each rese | OK | 91 passed, 1 warning in 32.02s |
