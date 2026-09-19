@@ -74277,3 +74277,146 @@ consistency SHALL pass on the exact candidate before atomic publication.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7415 and SCENARIO-REPORT-7415-* | Planned: independent host reducer and thin entrypoint | Planned: spec-linked tests, 100 percent changed-module coverage, scoped checks, entrypoint replay, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V650 calibrated precision and placement measurement — 2026-09-19
+
+**Status:** Specified. This is host emulation. It loads no LLM and performs no
+board operation.
+
+### REQ-REPORT-7419: Measure numeric precision inside the complete calibrated service
+
+Exp7419 SHALL authenticate the exact Exp7413 artifact, selected source-aware
+numeric checkpoint, feature rows, and held-out metric rows. The numeric branch
+SHALL require `calibration_capture_complete_score=1`, an allowed verdict class,
+and `flagged_adversarial=false`. A missing or ineligible Exp7413 input SHALL
+block only numeric measurement. It SHALL not erase the three board rows.
+
+The experiment SHALL freeze the first registered full-source source-aware head
+and its thresholds before reading held-out labels. It SHALL compare float64
+scalar scoring, float32 vectorized scoring, and symmetric int8 weights and
+features with float32 accumulation. Int8 scales SHALL use only training
+features and frozen checkpoint values. The experiment SHALL not tune scales or
+thresholds on held-out labels. All three paths are host emulation and SHALL not
+be described as device implementations.
+
+Every held-out row SHALL appear once for each numeric arm. Each precision row
+SHALL retain the unit, arm, probability, float64 error, typed action, measured
+representation bytes, threshold-crossing state, label availability, Brier
+contribution, and log-loss contribution. Unlabeled held-out rows SHALL remain
+explicit. The reducer SHALL report invalid numeric outputs, Brier and log-loss
+changes, maximum probability error, every measured action flip, and every
+threshold crossing. An exact near-threshold fixture SHALL expose adverse
+rounding instead of hiding it.
+
+The complete-service benchmark SHALL use batch sizes 1, 32, and 128. Each batch
+SHALL use 30 paired blocks with a deterministic rotated three-arm order. Cold
+initialization SHALL be measured separately. The timed boundary SHALL include
+source-feature materialization, quantization, scoring, typed policy decisions,
+serialization, and complete return materialization. Every timing row SHALL
+retain the batch, block, arm, order, stage durations, total duration, bytes,
+status, and row hash.
+
+Scientific value SHALL require all measured typed actions to match float64, no
+invalid numeric output, int8 Brier increase no greater than `0.001`, and the
+upper paired 95-percent bound for int8 total-time ratio versus vectorized
+float32 below one. A parity or speed failure SHALL produce a valid numeric
+null. Missing, changed, or corrupt evidence SHALL disqualify the branch. The
+experiment SHALL not change thresholds to recover a speed claim.
+
+Exp7419 SHALL compute the unaccelerated fraction from measured complete-service
+stage costs. A 100-fold complete-service target SHALL require that fraction to
+be no greater than `0.01`. This is an Amdahl feasibility bound, not achieved
+acceleration. Future KV260 work SHALL preserve `k_max<=5` and SSH-only access.
+Extropic TSU and XDNA SHALL remain unavailable research targets. The task SHALL
+perform no purchase, vendor contact, SSH, flash, or device probe.
+
+The experiment SHALL authenticate separate KV260, GateMate, and PolarFire
+rows. KV260 fabric and PolarFire CPU-dispatch graduation SHALL remain bounded
+to their dated evidence. GateMate SHALL remain
+`blocked_changed_physical_state` unless a new operator-authored dated cable,
+port, power, board, JTAG, or DirtyJTAG record exists after Exp6559. A new record
+SHALL be recorded only as a future prerequisite. `hardware_ready_score` and
+`hardware_value_score` SHALL remain zero.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate_class=no_model_load`, and
+`execution_venue=host`. `inference_substrate` SHALL be a string. Small Gibbs
+training SHALL appear only as an authenticated historical `small_ebm_training`
+receipt. Scripted transport and archived model receipts SHALL remain in
+hash-bound sidecars.
+
+The terminal artifact SHALL include actual UTC boundaries, monotonic duration,
+phase spans, exact source hashes, all comparative and board rows, sample
+budgets, categorized gates, branch-local blockers, validation receipts, field
+principles, and a checksum over protocol, source bytes, code, and raw rows.
+`precision_capture_complete_score` SHALL equal one only for a valid measured
+numeric branch. `precision_value_score` SHALL equal one only when every parity,
+score-tolerance, and full-service speed gate passes. `promotion_score`,
+`hardware_ready_score`, and `hardware_value_score` SHALL remain zero.
+
+The affected command plan SHALL come from Exp7358 and execute through Exp7303.
+It SHALL freeze worktree imports, focused pytest with `-n 0 -o addopts=
+--no-cov` and a private existing base-temp parent, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy, and
+exact-test specification coverage. It SHALL preserve command-local
+`COVERAGE_FILE`. It SHALL not launch `full_python_suite` or an old main.
+
+No numbered end-to-end scenario applies. The declared entrypoint and a
+fresh-process cold replay are the capability end-to-end checks. Independent
+row recomputation, the unchanged adversarial verifier, and strict verdict-row
+consistency SHALL pass on the exact candidate before atomic publication.
+
+#### SCENARIO-REPORT-7419-BRANCH: Calibration absence blocks only numeric work
+
+**Given** an unavailable or ineligible Exp7413 calibration artifact
+**When** Exp7419 authenticates its branch inputs and historical board evidence
+**Then** numeric measurement is blocked with its exact failed check
+**And** three independent board dispositions remain present and scoped.
+
+#### SCENARIO-REPORT-7419-QUANTIZATION: Scales remain train-only
+
+**Given** one frozen source-aware head and disjoint train and held-out features
+**When** symmetric int8 scales are derived and scoring runs
+**Then** only checkpoint weights and training features determine the scales
+**And** held-out labels do not change scales, thresholds, or arm definitions.
+
+#### SCENARIO-REPORT-7419-PARITY: Full held-out decisions retain rounding evidence
+
+**Given** every labeled and unlabeled held-out row plus an exact threshold fixture
+**When** float64, float32, and int8 paths score the same units
+**Then** probabilities, errors, bytes, actions, flips, proper-score contributions, and invalid values reproduce
+**And** the fixture reports adverse rounding even when measured typed actions remain unchanged.
+
+#### SCENARIO-REPORT-7419-TIMING: Rotated paired blocks cover the full service
+
+**Given** three batch sizes, three arms, 30 blocks, and separate cold initialization
+**When** the host benchmark runs in deterministic rotated order
+**Then** 270 warm timing rows retain every stage, total time, bytes, status, and row hash
+**And** paired total-time intervals compare int8 only with vectorized float32.
+
+#### SCENARIO-REPORT-7419-PLACEMENT: Amdahl limits stay prospective
+
+**Given** measured stage costs and no device execution
+**When** the reducer computes an infinite accelerated-stage bound
+**Then** 100-fold feasibility requires an unaccelerated fraction no greater than `0.01`
+**And** no host result becomes a hardware speed or readiness claim.
+
+#### SCENARIO-REPORT-7419-BOARDS: Dated board evidence remains independent
+
+**Given** authenticated KV260 and PolarFire graduation plus the GateMate receipt search
+**When** no qualifying post-Exp6559 changed-state record exists
+**Then** GateMate remains `blocked_changed_physical_state`
+**And** all hardware, external-operation, and promotion scores stay zero.
+
+#### SCENARIO-REPORT-7419-ARTIFACT: Exact readers control terminal publication
+
+**Given** raw precision rows, timing rows, board rows, exact hashes, and frozen checks
+**When** fresh processes replay, reduce, adversarially verify, and run strict row consistency
+**Then** changed evidence, scale provenance, metrics, parity, timing, gates, scores, or checksum fail
+**And** only a valid terminal JSON is published atomically.
+
+## Implementation Status (REQ-REPORT-7419)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7419 and SCENARIO-REPORT-7419-* | Implemented: host precision module, thin entrypoint, hash-bound raw rows, and terminal artifact | Verified by spec-linked tests, exact affected checks, 100 percent changed-module coverage, entrypoint E2E, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage |
