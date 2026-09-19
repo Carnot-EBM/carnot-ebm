@@ -18213,3 +18213,4 @@ code |
 | 2026-09-19 09:34 UTC | Measure source-grounded Gibbs calibration against  | OK | 97 passed, 1 warning in 8.20s |
 | 2026-09-19 09:52 UTC | Measure continuous energy calibration under select | FAIL | Codex CLI error: Stalled after 600s silence. Last output: selected = [ + |
 | 2026-09-19 10:18 UTC | Measure continuous energy calibration under select | OK | 95 passed, 1 warning in 10.11s |
+| 2026-09-19 10:44 UTC | Independently audit calibrated decisions and feedb | OK | 89 passed, 1 warning in 10.21s |
