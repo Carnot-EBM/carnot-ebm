@@ -998,6 +998,134 @@ rows,
 **then** it measures prediction, persistence, update, and reconstruction costs
 **and** it reports p50 and p95 latency without claiming a hardware speedup.
 
+### REQ-AUTO-7423: Seal a human-annotated source-support protocol
+
+Exp7423 SHALL resolve the public ParticleMedia/RAGTruth repository to commit
+`c103204b9ce28d6bbad859304bf30de72b8ed8fe`. It SHALL authenticate only
+`dataset/source_info.jsonl` and `dataset/response.jsonl` in an external cache.
+Each asset SHALL retain its immutable URL, byte size, SHA-256 hash, license,
+and author attribution. Network and cache failures SHALL produce a terminal
+blocked artifact. Synthetic rows, Enoki labels, and historical graph-grounding
+outputs SHALL not replace unavailable RAGTruth data.
+
+The experiment SHALL join the two files by `source_id`. It SHALL preserve QA,
+Summary, and Data2txt records. An evaluator-only record SHALL retain quality,
+span offsets, `label_type`, and `implicit_true`. The primary label SHALL be one
+when the response contains no annotated source-unsupported span. A span with
+`implicit_true=true` SHALL remain unsupported by the supplied source. It SHALL
+not be called false in the world. A frozen sensitivity view SHALL exclude such
+spans without tuning on that view. The documented exclusion rule SHALL reject
+non-good quality, truncated, and refusal records. It SHALL count every reason.
+
+Before labels are read, the experiment SHALL connect identical source IDs and
+duplicate normalized source bytes. All sibling responses SHALL remain in one
+group. Official test groups SHALL remain final-test only. A development group
+that overlaps official test SHALL be excluded. Remaining official training
+groups SHALL use salt `carnot-v651-human-1` and fixed hash ranges of 40, 15,
+15, and 30 percent for fit, probability calibration, policy calibration, and
+prospective stream. Labels SHALL not affect assignment, caps, or representative
+selection.
+
+The label-blind caps SHALL be 2,000 fit groups, 500 groups in each calibration
+partition, 1,000 stream groups, and 1,000 final-test groups. One hash-ranked
+response per group SHALL supply certificates and the stream. All siblings
+SHALL remain available for secondary grouped metrics. Inferential online value
+SHALL require 400 stream groups and 40 examples of each class. Each calibration
+partition SHALL require 100 groups and 20 examples of each class. Lower support
+SHALL yield a complete null with protocol readiness one when every contract
+check passes.
+
+Predictor records SHALL contain only a row key, group ID, partition, task type,
+label-blind source serialization, and bounded response text. Source text SHALL
+be capped at 4,096 lexical tokens. Response text SHALL be capped at 1,024
+lexical tokens. Predictor readers SHALL deny annotations, labels, model identity,
+quality, original metadata, source IDs, and split outcome statistics. The six
+features SHALL reuse the exact Exp7412 definitions and order. They are lexical
+and PCIB proxies. They do not prove entailment. Leakage mutations, sibling
+group checks, and a fresh reload SHALL pass before any later fitting.
+
+The experiment SHALL write hash-bound predictor and evaluator shards plus a
+frozen manifest under
+`results/raw/experiment_7423_v651_annotated_protocol/`. It SHALL seal seeds
+65101 through 65105, a 500-step small-energy-head budget, disjoint fitting and
+calibration roles, the Exp7412 threshold grid, and the fixed online schedules.
+No current LLM SHALL run. Current declarations SHALL be `MODEL_SPECS=[]`,
+`model_invoked=false`, zero invocation counts,
+`inference_substrate=no_model_load`,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`.
+Small numeric-head work SHALL use `small_ebm_training` receipts. Archived or
+scripted model events SHALL remain hash-bound sidecars and never current calls.
+
+`annotated_protocol_ready_score` SHALL equal one when source authentication,
+human-label semantics, grouping, masking, sealed partitions, cold reload,
+affected validation, entrypoint replay, independent reduction, adversarial
+verification, and strict row consistency pass. Readiness SHALL not depend on
+inferential support. `promotion_score` SHALL remain zero. `label_authority`
+SHALL be `human_annotation_source_support`, explicitly fallible and not formal
+truth. `verifier_is_oracle` SHALL be false.
+
+The workflow SHALL freeze an Exp7358 affected-file manifest. It SHALL use the
+Exp7303 runner with command-local coverage data. It SHALL run worktree imports,
+affected tests, 100-percent changed-module coverage, Ruff, mypy, and exact-test
+spec coverage. The declared entrypoint and fresh-process cold replay form the
+capability E2E. No numbered E2E scenario applies because shared training,
+sampling, serialization, PyO3, and ARC code do not change.
+
+The terminal artifact SHALL contain `schema`, `experiment_id`, `milestone`,
+`status`, `run_date`, `preconditions_checked`, `MODEL_SPECS`, `model_invoked`,
+`invocation_counts`, `inference_substrate`, `inference_substrate_details`,
+`inference_substrate_class`, `execution_venue`, `duration_s`, `phase_spans`,
+`random_seed`, `reproducibility_checksum`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `acceptance_gate_results`, `gate_check_summary`,
+`verifier_is_oracle`, `honest_verdict`, `verdict_class`,
+`flagged_adversarial`, `validation_receipts`, `field_principles`,
+`promotion_score`, `corpus_manifest`, `support_counts`, `label_authority`,
+`feature_contract`, and `annotated_protocol_ready_score`. It SHALL retain the
+exact candidate validation receipts. A complete finding SHALL use a
+`complete_` or `complete:` verdict. An unavailable source SHALL use
+`blocked_*`. `verdict_class` SHALL be one of `positive`, `circular_positive`,
+`null`, `blocked`, `disqualified`, or `partial`. The reproducibility checksum
+SHALL bind code, protocol, inputs, raw rows, and validation scope.
+
+#### SCENARIO-AUTO-7423-01: Human source-support labels stay evaluator-only
+
+**Given** joined RAGTruth source and response records,
+**when** predictor and evaluator shards are sealed and reloaded,
+**then** predictor rows expose no label, span, quality, model, metadata, or split
+statistics
+**and** evaluator rows retain exact spans and primary plus sensitivity labels.
+
+#### SCENARIO-AUTO-7423-02: Source duplicates cannot cross partitions
+
+**Given** sibling responses, repeated source IDs, and normalized duplicate
+source bytes,
+**when** official boundaries, hashed partitions, and label-blind caps apply,
+**then** each connected group has one disposition
+**and** cross-split components leave development instead of contaminating it.
+
+#### SCENARIO-AUTO-7423-03: Fixed features have bounded source inputs
+
+**Given** each supported task type and over-limit source or response text,
+**when** its predictor serialization and six features are computed,
+**then** source and response truncation are recorded
+**and** the feature names, order, bounds, and values match Exp7412.
+
+#### SCENARIO-AUTO-7423-04: Support changes value, not protocol readiness
+
+**Given** a valid sealed corpus with too few stream or calibration labels,
+**when** support gates are reduced,
+**then** the terminal verdict is a complete null and benefit is forbidden
+**and** annotated protocol readiness remains one.
+
+#### SCENARIO-AUTO-7423-05: Cold readers reject evidence drift
+
+**Given** a terminal candidate and its raw predictor, evaluator, and manifest
+shards,
+**when** a fresh process reloads and independently reduces them,
+**then** any hash, membership, mask, label, feature, receipt, or checksum drift
+fails
+**and** terminal JSON publishes atomically only after all required checks pass.
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the

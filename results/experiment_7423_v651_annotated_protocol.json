@@ -1,0 +1,3955 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "human_label_authority",
+      "expected": "human_annotation_source_support",
+      "observed": "human_annotation_source_support",
+      "operator": "==",
+      "passed": true,
+      "principle": "Only author human source-support annotations may label this protocol."
+    },
+    {
+      "category": "validity",
+      "check": "sealed_view_reload",
+      "expected": "sha256:5e09e80789b5579194d22018a9b336558da4668cfa1facbf58d2e6c403fccdb8",
+      "observed": "sha256:5e09e80789b5579194d22018a9b336558da4668cfa1facbf58d2e6c403fccdb8",
+      "operator": "==",
+      "passed": true,
+      "principle": "Freshly hashed shards must reproduce the frozen manifest."
+    },
+    {
+      "category": "leakage",
+      "check": "predictor_field_mask",
+      "expected": [
+        "row_key",
+        "group_id",
+        "partition",
+        "task_type",
+        "source_text",
+        "response_text",
+        "source_token_count",
+        "response_token_count",
+        "source_truncated",
+        "response_truncated",
+        "certificate_selected",
+        "features"
+      ],
+      "observed": [
+        "row_key",
+        "group_id",
+        "partition",
+        "task_type",
+        "source_text",
+        "response_text",
+        "source_token_count",
+        "response_token_count",
+        "source_truncated",
+        "response_truncated",
+        "certificate_selected",
+        "features"
+      ],
+      "operator": "==",
+      "passed": true,
+      "principle": "Predictors cannot observe evaluator authority."
+    },
+    {
+      "category": "completion",
+      "check": "required_validation",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "All affected and terminal readers must pass once."
+    },
+    {
+      "category": "scientific_support",
+      "check": "inferential_support",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Support limits future benefit claims but does not invalidate this audit."
+    }
+  ],
+  "annotated_protocol_ready_score": 1,
+  "benefit_claim": false,
+  "cold_start_duration_s": 3.7610482973977923,
+  "completed_at_utc": "2026-09-19T15:41:03.064294+00:00",
+  "corpus_manifest": {
+    "asset_receipt": {
+      "attribution": "RAGTruth, Particle Media; human annotations released by the authors.",
+      "authenticated": true,
+      "cache_root": "/home/ianblenke/.cache/carnot-rewrite-20260731/work/data/ragtruth",
+      "commit": "c103204b9ce28d6bbad859304bf30de72b8ed8fe",
+      "commit_url": "https://github.com/ParticleMedia/RAGTruth/commit/c103204b9ce28d6bbad859304bf30de72b8ed8fe",
+      "files": [
+        {
+          "cache_path": "/home/ianblenke/.cache/carnot-rewrite-20260731/work/data/ragtruth/source_info.jsonl",
+          "path": "dataset/source_info.jsonl",
+          "sha256": "sha256:0dffc26ea9f3c1c3d7c7e8336b56ef1646e3cec876edffcca3c9c624d12d578b",
+          "size_bytes": 15117971,
+          "url": "https://raw.githubusercontent.com/ParticleMedia/RAGTruth/c103204b9ce28d6bbad859304bf30de72b8ed8fe/dataset/source_info.jsonl"
+        },
+        {
+          "cache_path": "/home/ianblenke/.cache/carnot-rewrite-20260731/work/data/ragtruth/response.jsonl",
+          "path": "dataset/response.jsonl",
+          "sha256": "sha256:e4c2e4ac24fff676d8984cc61c35d791612fadc58015335d97dd632375e18073",
+          "size_bytes": 21458735,
+          "url": "https://raw.githubusercontent.com/ParticleMedia/RAGTruth/c103204b9ce28d6bbad859304bf30de72b8ed8fe/dataset/response.jsonl"
+        }
+      ],
+      "license": "MIT",
+      "repository": "https://github.com/ParticleMedia/RAGTruth",
+      "total_bytes": 36576706
+    },
+    "attribution": "RAGTruth, Particle Media; human annotations released by the authors.",
+    "commit": "c103204b9ce28d6bbad859304bf30de72b8ed8fe",
+    "evaluator_fields": [
+      "row_key",
+      "group_id",
+      "partition",
+      "task_type",
+      "source_id",
+      "response_id",
+      "source_name",
+      "model",
+      "temperature",
+      "official_split",
+      "quality",
+      "annotations",
+      "primary_label",
+      "implicit_true_excluded_label",
+      "certificate_selected"
+    ],
+    "evaluator_row_count": 17617,
+    "exclusion_counts": {
+      "excluded_incorrect_refusal": 144,
+      "excluded_truncated": 29
+    },
+    "feature_contract": {
+      "definitions": {
+        "bounds": [
+          0.0,
+          1.0
+        ],
+        "normalization": "Unicode NFKC and lowercase lexical matching",
+        "ordered_source_features": [
+          "numeric_novelty_with_context",
+          "falsifiability_score",
+          "normalized_number_token_overlap",
+          "normalized_content_token_overlap",
+          "max_answer_source_sentence_overlap",
+          "missing_or_empty_source"
+        ],
+        "response_only_ablation": {
+          "context": "empty string to preserve the shipped two-feature PCIB representation",
+          "ordered_features": [
+            "entity_uptake",
+            "falsifiability_score"
+          ]
+        },
+        "semantic_scope": "interpretable_proxy_not_entailment",
+        "source_features": {
+          "falsifiability_score": {
+            "empty_denominator": 0.0,
+            "rule": "existing PCIBProbe falsifiability score with actual bounded context"
+          },
+          "max_answer_source_sentence_overlap": {
+            "empty_denominator": 0.0,
+            "rule": "maximum response-content overlap against one bounded source sentence"
+          },
+          "missing_or_empty_source": {
+            "empty_denominator": 1.0,
+            "rule": "one for missing or whitespace-only context, else zero"
+          },
+          "normalized_content_token_overlap": {
+            "empty_denominator": 0.0,
+            "rule": "unique response content words in context divided by response content words"
+          },
+          "normalized_number_token_overlap": {
+            "empty_denominator": 0.0,
+            "rule": "unique response numbers in context divided by unique response numbers"
+          },
+          "numeric_novelty_with_context": {
+            "empty_denominator": 0.0,
+            "empty_source": "all response numbers are novel",
+            "rule": "unique response numbers absent from context divided by unique response numbers"
+          }
+        },
+        "token_limits": {
+          "answer": 1024,
+          "context": 4096,
+          "question": 1024,
+          "selected_sentence": 1024
+        }
+      },
+      "denied_predictor_fields": [
+        "annotations",
+        "primary_label",
+        "implicit_true_excluded_label",
+        "model",
+        "quality",
+        "source_id",
+        "response_id",
+        "official_split",
+        "temperature"
+      ],
+      "predictor_fields": [
+        "row_key",
+        "group_id",
+        "partition",
+        "task_type",
+        "source_text",
+        "response_text",
+        "source_token_count",
+        "response_token_count",
+        "source_truncated",
+        "response_truncated",
+        "certificate_selected",
+        "features"
+      ],
+      "response_token_limit": 1024,
+      "semantics": "lexical and PCIB proxy inputs; not entailment or proof",
+      "source_feature_names": [
+        "numeric_novelty_with_context",
+        "falsifiability_score",
+        "normalized_number_token_overlap",
+        "normalized_content_token_overlap",
+        "max_answer_source_sentence_overlap",
+        "missing_or_empty_source"
+      ],
+      "source_token_limit": 4096
+    },
+    "independent_group_count": 2964,
+    "label_authority": "human_annotation_source_support",
+    "label_authority_limit": "fallible human source-support judgment; not formal truth",
+    "license": "MIT",
+    "manifest_hash": "sha256:5e09e80789b5579194d22018a9b336558da4668cfa1facbf58d2e6c403fccdb8",
+    "partition_group_counts": {
+      "final_test": 450,
+      "fit": 1002,
+      "policy_calibration": 386,
+      "probability_calibration": 373,
+      "prospective_stream": 753
+    },
+    "predictor_fields": [
+      "row_key",
+      "group_id",
+      "partition",
+      "task_type",
+      "source_text",
+      "response_text",
+      "source_token_count",
+      "response_token_count",
+      "source_truncated",
+      "response_truncated",
+      "certificate_selected",
+      "features"
+    ],
+    "predictor_row_count": 17617,
+    "protocol": {
+      "accept_thresholds": [
+        0.01,
+        0.025,
+        0.05
+      ],
+      "arms": [
+        "training_prevalence",
+        "l2_logistic_six_input",
+        "response_only_2_4_1_gibbs",
+        "source_aware_6_4_1_gibbs"
+      ],
+      "feedback_delays": [
+        1,
+        32
+      ],
+      "feedback_regimes": [
+        "deterministic_75_percent",
+        "frozen_baseline_selected"
+      ],
+      "final_static_role": "final_test",
+      "fit_role": "fit",
+      "group_caps": {
+        "final_test": 1000,
+        "fit": 2000,
+        "policy_calibration": 500,
+        "probability_calibration": 500,
+        "prospective_stream": 1000
+      },
+      "online_orders": [
+        "hash_order",
+        "reversed_block_order"
+      ],
+      "partition_salt": "carnot-v651-human-1",
+      "policy_calibration_role": "policy_calibration",
+      "primary_label": "1 means no human-annotated source-unsupported span",
+      "probability_calibration_role": "probability_calibration",
+      "reject_thresholds": [
+        0.9,
+        0.95,
+        0.99
+      ],
+      "sensitivity_label": "ignore only spans marked implicit_true; never tune on this view",
+      "stream_role": "prospective_stream",
+      "training_budget_steps": 500,
+      "training_seeds": [
+        65101,
+        65102,
+        65103,
+        65104,
+        65105
+      ]
+    },
+    "repository": "https://github.com/ParticleMedia/RAGTruth",
+    "response_truncation_count": 0,
+    "schema": "carnot.exp7423.corpus_manifest.v1",
+    "shards": [
+      {
+        "kind": "predictor",
+        "path": "predictor-fit-000.jsonl",
+        "rows": 2707,
+        "sha256": "sha256:1447ed36f10f68a09c21023ad23eaf1c2bc92949c1bacdb5eaeb27e2ab2e0f35",
+        "size_bytes": 8388457
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-fit-001.jsonl",
+        "rows": 1904,
+        "sha256": "sha256:e8c7ddb2dcfe1ea3e37a99568ab3b8d104807302953337af68b2665a87f1772c",
+        "size_bytes": 8384684
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-fit-002.jsonl",
+        "rows": 1333,
+        "sha256": "sha256:a0eef4fbb623f3e9200c9f262bc9fc50745acede7eb0113e8d240f7c738a1f4f",
+        "size_bytes": 4882903
+      },
+      {
+        "kind": "evaluator",
+        "path": "evaluator-fit-000.jsonl",
+        "rows": 5944,
+        "sha256": "sha256:b0e6c2fc6fa08f71f2072daabba7012f78e5aa1b867b115fb0741213dfb04bff",
+        "size_bytes": 3677803
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-probability_calibration-000.jsonl",
+        "rows": 2219,
+        "sha256": "sha256:501fcae5671620addd707e662354c26fcdf89e00471d726b1ed9fab206f325be",
+        "size_bytes": 7956588
+      },
+      {
+        "kind": "evaluator",
+        "path": "evaluator-probability_calibration-000.jsonl",
+        "rows": 2219,
+        "sha256": "sha256:f80749dfa509c566bbc258994d134119eeccc1bd53f13d54891b84caed3c3f2f",
+        "size_bytes": 1433508
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-policy_calibration-000.jsonl",
+        "rows": 2293,
+        "sha256": "sha256:bc64ecbfc344377d7a47b81b899fee6ab03b2f78b27252a834f9c5c191ba0238",
+        "size_bytes": 7996082
+      },
+      {
+        "kind": "evaluator",
+        "path": "evaluator-policy_calibration-000.jsonl",
+        "rows": 2293,
+        "sha256": "sha256:50e8015aea3227047148aec83986153ecf9e4b888ead42901955a7cfe0bb0000",
+        "size_bytes": 1480786
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-prospective_stream-000.jsonl",
+        "rows": 2558,
+        "sha256": "sha256:62da9b6ad5b826ca217d29e221d731a93e0633277635099c875bd2902b20853c",
+        "size_bytes": 8388299
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-prospective_stream-001.jsonl",
+        "rows": 1928,
+        "sha256": "sha256:bc95b2e9f9b614ea289f866bbd52152d4bf99d791c025e7ddad29d06aa3eb767",
+        "size_bytes": 7641618
+      },
+      {
+        "kind": "evaluator",
+        "path": "evaluator-prospective_stream-000.jsonl",
+        "rows": 4486,
+        "sha256": "sha256:eb1965f408b2278d7161998aa0b552cf77bb6e4811b408e556969f550bae9f98",
+        "size_bytes": 2916379
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-final_test-000.jsonl",
+        "rows": 2344,
+        "sha256": "sha256:0eacb8edda1c1ee6f2f0ccd4c2053b12c2845536a264387dc1864e3a155fcd2f",
+        "size_bytes": 8385332
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-final_test-001.jsonl",
+        "rows": 331,
+        "sha256": "sha256:2cb50175c3095c3d05f6ecfd7509ea4892a40af510a762b58805551f5aafc760",
+        "size_bytes": 1204713
+      },
+      {
+        "kind": "evaluator",
+        "path": "evaluator-final_test-000.jsonl",
+        "rows": 2675,
+        "sha256": "sha256:1d5dfb032fc5489835542fc63b34ecc9ca91500fbdc072bb1c56c8ca8af2fc8f",
+        "size_bytes": 1481895
+      },
+      {
+        "kind": "disposition",
+        "path": "dispositions-000.jsonl",
+        "rows": 173,
+        "sha256": "sha256:77267da77c67191d33644a3331c9cd3a09b4cb8f4cdb607d0ac70fa1015f18a8",
+        "size_bytes": 18250
+      }
+    ],
+    "source_truncation_count": 0,
+    "task_type_counts": {
+      "Data2txt": 6195,
+      "QA": 5767,
+      "Summary": 5655
+    }
+  },
+  "corpus_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7423_v651_annotated_protocol/corpus_manifest.json",
+  "current_invocation_events": [],
+  "current_owner_pid": 4057637,
+  "current_run_id": "exp7423-v651-annotated-protocol",
+  "duration_s": 25.770622988,
+  "ended_monotonic_ns": 2124163299294986,
+  "event_count": 0,
+  "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "execution_venue": "host",
+  "experiment_id": "exp7423-v651-annotated-protocol",
+  "feature_contract": {
+    "definitions": {
+      "bounds": [
+        0.0,
+        1.0
+      ],
+      "normalization": "Unicode NFKC and lowercase lexical matching",
+      "ordered_source_features": [
+        "numeric_novelty_with_context",
+        "falsifiability_score",
+        "normalized_number_token_overlap",
+        "normalized_content_token_overlap",
+        "max_answer_source_sentence_overlap",
+        "missing_or_empty_source"
+      ],
+      "response_only_ablation": {
+        "context": "empty string to preserve the shipped two-feature PCIB representation",
+        "ordered_features": [
+          "entity_uptake",
+          "falsifiability_score"
+        ]
+      },
+      "semantic_scope": "interpretable_proxy_not_entailment",
+      "source_features": {
+        "falsifiability_score": {
+          "empty_denominator": 0.0,
+          "rule": "existing PCIBProbe falsifiability score with actual bounded context"
+        },
+        "max_answer_source_sentence_overlap": {
+          "empty_denominator": 0.0,
+          "rule": "maximum response-content overlap against one bounded source sentence"
+        },
+        "missing_or_empty_source": {
+          "empty_denominator": 1.0,
+          "rule": "one for missing or whitespace-only context, else zero"
+        },
+        "normalized_content_token_overlap": {
+          "empty_denominator": 0.0,
+          "rule": "unique response content words in context divided by response content words"
+        },
+        "normalized_number_token_overlap": {
+          "empty_denominator": 0.0,
+          "rule": "unique response numbers in context divided by unique response numbers"
+        },
+        "numeric_novelty_with_context": {
+          "empty_denominator": 0.0,
+          "empty_source": "all response numbers are novel",
+          "rule": "unique response numbers absent from context divided by unique response numbers"
+        }
+      },
+      "token_limits": {
+        "answer": 1024,
+        "context": 4096,
+        "question": 1024,
+        "selected_sentence": 1024
+      }
+    },
+    "denied_predictor_fields": [
+      "annotations",
+      "primary_label",
+      "implicit_true_excluded_label",
+      "model",
+      "quality",
+      "source_id",
+      "response_id",
+      "official_split",
+      "temperature"
+    ],
+    "predictor_fields": [
+      "row_key",
+      "group_id",
+      "partition",
+      "task_type",
+      "source_text",
+      "response_text",
+      "source_token_count",
+      "response_token_count",
+      "source_truncated",
+      "response_truncated",
+      "certificate_selected",
+      "features"
+    ],
+    "response_token_limit": 1024,
+    "semantics": "lexical and PCIB proxy inputs; not entailment or proof",
+    "source_feature_names": [
+      "numeric_novelty_with_context",
+      "falsifiability_score",
+      "normalized_number_token_overlap",
+      "normalized_content_token_overlap",
+      "max_answer_source_sentence_overlap",
+      "missing_or_empty_source"
+    ],
+    "source_token_limit": 4096
+  },
+  "field_principles": {
+    "MODEL_SPECS": "List current LLMs; use an empty list when no LLM runs.",
+    "acceptance_gate_results": "Keep contract validity separate from inferential support.",
+    "annotated_protocol_ready_score": "Measure valid authority, masks, and sealed partitions.",
+    "corpus_manifest": "Record revision, attribution, hashes, assignments, and exclusions.",
+    "duration_s": "Measure current work and separate validation and cold-start time.",
+    "execution_venue": "Use the closed host venue value.",
+    "experiment_id": "Record the measured experiment id value.",
+    "feature_contract": "Freeze six proxies and deny evaluator fields.",
+    "field_principles": "Explain field intent separately from scalar values.",
+    "flagged_adversarial": "Preserve critical findings and deny readiness when flagged.",
+    "gate_check_summary": "Name exact failed or blocked fields without hiding zero values.",
+    "honest_verdict": "Use complete or blocked terminal prefixes.",
+    "inference_substrate": "State the current inference substrate as a plain string.",
+    "inference_substrate_class": "State the actual current compute class.",
+    "inference_substrate_details": "Record the measured inference substrate details value.",
+    "invocation_counts": "Record actual owned current call lifecycle counts.",
+    "label_authority": "Name fallible human source-support annotation authority.",
+    "milestone": "Record the measured milestone value.",
+    "model_invoked": "Count only actual current attempted model use.",
+    "phase_spans": "Record real phase times, progress boundaries, and checkpoints.",
+    "preconditions_checked": "Record exact paths, identities, and observed values first.",
+    "promotion_score": "Remain zero; this protocol cannot trigger deployment.",
+    "random_seed": "Freeze partition, fitting, sampling, and future resampling seeds.",
+    "reproducibility_checksum": "Bind code, protocol, inputs, raw rows, and validation scope.",
+    "rows": "List every deferred comparative arm, seed, and condition.",
+    "run_date": "Use the fixed execution date with actual UTC and monotonic timing.",
+    "sample_size_budget": "Separate planned, attempted, completed, failed, and unstarted work.",
+    "schema": "Use a versioned plain top-level schema with terminal identity.",
+    "source_artifact_hashes": "Identify exact source and shard bytes.",
+    "status": "Record the measured status value.",
+    "support_counts": "Count independent groups and labels by partition and domain.",
+    "validation_receipts": "Retain exact scoped commands, exits, durations, and log hashes.",
+    "verdict_class": "Use the closed terminal disposition enum.",
+    "verifier_is_oracle": "Human source-support labels are fallible, not an oracle."
+  },
+  "fixture_artifact": false,
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "failed_required_checks": [],
+    "required_checks_passed": true,
+    "support_limited": false
+  },
+  "historical_graph_extraction_repeated": false,
+  "honest_verdict": "complete_null_protocol_only_no_benefit_test",
+  "implicit_true_semantics": "unsupported by provided source; not false in the world",
+  "inference_substrate": "no_model_load",
+  "inference_substrate_class": "no_model_load",
+  "inference_substrate_details": {
+    "current_llm": null,
+    "device": "host_cpu",
+    "work": "RAGTruth reduction and lexical proxy extraction"
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "label_authority": "human_annotation_source_support",
+  "label_authority_limit": "fallible human source-support judgment; not formal truth",
+  "milestone": "2026.09.651",
+  "model_duration_s": 0.0,
+  "model_invoked": false,
+  "phase_spans": [
+    {
+      "checkpoint_at_utc": "2026-09-19T15:40:37.360497+00:00",
+      "completed_units": 18,
+      "duration_s": 0.06680914666503668,
+      "end_s": 0.06682009669020772,
+      "phase": "preconditions",
+      "start_s": 1.0950025171041489e-05
+    },
+    {
+      "checkpoint_at_utc": "2026-09-19T15:40:37.533326+00:00",
+      "completed_units": 20755,
+      "duration_s": 0.17278927378356457,
+      "end_s": 0.2396495258435607,
+      "phase": "acquisition_and_decode",
+      "start_s": 0.06686025205999613
+    },
+    {
+      "checkpoint_at_utc": "2026-09-19T15:40:46.935425+00:00",
+      "completed_units": 17617,
+      "duration_s": 9.402068707626313,
+      "end_s": 9.641747949644923,
+      "phase": "corpus_reduction",
+      "start_s": 0.23967924201861024
+    },
+    {
+      "checkpoint_at_utc": "2026-09-19T15:40:58.681554+00:00",
+      "completed_units": 8,
+      "duration_s": 11.746086805127561,
+      "end_s": 21.38787905778736,
+      "phase": "affected_validation",
+      "start_s": 9.641792252659798
+    },
+    {
+      "checkpoint_at_utc": "2026-09-19T15:41:03.064256+00:00",
+      "completed_units": 4,
+      "duration_s": 4.373118375428021,
+      "end_s": 25.770580538082868,
+      "phase": "terminal_validation",
+      "start_s": 21.397462162654847
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "source_bytes:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "AGENTS.md",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "source_bytes:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "CODEX.md",
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "source_bytes:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "source_bytes:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "research-program.md",
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "source_bytes:research-references.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "research-references.md",
+      "upstream": "research-references.md"
+    },
+    {
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/reporting/current_work_receipt.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7410_v650_source_corpus.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7410_v650_source_corpus.py",
+      "upstream": "python/carnot/experiment_7410_v650_source_corpus.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7412_v650_source_features.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7412_v650_source_features.py",
+      "upstream": "python/carnot/experiment_7412_v650_source_features.py"
+    },
+    {
+      "check": "source_bytes:results/experiment_7413_v650_source_calibration.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7413_v650_source_calibration.json",
+      "upstream": "results/experiment_7413_v650_source_calibration.json"
+    },
+    {
+      "check": "source_bytes:results/experiment_7414_v650_selected_feedback.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7414_v650_selected_feedback.json",
+      "upstream": "results/experiment_7414_v650_selected_feedback.json"
+    },
+    {
+      "check": "source_bytes:openspec/capabilities/autoresearch/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "path": "openspec/capabilities/autoresearch/spec.md",
+      "upstream": "openspec/capabilities/autoresearch/spec.md"
+    },
+    {
+      "check": "driving_requirement",
+      "expected": "REQ-AUTO-7423",
+      "field": "REQ-*",
+      "observed": "REQ-AUTO-7423",
+      "operator": "==",
+      "passed": true,
+      "path": "openspec/capabilities/autoresearch/spec.md",
+      "upstream": "openspec/capabilities/autoresearch/spec.md"
+    },
+    {
+      "check": "current_task_not_quarantined",
+      "expected": false,
+      "field": "exp7423-v651-annotated-protocol",
+      "observed": false,
+      "operator": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "upstream": "ops/exclusion_manifest.yaml"
+    }
+  ],
+  "promotion_score": 0,
+  "protocol_plan": {
+    "accept_thresholds": [
+      0.01,
+      0.025,
+      0.05
+    ],
+    "arms": [
+      "training_prevalence",
+      "l2_logistic_six_input",
+      "response_only_2_4_1_gibbs",
+      "source_aware_6_4_1_gibbs"
+    ],
+    "feedback_delays": [
+      1,
+      32
+    ],
+    "feedback_regimes": [
+      "deterministic_75_percent",
+      "frozen_baseline_selected"
+    ],
+    "final_static_role": "final_test",
+    "fit_role": "fit",
+    "group_caps": {
+      "final_test": 1000,
+      "fit": 2000,
+      "policy_calibration": 500,
+      "probability_calibration": 500,
+      "prospective_stream": 1000
+    },
+    "online_orders": [
+      "hash_order",
+      "reversed_block_order"
+    ],
+    "partition_salt": "carnot-v651-human-1",
+    "policy_calibration_role": "policy_calibration",
+    "primary_label": "1 means no human-annotated source-unsupported span",
+    "probability_calibration_role": "probability_calibration",
+    "reject_thresholds": [
+      0.9,
+      0.95,
+      0.99
+    ],
+    "sensitivity_label": "ignore only spans marked implicit_true; never tune on this view",
+    "stream_role": "prospective_stream",
+    "training_budget_steps": 500,
+    "training_seeds": [
+      65101,
+      65102,
+      65103,
+      65104,
+      65105
+    ]
+  },
+  "random_seed": {
+    "future_resampling_seed": 6512307,
+    "partition_salt": "carnot-v651-human-1",
+    "training_seeds": [
+      65101,
+      65102,
+      65103,
+      65104,
+      65105
+    ]
+  },
+  "receipt_sidecars": [],
+  "reproducibility_checksum": "sha256:2e2981b37f2fc7a9ff3bed4238d122bf0c7ef80425bb38b2003f7c2c32c125e4",
+  "rows": [
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "training_prevalence",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "l2_logistic_six_input",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "response_only_2_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65101,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65102,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65103,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65104,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "hash_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "deterministic_75_percent",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 1,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    },
+    {
+      "arm": "source_aware_6_4_1_gibbs",
+      "attempted": false,
+      "censored": false,
+      "completed": false,
+      "condition": {
+        "delay": 32,
+        "feedback_regime": "frozen_baseline_selected",
+        "order": "reversed_block_order"
+      },
+      "failure": null,
+      "seed": 65105,
+      "status": "unstarted",
+      "unit": "future_human_label_measurement"
+    }
+  ],
+  "run_date": "20260919",
+  "sample_size_budget": {
+    "attempted": 0,
+    "censored": 0,
+    "completed": 0,
+    "eligible_responses": 17617,
+    "failed": 0,
+    "independent_groups": 2964,
+    "planned": 160,
+    "stop_rule": "protocol audit only; no label fitting or benefit test in Exp7423",
+    "unstarted": 160
+  },
+  "schema": "carnot.exp7423.v651.annotated_protocol.v1",
+  "sensitivity_tuned": false,
+  "small_ebm_training": {
+    "future_training_budget_steps": 500,
+    "future_training_seeds": [
+      65101,
+      65102,
+      65103,
+      65104,
+      65105
+    ],
+    "performed": false,
+    "receipts": []
+  },
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "corpus_manifest": {
+      "manifest_hash": "sha256:5e09e80789b5579194d22018a9b336558da4668cfa1facbf58d2e6c403fccdb8",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7423_v651_annotated_protocol/corpus_manifest.json",
+      "sha256": "sha256:a065b2a64f2926c5bade1fd3495b1cbff23bd3b3c967bd104b973a6b118e30c0"
+    },
+    "openspec/capabilities/autoresearch/spec.md": "sha256:0d965141b4fbdf3753f7fd36d6cc71cbec52e0ba4aba1ba481ff1ca7bbcc1062",
+    "ops/e2e-test-plan.md": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+    "ops/exclusion_manifest.yaml": "sha256:fdab7b9ef47aa3f8be8902e30d96cd096f361d1abbe7c6de7624101383bf968e",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7410_v650_source_corpus.py": "sha256:45f0d0080509dde10943cddb5e21bf7c35716d20d9d57ca303a0e1bd596eb23c",
+    "python/carnot/experiment_7412_v650_source_features.py": "sha256:59c5a47f08375ab1abe5cc0df3dc7d3f1a613550412174415a0d5d6b547e1bab",
+    "python/carnot/experiment_7423_v651_annotated_protocol.py": "sha256:a188faebdf4086624627c244ada1ee66bed30b554d04fc1ff448b0b4565e2cf2",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "ragtruth": {
+      "attribution": "RAGTruth, Particle Media; human annotations released by the authors.",
+      "authenticated": true,
+      "cache_root": "/home/ianblenke/.cache/carnot-rewrite-20260731/work/data/ragtruth",
+      "commit": "c103204b9ce28d6bbad859304bf30de72b8ed8fe",
+      "commit_url": "https://github.com/ParticleMedia/RAGTruth/commit/c103204b9ce28d6bbad859304bf30de72b8ed8fe",
+      "files": [
+        {
+          "cache_path": "/home/ianblenke/.cache/carnot-rewrite-20260731/work/data/ragtruth/source_info.jsonl",
+          "path": "dataset/source_info.jsonl",
+          "sha256": "sha256:0dffc26ea9f3c1c3d7c7e8336b56ef1646e3cec876edffcca3c9c624d12d578b",
+          "size_bytes": 15117971,
+          "url": "https://raw.githubusercontent.com/ParticleMedia/RAGTruth/c103204b9ce28d6bbad859304bf30de72b8ed8fe/dataset/source_info.jsonl"
+        },
+        {
+          "cache_path": "/home/ianblenke/.cache/carnot-rewrite-20260731/work/data/ragtruth/response.jsonl",
+          "path": "dataset/response.jsonl",
+          "sha256": "sha256:e4c2e4ac24fff676d8984cc61c35d791612fadc58015335d97dd632375e18073",
+          "size_bytes": 21458735,
+          "url": "https://raw.githubusercontent.com/ParticleMedia/RAGTruth/c103204b9ce28d6bbad859304bf30de72b8ed8fe/dataset/response.jsonl"
+        }
+      ],
+      "license": "MIT",
+      "repository": "https://github.com/ParticleMedia/RAGTruth",
+      "total_bytes": 36576706
+    },
+    "raw_shards": [
+      {
+        "kind": "predictor",
+        "path": "predictor-fit-000.jsonl",
+        "rows": 2707,
+        "sha256": "sha256:1447ed36f10f68a09c21023ad23eaf1c2bc92949c1bacdb5eaeb27e2ab2e0f35",
+        "size_bytes": 8388457
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-fit-001.jsonl",
+        "rows": 1904,
+        "sha256": "sha256:e8c7ddb2dcfe1ea3e37a99568ab3b8d104807302953337af68b2665a87f1772c",
+        "size_bytes": 8384684
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-fit-002.jsonl",
+        "rows": 1333,
+        "sha256": "sha256:a0eef4fbb623f3e9200c9f262bc9fc50745acede7eb0113e8d240f7c738a1f4f",
+        "size_bytes": 4882903
+      },
+      {
+        "kind": "evaluator",
+        "path": "evaluator-fit-000.jsonl",
+        "rows": 5944,
+        "sha256": "sha256:b0e6c2fc6fa08f71f2072daabba7012f78e5aa1b867b115fb0741213dfb04bff",
+        "size_bytes": 3677803
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-probability_calibration-000.jsonl",
+        "rows": 2219,
+        "sha256": "sha256:501fcae5671620addd707e662354c26fcdf89e00471d726b1ed9fab206f325be",
+        "size_bytes": 7956588
+      },
+      {
+        "kind": "evaluator",
+        "path": "evaluator-probability_calibration-000.jsonl",
+        "rows": 2219,
+        "sha256": "sha256:f80749dfa509c566bbc258994d134119eeccc1bd53f13d54891b84caed3c3f2f",
+        "size_bytes": 1433508
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-policy_calibration-000.jsonl",
+        "rows": 2293,
+        "sha256": "sha256:bc64ecbfc344377d7a47b81b899fee6ab03b2f78b27252a834f9c5c191ba0238",
+        "size_bytes": 7996082
+      },
+      {
+        "kind": "evaluator",
+        "path": "evaluator-policy_calibration-000.jsonl",
+        "rows": 2293,
+        "sha256": "sha256:50e8015aea3227047148aec83986153ecf9e4b888ead42901955a7cfe0bb0000",
+        "size_bytes": 1480786
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-prospective_stream-000.jsonl",
+        "rows": 2558,
+        "sha256": "sha256:62da9b6ad5b826ca217d29e221d731a93e0633277635099c875bd2902b20853c",
+        "size_bytes": 8388299
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-prospective_stream-001.jsonl",
+        "rows": 1928,
+        "sha256": "sha256:bc95b2e9f9b614ea289f866bbd52152d4bf99d791c025e7ddad29d06aa3eb767",
+        "size_bytes": 7641618
+      },
+      {
+        "kind": "evaluator",
+        "path": "evaluator-prospective_stream-000.jsonl",
+        "rows": 4486,
+        "sha256": "sha256:eb1965f408b2278d7161998aa0b552cf77bb6e4811b408e556969f550bae9f98",
+        "size_bytes": 2916379
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-final_test-000.jsonl",
+        "rows": 2344,
+        "sha256": "sha256:0eacb8edda1c1ee6f2f0ccd4c2053b12c2845536a264387dc1864e3a155fcd2f",
+        "size_bytes": 8385332
+      },
+      {
+        "kind": "predictor",
+        "path": "predictor-final_test-001.jsonl",
+        "rows": 331,
+        "sha256": "sha256:2cb50175c3095c3d05f6ecfd7509ea4892a40af510a762b58805551f5aafc760",
+        "size_bytes": 1204713
+      },
+      {
+        "kind": "evaluator",
+        "path": "evaluator-final_test-000.jsonl",
+        "rows": 2675,
+        "sha256": "sha256:1d5dfb032fc5489835542fc63b34ecc9ca91500fbdc072bb1c56c8ca8af2fc8f",
+        "size_bytes": 1481895
+      },
+      {
+        "kind": "disposition",
+        "path": "dispositions-000.jsonl",
+        "rows": 173,
+        "sha256": "sha256:77267da77c67191d33644a3331c9cd3a09b4cb8f4cdb607d0ac70fa1015f18a8",
+        "size_bytes": 18250
+      }
+    ],
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:7e5379474790c6522beb8827e8af7b85977dd6fbb2bcf639940e69a97ac2c342",
+    "results/experiment_7413_v650_source_calibration.json": "sha256:a32ff491648d1459a2948280d5a662b8a30fb9bb3476d10331d597be150ff647",
+    "results/experiment_7414_v650_selected_feedback.json": "sha256:12e57814d34d6ed4cd53a7ecafe56693700e4e94a98dada6cd4ac343c40f7091",
+    "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+    "scripts/experiments/experiment_7423_v651_annotated_protocol.py": "sha256:f78bd07ddd28a425f554913925e9a6140647afe6ec73aabd8b7e482f144e0fce",
+    "tests/python/test_experiment_7423_v651_annotated_protocol.py": "sha256:6d0c883b2581ce7039899c59209170bad330ed70c50af3619e979e8165596687"
+  },
+  "started_at_utc": "2026-09-19T15:40:37.293676+00:00",
+  "started_monotonic_ns": 2124137528671998,
+  "status": "complete_null_protocol_only_no_benefit_test",
+  "support_counts": {
+    "final_test": {
+      "by_domain": {
+        "Data2txt": {
+          "independent_groups": 150,
+          "label_counts": {
+            "0": 92,
+            "1": 58
+          }
+        },
+        "QA": {
+          "independent_groups": 150,
+          "label_counts": {
+            "0": 24,
+            "1": 126
+          }
+        },
+        "Summary": {
+          "independent_groups": 150,
+          "label_counts": {
+            "0": 39,
+            "1": 111
+          }
+        }
+      },
+      "independent_groups": 450,
+      "label_counts": {
+        "0": 155,
+        "1": 295
+      },
+      "minimum_each_class": 0,
+      "minimum_independent_groups": 0,
+      "support_ready": true
+    },
+    "fit": {
+      "by_domain": {
+        "Data2txt": {
+          "independent_groups": 330,
+          "label_counts": {
+            "0": 236,
+            "1": 94
+          }
+        },
+        "QA": {
+          "independent_groups": 335,
+          "label_counts": {
+            "0": 114,
+            "1": 221
+          }
+        },
+        "Summary": {
+          "independent_groups": 337,
+          "label_counts": {
+            "0": 107,
+            "1": 230
+          }
+        }
+      },
+      "independent_groups": 1002,
+      "label_counts": {
+        "0": 457,
+        "1": 545
+      },
+      "minimum_each_class": 0,
+      "minimum_independent_groups": 0,
+      "support_ready": true
+    },
+    "policy_calibration": {
+      "by_domain": {
+        "Data2txt": {
+          "independent_groups": 134,
+          "label_counts": {
+            "0": 101,
+            "1": 33
+          }
+        },
+        "QA": {
+          "independent_groups": 136,
+          "label_counts": {
+            "0": 43,
+            "1": 93
+          }
+        },
+        "Summary": {
+          "independent_groups": 116,
+          "label_counts": {
+            "0": 36,
+            "1": 80
+          }
+        }
+      },
+      "independent_groups": 386,
+      "label_counts": {
+        "0": 180,
+        "1": 206
+      },
+      "minimum_each_class": 20,
+      "minimum_independent_groups": 100,
+      "support_ready": true
+    },
+    "probability_calibration": {
+      "by_domain": {
+        "Data2txt": {
+          "independent_groups": 139,
+          "label_counts": {
+            "0": 93,
+            "1": 46
+          }
+        },
+        "QA": {
+          "independent_groups": 115,
+          "label_counts": {
+            "0": 36,
+            "1": 79
+          }
+        },
+        "Summary": {
+          "independent_groups": 119,
+          "label_counts": {
+            "0": 37,
+            "1": 82
+          }
+        }
+      },
+      "independent_groups": 373,
+      "label_counts": {
+        "0": 166,
+        "1": 207
+      },
+      "minimum_each_class": 20,
+      "minimum_independent_groups": 100,
+      "support_ready": true
+    },
+    "prospective_stream": {
+      "by_domain": {
+        "Data2txt": {
+          "independent_groups": 280,
+          "label_counts": {
+            "0": 199,
+            "1": 81
+          }
+        },
+        "QA": {
+          "independent_groups": 253,
+          "label_counts": {
+            "0": 78,
+            "1": 175
+          }
+        },
+        "Summary": {
+          "independent_groups": 220,
+          "label_counts": {
+            "0": 81,
+            "1": 139
+          }
+        }
+      },
+      "independent_groups": 753,
+      "label_counts": {
+        "0": 358,
+        "1": 395
+      },
+      "minimum_each_class": 40,
+      "minimum_independent_groups": 400,
+      "support_ready": true
+    }
+  },
+  "validation_duration_s": 16.114117345307022,
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7423_v651_annotated_protocol",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7423_v651_annotated_protocol"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 1.2761021861806512,
+      "ended_at_utc": "2026-09-19T15:40:48.212591+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7423_v651_annotated_protocol/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:118af97ebd97db66396c3219c0f7980b95f623d72230a92fe3c075dabb870be3",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7423_v651_annotated_protocol\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7423_v651_annotated_protocol.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7423_v651_annotated_protocol": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7423_v651_annotated_protocol.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T15:40:46.936144+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7423-validation-dvt6f4zz/basetemp/focused tests/python/test_experiment_7423_v651_annotated_protocol.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7423-validation-dvt6f4zz/basetemp/focused",
+        "tests/python/test_experiment_7423_v651_annotated_protocol.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 3.852397346869111,
+      "ended_at_utc": "2026-09-19T15:40:52.065279+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7423_v651_annotated_protocol/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:831ccf3c2b261614d77f6a6fe7269352891644365f094a5df505722ce1864d90",
+      "name": "focused_pytest",
+      "output_tail": "..................                                                       [100%]\n18 passed in 1.68s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T15:40:48.212624+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/exp7423-validation-dvt6f4zz/coverage/.coverage '--include=*/experiment_7423_v651_annotated_protocol.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7423-validation-dvt6f4zz/basetemp/coverage tests/python/test_experiment_7423_v651_annotated_protocol.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7423-validation-dvt6f4zz/coverage/.coverage",
+        "--include=*/experiment_7423_v651_annotated_protocol.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7423-validation-dvt6f4zz/basetemp/coverage",
+        "tests/python/test_experiment_7423_v651_annotated_protocol.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 6.327124675735831,
+      "ended_at_utc": "2026-09-19T15:40:58.392677+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7423_v651_annotated_protocol/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:9cc5646c1556b10aaa5c485e1e7831d14197e111492eb576bf4c5acfea44e773",
+      "name": "changed_module_coverage",
+      "output_tail": "..................                                                       [100%]\n18 passed in 3.09s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-19T15:40:52.065311+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7423_v651_annotated_protocol.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7423_v651_annotated_protocol.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7423-validation-dvt6f4zz/coverage/.coverage"
+      },
+      "duration_s": 0.083488077390939,
+      "ended_at_utc": "2026-09-19T15:40:58.476434+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7423_v651_annotated_protocol/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:2b405b8e2073e6ea7eaaaaa5e8dadbae979851cfaf0d111169bd589c23ed0f0d",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                       Stmts   Miss  Cover   Missing\n----------------------------------------------------------------------------------------\npython/carnot/experiment_7423_v651_annotated_protocol.py     530      0   100%\n----------------------------------------------------------------------------------------\nTOTAL                                                        530      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T15:40:58.392707+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7423_v651_annotated_protocol.py scripts/experiments/experiment_7423_v651_annotated_protocol.py tests/python/test_experiment_7423_v651_annotated_protocol.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7423_v651_annotated_protocol.py",
+        "scripts/experiments/experiment_7423_v651_annotated_protocol.py",
+        "tests/python/test_experiment_7423_v651_annotated_protocol.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.012370468117296696,
+      "ended_at_utc": "2026-09-19T15:40:58.489169+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7423_v651_annotated_protocol/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T15:40:58.476464+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7423_v651_annotated_protocol.py scripts/experiments/experiment_7423_v651_annotated_protocol.py tests/python/test_experiment_7423_v651_annotated_protocol.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7423_v651_annotated_protocol.py",
+        "scripts/experiments/experiment_7423_v651_annotated_protocol.py",
+        "tests/python/test_experiment_7423_v651_annotated_protocol.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011110331863164902,
+      "ended_at_utc": "2026-09-19T15:40:58.500791+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7423_v651_annotated_protocol/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T15:40:58.489217+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7423_v651_annotated_protocol.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7423_v651_annotated_protocol.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.16225721314549446,
+      "ended_at_utc": "2026-09-19T15:40:58.663493+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7423_v651_annotated_protocol/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T15:40:58.500838+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7423_v651_annotated_protocol.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7423_v651_annotated_protocol.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.017718580085784197,
+      "ended_at_utc": "2026-09-19T15:40:58.681450+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7423_v651_annotated_protocol/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T15:40:58.663521+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7423_v651_annotated_protocol.py --date 20260919 --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7423_v651_annotated_protocol/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7423_v651_annotated_protocol.py",
+        "--date",
+        "20260919",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7423_v651_annotated_protocol/measured_terminal_candidate.json"
+      ],
+      "command_category": "terminal_validation",
+      "command_environment": {},
+      "duration_s": 1.883013114798814,
+      "ended_at_utc": "2026-09-19T15:41:00.574432+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7423_v651_annotated_protocol/validation/terminal/00_declared_entrypoint_cold_replay/00_declared_entrypoint_cold_replay.log",
+      "log_sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+      "name": "declared_entrypoint_cold_replay",
+      "output_tail": "{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-19T15:40:58.691169+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7423_v651_annotated_protocol import independent_reduce_artifact;v=json.loads(pathlib.Path(sys.argv[1]).read_text());e=independent_reduce_artifact(v);print(json.dumps({'\"'\"'errors'\"'\"':e}),flush=True);raise SystemExit(bool(e))' /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7423_v651_annotated_protocol/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,pathlib,sys;from carnot.experiment_7423_v651_annotated_protocol import independent_reduce_artifact;v=json.loads(pathlib.Path(sys.argv[1]).read_text());e=independent_reduce_artifact(v);print(json.dumps({'errors':e}),flush=True);raise SystemExit(bool(e))",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7423_v651_annotated_protocol/measured_terminal_candidate.json"
+      ],
+      "command_category": "terminal_validation",
+      "command_environment": {},
+      "duration_s": 1.8780351825989783,
+      "ended_at_utc": "2026-09-19T15:41:02.452738+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7423_v651_annotated_protocol/validation/terminal/01_independent_cold_reducer/00_independent_cold_reducer.log",
+      "log_sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+      "name": "independent_cold_reducer",
+      "output_tail": "{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-19T15:41:00.574462+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7423_v651_annotated_protocol/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7423_v651_annotated_protocol/measured_terminal_candidate.json"
+      ],
+      "command_category": "terminal_validation",
+      "command_environment": {},
+      "duration_s": 0.5762829883024096,
+      "ended_at_utc": "2026-09-19T15:41:03.029429+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7423_v651_annotated_protocol/validation/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-19T15:41:02.452767+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7423_v651_annotated_protocol/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7423_v651_annotated_protocol/measured_terminal_candidate.json"
+      ],
+      "command_category": "terminal_validation",
+      "command_environment": {},
+      "duration_s": 0.03421718021854758,
+      "ended_at_utc": "2026-09-19T15:41:03.064202+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7423_v651_annotated_protocol/validation/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-19T15:41:03.029479+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}
