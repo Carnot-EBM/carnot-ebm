@@ -18211,3 +18211,4 @@ code |
 | 2026-09-19 08:48 UTC | Enforce ARC request budgets at the live callback b | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 105 passed, 1 warning in 18.77s |
 | 2026-09-19 09:11 UTC | Prototype source-aware energy inputs and freeze de | OK | 99 passed, 1 warning in 9.30s |
 | 2026-09-19 09:34 UTC | Measure source-grounded Gibbs calibration against  | OK | 97 passed, 1 warning in 8.20s |
+| 2026-09-19 09:52 UTC | Measure continuous energy calibration under select | FAIL | Codex CLI error: Stalled after 600s silence. Last output: selected = [ + |

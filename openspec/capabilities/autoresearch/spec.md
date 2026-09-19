@@ -850,6 +850,147 @@ source permutation,
 **then** changed rows, metrics, gates, source hashes, counters, or checksums fail
 **and** the final JSON is published atomically only after all readers pass.
 
+### REQ-AUTO-7414: Measure fixed selected-feedback source adaptation
+
+Exp7414 SHALL authenticate the exact Exp7412 artifact, protocol manifest, and
+source-feature rows before dependent work. It SHALL require
+`source_feature_protocol_ready_score=1`, an allowed `verdict_class`, and
+`flagged_adversarial=false`. A failed prerequisite SHALL produce a terminal
+blocked artifact that names the upstream, path, check, field, expected value,
+and observed value.
+
+The experiment SHALL use only Exp7410 development train, probability-calibration,
+policy-calibration, and online-stream groups through the predictor and evaluator
+readers sealed by Exp7410 and the feature protocol sealed by Exp7412. It SHALL
+not read official final-test labels. Initial source-aware 6-4-1 Gibbs weights and
+the initial L2 logistic control SHALL fit on scored train rows only. Initial
+affine probability calibration SHALL use scored probability-calibration rows
+only. The frozen baseline policy SHALL use scored policy-calibration groups only.
+No checkpoint that saw an online-stream label may initialize the replay.
+
+The five compared arms SHALL be frozen calibrated Gibbs, projected adaptive
+affine Gibbs, online L2 logistic, recent-frequency Beta(1,1) with window 128,
+and a no-feedback copy of the adaptive arm. The adaptive Gibbs arm SHALL keep
+all Gibbs weights fixed. For each newly revealed label, it SHALL update only
+`a,b` in `p=sigmoid(a*E+b)` once, use learning rate `0.01`, clip the joint
+gradient norm to `1`, and project `a` to `[0.25,4]` and `b` to `[-8,8]`.
+Every prediction and its durable state hash SHALL be recorded before feedback.
+Duplicate or premature reveals SHALL not update state.
+
+The replay SHALL seal one label-blind representative per independent online
+group in hash order and one reversed-block sensitivity order. These are
+constructed archive replays, not real chronology. It SHALL evaluate delays 1
+and 32. The primary feedback regime SHALL use a label-blind deterministic
+75-percent availability mask shared by every learner. The selected-feedback
+regime SHALL reveal only events escalated by the frozen baseline policy, with
+the same frozen mask shared by every learner. Learner-specific escalation masks
+MAY be reported as diagnostics, but SHALL not drive a paired causal claim.
+
+Inferential claims SHALL require at least 80 independent online groups and at
+least ten observations of each binary label. Lower support SHALL produce
+`complete_null_insufficient_online_support` with exact counts. Paired moving-
+block intervals SHALL use 10,000 draws, primary block length 16, sensitivity
+length 32, and seed 6501407. Seeds SHALL be averaged within each event before
+resampling. Registered value SHALL require a simultaneous Brier-delta upper
+bound below zero against frozen Gibbs, online logistic, and recent frequency on
+the primary delay-1 hash-order stream. It SHALL also require no worse log loss,
+no lower typed-action coverage, and no higher observed action risk against each
+control. Each feedback regime SHALL be reported separately. The experiment
+SHALL assert neither IID sampling nor a conformal guarantee.
+
+Independent fixtures SHALL test label replacement, label erasure, duplicate
+reveal, premature reveal, crash/restart, no-feedback equality, and erased-update
+replay. A revoked event SHALL deterministically reconstruct state from the
+trusted journal before the next prediction. Reconstruction and persistence
+costs SHALL be included in measured service costs. Prediction, reveal, and
+commit rows SHALL retain observation identity, availability index, fixed and
+diagnostic masks, prior and new state hashes, and label authority.
+
+`online_capture_complete_score` SHALL equal one when the registered replay,
+controls, persistence, affected validation, cold replay, independent reduction,
+adversarial verification, and strict row consistency pass. A support-limited
+null MAY receive this score. `online_value_score` SHALL equal one only when the
+registered equal-information causal conjunction passes. `promotion_score`
+SHALL remain zero. `label_authority` SHALL be `machine_annotation`, and
+`verifier_is_oracle` SHALL be false. The exact-learning branch in Exp7418 SHALL
+remain independent of these machine labels.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate=no_model_load`,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`. Small
+numeric-head work SHALL appear only in `small_ebm_training`. The workflow SHALL
+freeze the Exp7358 affected manifest before using the Exp7303 runner. It SHALL
+run scoped imports, tests, changed-module coverage at 100 percent, Ruff, mypy,
+exact-test spec coverage, the declared entrypoint, fresh-process cold replay,
+independent row reduction, adversarial verification, and strict verdict-row
+consistency. No numbered E2E scenario applies because shared training,
+sampling, serialization, and PyO3 behavior do not change.
+
+The required ordinary fields SHALL include `schema`, `experiment_id`,
+`milestone`, `status`, `run_date`, `preconditions_checked`, `MODEL_SPECS`,
+`model_invoked`, `invocation_counts`, `inference_substrate`,
+`inference_substrate_details`, `inference_substrate_class`, `execution_venue`,
+`duration_s`, `phase_spans`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `rows`, `sample_size_budget`,
+`acceptance_gate_results`, `gate_check_summary`, `verifier_is_oracle`,
+`honest_verdict`, `verdict_class`, `flagged_adversarial`,
+`validation_receipts`, `field_principles`, `promotion_score`,
+`continuous_self_learning_task`, `online_capture_complete_score`,
+`online_value_score`, `feedback_event_rows`, `revocation_rows`,
+`condition_reports`, `paired_moving_block_intervals`, `hardware_path`, and
+`label_authority`.
+
+#### SCENARIO-AUTO-7414-01: Inputs stop at the sealed online boundary
+
+**Given** authenticated Exp7410 development roles and the Exp7412 protocol,
+**when** initial heads, calibration, policy, and online replay data load,
+**then** each operation reads only its registered role
+**and** no official final-test label or online label enters initial state.
+
+#### SCENARIO-AUTO-7414-02: Prediction precedes one bounded update
+
+**Given** a predicted event with a future availability index,
+**when** its machine label becomes visible,
+**then** the prediction state is durable before the reveal and one projected
+affine update is committed
+**and** early or repeated reveals do not change state.
+
+#### SCENARIO-AUTO-7414-03: Fixed feedback masks preserve equal information
+
+**Given** primary and frozen-baseline-selected feedback regimes,
+**when** all five arms replay the two delays and two constructed orders,
+**then** each compared learner receives the same registered event mask
+**and** learner-specific selection remains diagnostic only.
+
+#### SCENARIO-AUTO-7414-04: Support and value claims fail closed
+
+**Given** the completed primary delay-1 stream and paired moving-block draws,
+**when** independent groups or either label count is below its registered floor,
+**then** online capture can complete but online value remains zero
+**and** the verdict is `complete_null_insufficient_online_support`.
+
+#### SCENARIO-AUTO-7414-05: Revocation reconstructs trusted state
+
+**Given** committed feedback and its trusted prediction journal,
+**when** an authority replaces or erases an earlier label,
+**then** the adapter replays active commits in order before later prediction
+**and** restart, replacement, and erasure reproduce deterministic state hashes.
+
+#### SCENARIO-AUTO-7414-06: No-feedback stays equal to frozen Gibbs
+
+**Given** equal initial Gibbs weights and affine state,
+**when** other learners receive delayed feedback,
+**then** the no-feedback copy never admits an update
+**and** its predictions and state hashes remain equal to frozen Gibbs.
+
+#### SCENARIO-AUTO-7414-07: Cold readers reject material replay drift
+
+**Given** a terminal candidate with raw event, journal, interval, and control
+rows,
+**when** a fresh process independently reduces the artifact,
+**then** changed masks, metrics, state lineage, counters, hashes, or gates fail
+**and** terminal JSON is published atomically only after all readers pass.
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the
