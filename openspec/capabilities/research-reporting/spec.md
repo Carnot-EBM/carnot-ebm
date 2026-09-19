@@ -74637,3 +74637,101 @@ pass before atomic publication.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7421 and SCENARIO-REPORT-7421-* | Implemented: V651 host contract and method-ingestion reducer, thin entrypoint, research note, and terminal artifact | Verified by spec-linked tests and 100 percent changed-module coverage; the declared entrypoint runs exact affected checks, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage |
+## V651 independent static and online decision audit — 2026-09-19
+
+**Status:** Specified. This host aggregation audits existing numeric evidence.
+It does not load an LLM or promote a producer result.
+
+### REQ-REPORT-7428: Audit V651 decision branches independently
+
+Exp7428 SHALL authenticate the exact Exp7423, Exp7425, Exp7426, and Exp7427
+deliverable paths. It SHALL check byte hashes, schemas, milestone identities,
+adversarial flags, completion classes, and required validation receipts before
+using branch evidence. Each failed check SHALL retain its exact upstream, path,
+field, expected value, and observed value. Missing bytes, missing fields, and
+observed zero SHALL remain distinct observations.
+
+The static branch SHALL read the sealed Exp7423 views and the Exp7426 raw row
+shards. It SHALL independently recompute source-component partitions, annotation
+labels, Brier loss, log loss, typed action counts, and simultaneous confidence
+bounds. It SHALL not call an Exp7426 summary reducer. It SHALL reject evaluator
+fields in predictor rows, incorrect `implicit_true` handling, cross-split source
+aliases, response siblings across splits, and changed source offsets. It SHALL
+check dense fixed-basis logistic parity with the sparse spline and limit the
+capacity claim to their shared 49-parameter feature basis.
+
+The online branch SHALL read the Exp7427 raw event and checkpoint-lineage shards.
+It SHALL independently reconstruct reveal propensities, prediction-before-
+feedback order, persistence order, update uniqueness, checkpoint parents,
+numeric update transitions, revoked-event replay, condition metrics, contrasts,
+and moving-block intervals. It SHALL not call an Exp7427 summary reducer. It
+SHALL reject future-label access, substituted propensities, duplicate updates,
+hidden full-feedback access, and omitted persistence time. Each stated safety
+property SHALL have one correctly targeted mutation row that fails.
+
+The artifact SHALL publish `static_audit_complete_score` and
+`online_audit_complete_score` independently. An available eligible branch SHALL
+finish even when its peer is unavailable. External absence SHALL make the
+overall result `blocked`, not `partial`, while preserving the completed branch.
+A valid null SHALL remain useful. Invalid required evidence SHALL disqualify its
+branch. The audit SHALL preserve producer adversarial flags and SHALL not turn
+machine or human annotations into formal truth.
+
+The run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current LLM
+invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Producer numeric fitting SHALL remain typed as
+historical `small_ebm_training`. Archived and scripted model events SHALL remain
+hash-bound sidecars. `promotion_score` SHALL remain zero.
+
+The affected command manifest SHALL use the Exp7358 scoped plan and Exp7303
+runner. It SHALL include worktree imports, focused pytest with `-n 0 -o
+addopts= --no-cov` and a private existing base-temp parent, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy, and
+exact-test specification coverage. It SHALL preserve command-local
+`COVERAGE_FILE` and SHALL not run `full_python_suite`.
+
+No numbered end-to-end check applies. The declared entrypoint and a fresh-process
+cold artifact replay are the capability end-to-end checks. An independent raw
+reduction, `scripts/adversarial_verify.py`, and strict verdict-row consistency
+SHALL pass against the exact candidate before atomic publication.
+
+#### SCENARIO-REPORT-7428-INDEPENDENT: External absence does not suppress its peer
+
+**Given** one eligible branch and one missing external producer
+**When** Exp7428 authenticates and reduces both branch inputs
+**Then** the available branch keeps its completed independent result
+**And** the overall verdict is blocked rather than retryable partial.
+
+#### SCENARIO-REPORT-7428-STATIC: Static rows and label boundaries reproduce
+
+**Given** sealed predictor and evaluator views plus Exp7426 raw rows
+**When** the audit recomputes metrics, actions, bounds, splits, and annotations
+**Then** every stored static value matches within its declared tolerance
+**And** targeted label, alias, sibling, offset, and feature mutations fail.
+
+#### SCENARIO-REPORT-7428-ONLINE: Feedback order and numeric state reproduce
+
+**Given** Exp7427 raw events, initial checkpoints, and update lineage
+**When** the audit reconstructs schedules, updates, parents, revocations, and intervals
+**Then** every stored online value and state transition matches independently
+**And** future-label, propensity, duplicate, full-feedback, and persistence mutations fail.
+
+#### SCENARIO-REPORT-7428-CAPACITY: Parity does not enlarge the feature claim
+
+**Given** dense and sparse heads over the same frozen six-feature spline basis
+**When** coefficient, probability, gradient, and parameter counts are compared
+**Then** parity requires the declared tolerance and 49 trainable parameters
+**And** no parity result claims a richer feature family or semantic truth.
+
+#### SCENARIO-REPORT-7428-ARTIFACT: Scoped checks control atomic publication
+
+**Given** exact source bytes, branch reductions, mutation rows, and a frozen plan
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** source, identity, metric, state, gate, principle, or checksum drift fails
+**And** only the terminal JSON is published at the declared path.
+
+## Implementation Status (REQ-REPORT-7428)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7428 and SCENARIO-REPORT-7428-* | Planned: independent V651 host reducer and thin entrypoint | Planned: spec-linked focused tests, 100 percent changed-module coverage, scoped checks, entrypoint replay, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
