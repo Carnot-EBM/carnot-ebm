@@ -20132,3 +20132,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-18: Independently audit online learning and its failed controls (⚠️ Blocked) — honest_verdict=blocked_missing_unchanged_online_producer_inputs; results/experiment_7401_v649_online_audit.json
 - 2026-09-19: Capture the sealed Qwen3.8 implication-query panel (⚠️ Blocked) — honest_verdict=blocked_one_owned_rtx3090_slot; results/experiment_7402_v649_proposal_capture.json
 - 2026-09-19: Measure certified memory independently on sealed synthetic streams (⚠️ Research Finding) — honest_verdict=complete_circular_positive_source_certified_synthetic_memory_value; results/experiment_7403_v649_synthetic_memory.json
+- 2026-09-19: Audit synthetic and live proof claims independently (⚠️ Blocked) — honest_verdict=blocked_live_cohort_unavailable_synthetic_circular_value_retained; results/experiment_7405_v649_proof_audit.json
