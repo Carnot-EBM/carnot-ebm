@@ -74879,3 +74879,105 @@ consistency SHALL pass against the exact candidate before atomic publication.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7433 and SCENARIO-REPORT-7433-* | Implemented: V651 host capstone reducer, exact authority readers, and thin entrypoint | Verified by spec-linked focused tests, 100 percent changed-module coverage, scoped checks, entrypoint replay, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V652 contract and method audit — 2026-09-19
+
+**Status:** Specified. This advisory host aggregation performs no model
+inference, training, science gating, promotion, or external publication.
+
+### REQ-REPORT-7434: Bind the exact V652 contract and preserve V651 evidence
+
+Exp7434 SHALL parse the single V652 Markdown Exact Task Contract and the active
+YAML independently through the shipped generic parsers. Both authorities SHALL
+declare milestone `2026.09.652`. They SHALL contain exactly thirteen ordered
+tasks from Exp7434 through Exp7446. The audit SHALL compare each ID, title,
+phase, deliverable, substrate class, and structured gate. It SHALL mutate each
+authority independently. A contract failure SHALL remain advisory and SHALL not
+change independent branch scheduling.
+
+The audit SHALL run the real conductor gate reader against private files. It
+SHALL retain controls for passing evidence, zero, a missing file, a missing
+field, `None`, a wrong type, a disqualified class, and flagged evidence. A
+control SHALL distinguish the reader result from evidence admissibility.
+
+The audit SHALL authenticate all thirteen V651 dispositions. It SHALL preserve
+original verdict classes and adversarial flags. For Exp7430, it SHALL name both
+the missing declared V651 deliverable and the extant conductor pre-gate path.
+It SHALL record that the completion archive ended at V650 during V652 planning.
+It SHALL also record the current archive state without rewriting history.
+
+The method audit SHALL check no more than six primary sources from the dated
+V652 source review. It SHALL preserve versions and access failures. Method rows
+SHALL map joint certification, expert aggregation, and output representation to
+the exact V652 task roster. The durable note and studying ledger SHALL state
+assumptions, code hooks, controls, and deferrals. Generator training, unchanged
+proof-memory trials, and generic Ising sweeps SHALL remain deferred.
+
+The audit SHALL record the dated autoresearch-breaker and conductor-size
+priorities. Exp7435 SHALL own the breaker repair. The conductor size gate SHALL
+remain deferred because this task cannot edit `scripts/research_conductor.py`.
+No unwired helper SHALL close that priority.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Archived model events SHALL remain typed, hash-bound
+evidence. `promotion_score` SHALL remain zero. `contract_ready_score` SHALL be
+one only when both exact thirteen-row authorities agree. This score SHALL be
+advisory and SHALL not measure scientific benefit.
+
+The terminal artifact SHALL include the required plain schema, identity, UTC
+boundaries, duration, phase spans, preconditions, source hashes, raw rows,
+sample budget, categorized gates, exact failure summary, validation receipts,
+field principles, task rows, method rows, prior dispositions, and a checksum.
+Blocked prerequisites SHALL use a `blocked_*` verdict and name upstream, path,
+check, field, expected, and observed values. Completed valid no-benefit work
+SHALL use a `null` class. `partial` SHALL apply only to unfinished owned work.
+
+The affected plan SHALL use the Exp7358 command plan and Exp7303 runner. It
+SHALL run worktree import checks, focused pytest without coverage, separate 100
+percent changed-module coverage, scoped Ruff check and format, changed-module
+mypy, and exact-test specification coverage. The entrypoint and fresh-process
+cold replay are the capability end-to-end checks. Independent reduction,
+`scripts/adversarial_verify.py`, and strict verdict-row consistency SHALL pass
+before atomic publication. No numbered end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7434-CONTRACT: Both authorities fail closed independently
+
+**Given** one Markdown table and one YAML roadmap for V652
+**When** count, order, ID, title, phase, path, substrate, gate, or milestone changes
+**Then** the changed authority fails while the unchanged authority remains readable
+**And** all thirteen branch scheduling decisions remain independent of this audit.
+
+#### SCENARIO-REPORT-7434-GATES: Real conductor reads retain exact failure shapes
+
+**Given** private upstream artifacts for each declared edge case
+**When** the shipped conductor reader evaluates each gate
+**Then** pass, zero, missing, null, type, class, and flag observations remain distinct
+**And** flagged evidence cannot become admissible readiness evidence.
+
+#### SCENARIO-REPORT-7434-DISPOSITIONS: V651 outcomes retain original authority
+
+**Given** the thirteen V651 dispositions and their exact evidence paths
+**When** Exp7434 authenticates each source and the planning archive statement
+**Then** verdicts, quarantines, missing declared paths, and pre-gate evidence remain distinct
+**And** no missing terminal artifact is invented.
+
+#### SCENARIO-REPORT-7434-METHODS: Bounded sources map to exact future controls
+
+**Given** the dated V652 review and at most six primary-source checks
+**When** joint certification, expert aggregation, and output representation are ingested
+**Then** versions, failures, assumptions, task hooks, controls, and deferrals are recorded
+**And** external claims do not become Carnot measurements.
+
+#### SCENARIO-REPORT-7434-ARTIFACT: Scoped readers control atomic publication
+
+**Given** exact source bytes, raw reductions, and a frozen affected manifest
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** identity, source, row, gate, score, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared path.
+
+## Implementation Status (REQ-REPORT-7434)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7434 and SCENARIO-REPORT-7434-* | Implemented: V652 advisory contract and method reducer with thin entrypoint | Verified by spec-linked focused tests, 100 percent changed-module coverage, scoped checks, entrypoint replay, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage |

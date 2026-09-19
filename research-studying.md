@@ -6006,3 +6006,11 @@ The next work must use the measured causes. It must not repeat the retired
 Exp7404 or Exp7406 panel chains. Publication gates, production defaults,
 generator weights, and promotion remain unchanged.
 <!-- EXP7420-V650-EVIDENCE-SCOPE-20260919-END -->
+<!-- EXP7434-V652-METHOD-INGESTION -->
+## 2026-09-19 Exp7434 — V652 methods — INGESTED
+
+Joint certification, expert aggregation, and compact output representation were
+mapped to the V652 roster. Exact access receipts and limits are in
+`docs/research-notes/v652-method-ingestion.md`. External claims are not Carnot
+measurements. Generator training, unchanged proof-memory trials, and generic
+Ising sweeps remain deferred.
