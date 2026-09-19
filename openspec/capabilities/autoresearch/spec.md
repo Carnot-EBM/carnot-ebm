@@ -1126,6 +1126,165 @@ shards,
 fails
 **and** terminal JSON publishes atomically only after all required checks pass.
 
+### REQ-AUTO-7426: Measure static human source-support decisions
+
+Exp7426 SHALL authenticate the exact Exp7423 annotated protocol and Exp7425
+spline prototype before dependent work. It SHALL require both readiness scores
+to equal one. It SHALL require each upstream verdict class to be `positive`,
+`circular_positive`, or `null`. Both upstream artifacts SHALL be unflagged.
+A failed prerequisite SHALL produce a terminal blocked artifact. The artifact
+SHALL name the upstream, path, check, field, expected value, and observed value.
+
+The primary label SHALL be the Exp7423 human source-support label. Label one
+means that no human-annotated source-unsupported span is present. The authority
+SHALL be `human_annotation_source_support`. It is a fallible support judgment.
+It is not general semantic truth and is not a replacement-grade verifier.
+
+The experiment SHALL fit five arms with seeds 65101 through 65105 and at most
+500 updates. The arms SHALL be training prevalence, L2 logistic regression on
+the six raw features, the existing 6-4-1 Gibbs head, the sparse 49-parameter
+cubic-spline head, and dense logistic regression on the identical spline basis.
+All learned heads SHALL use natural-prevalence Bernoulli loss. Spline knots
+SHALL use training features only. Sparse and dense spline probabilities and
+parameters SHALL match within `1e-10`. Spline parity is a validity gate. It is
+not a scientific contrast.
+
+Each arm SHALL average its five seed probabilities before affine logit
+calibration. Affine calibration SHALL use only the sealed probability
+calibration partition. Policy selection SHALL use only the separate policy
+partition. It SHALL use one label-blind representative per source group. The
+nine registered threshold pairs SHALL combine accept probabilities `0.95`,
+`0.975`, and `0.99` with reject probabilities `0.01`, `0.05`, and `0.10`.
+Accept harm is label zero and has a 0.05 budget. Reject harm is label one and
+has a 0.10 budget. Certificates SHALL use one-sided Clopper-Pearson bounds with
+Bonferroni correction over five arms, nine pairs, and two actions. No selected
+group means no certificate. An uncertified action SHALL escalate.
+
+The experiment SHALL freeze all fitted state, affine transforms, and policies
+before it opens official final-test labels. It SHALL evaluate final test once.
+It SHALL retain every arm, seed, condition, row key, source group, task domain,
+raw probability, seed-averaged calibrated probability, label, action, Brier
+contribution, log-loss contribution, cost, and authority. Hash-bound shards MAY
+hold the detailed ledger when the terminal artifact would exceed 20 MiB.
+Malformed, unsupported, and excluded units SHALL remain visible with null
+predictions and their exact disposition. Domain support and empirical risk
+SHALL be reported separately.
+
+The registered conditions SHALL be full source, source masked, and label-blind
+source swapped. Masking and swapping SHALL happen before evaluator labels join.
+All arms in one condition SHALL receive identical six-feature information.
+Lexical agreement SHALL not be called entailment. Source ablations are
+diagnostics and SHALL not supply another chance to pass the benefit gate.
+
+The predictive-value gate SHALL compare the sparse spline arm with raw-feature
+logistic and the 6-4-1 Gibbs head. Seeds SHALL be averaged before connected
+source groups enter a 10,000-draw paired bootstrap. The bootstrap SHALL use
+simultaneous upper Brier bounds corrected across the two primary contrasts.
+Both upper bounds SHALL be below zero. Spline log loss SHALL be no worse than
+both controls. Certified coverage SHALL be at least 0.25 and no lower than both
+controls. Empirical accept and reject risk SHALL not increase. All clauses
+SHALL pass for `decision_value_score=1`.
+
+The experiment SHALL record numeric initial checkpoints, final checkpoints,
+loss traces, update counts, parameter counts, partition hashes, probability
+maps, affine state, and policy thresholds. These experiment-local weights
+SHALL not change a generator or production default. `promotion_score` SHALL
+remain zero. Valid complete paired measurements SHALL set
+`decision_capture_complete_score=1`, including a complete null. Basis parity,
+partition leakage, missing required evidence, or affected validation failure
+SHALL disqualify the result.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM counts, `inference_substrate=no_model_load`,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`. Small
+head fitting SHALL appear only in `small_ebm_training`. Historical or scripted
+model events SHALL remain typed hash-bound sidecars and SHALL not enter current
+invocation counts.
+
+The workflow SHALL freeze an Exp7358 affected-file manifest. It SHALL use the
+Exp7303 runner with command-local coverage data. It SHALL run worktree imports,
+affected tests, 100-percent changed-module coverage, scoped Ruff, changed-module
+mypy, exact-test spec coverage, the declared entrypoint, fresh-process replay,
+independent reduction, adversarial verification, and strict row consistency.
+No numbered E2E scenario applies because this experiment changes no shared
+training, sampling, serialization, PyO3, or ARC behavior.
+
+The terminal artifact SHALL contain the ordinary required experiment fields.
+It SHALL also contain `decision_capture_complete_score`,
+`decision_value_score`, `checkpoint_manifest`, `policy_certificates`,
+`grouped_intervals`, and `small_ebm_training`. Its checksum SHALL bind code,
+protocol, input bytes, detailed row shards, checkpoints, and validation scope.
+
+#### SCENARIO-AUTO-7426-01: Prerequisites fail closed
+
+**Given** the two exact upstream artifacts and their sealed manifests,
+**when** any readiness, verdict, adversarial flag, byte hash, or identity differs,
+**then** dependent fitting does not start
+**and** the terminal block names the exact failed upstream field.
+
+#### SCENARIO-AUTO-7426-02: Label authority changes decision direction
+
+**Given** a probability of human source support,
+**when** a registered policy emits a typed action,
+**then** high probability can accept and low probability can reject
+**and** unsupported or uncertified actions escalate.
+
+#### SCENARIO-AUTO-7426-03: Seeds precede calibration and policy fitting
+
+**Given** five fitted seed states for one arm,
+**when** probability calibration and policy selection run,
+**then** raw seed probabilities average before the affine logit transform
+**and** only the two sealed calibration roles determine later state.
+
+#### SCENARIO-AUTO-7426-04: Sparse and dense spline heads stay equivalent
+
+**Given** identical training-only knots and initial numeric state,
+**when** both spline representations receive the same Bernoulli updates,
+**then** final parameters and every probability agree within `1e-10`
+**and** a mismatch disqualifies rather than becoming a claimed benefit.
+
+#### SCENARIO-AUTO-7426-05: Policy certificates use independent groups
+
+**Given** repeated responses from one source group and all nine threshold pairs,
+**when** policy risk is certified,
+**then** one label-blind representative enters each exact bound
+**and** empty or uncertified actions become escalation.
+
+#### SCENARIO-AUTO-7426-06: Official scoring preserves every disposition
+
+**Given** eligible final-test rows and excluded corpus dispositions,
+**when** frozen heads score the official test once,
+**then** every eligible arm-seed row retains its probability and proper scores
+**and** each excluded unit remains visible with no invented probability.
+
+#### SCENARIO-AUTO-7426-07: Source controls stay label blind
+
+**Given** predictor-only source and response text,
+**when** source masking or within-role source swapping runs,
+**then** features change before labels join and all arms see the same inputs
+**and** the diagnostic controls cannot change the primary pass rule.
+
+#### SCENARIO-AUTO-7426-08: Grouped value reduction is reproducible
+
+**Given** the full-source paired ledger,
+**when** 10,000 source-group bootstrap draws are reduced,
+**then** the two primary Brier contrasts use simultaneous corrected bounds
+**and** log loss, coverage, and empirical risk clauses reproduce exactly.
+
+#### SCENARIO-AUTO-7426-09: Completion remains independent of benefit
+
+**Given** valid complete paired measurement with inadequate decision support,
+**when** one or more predictive or policy gates fail,
+**then** the result is a complete null with capture score one
+**and** value and promotion remain zero.
+
+#### SCENARIO-AUTO-7426-10: Cold readers bind detailed evidence
+
+**Given** a terminal candidate and its row and checkpoint shards,
+**when** a fresh process replays and independently reduces the result,
+**then** changed probabilities, metrics, hashes, counters, or gates fail
+**and** terminal JSON publishes atomically only after all required readers pass.
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the
