@@ -18215,3 +18215,4 @@ code |
 | 2026-09-19 10:18 UTC | Measure continuous energy calibration under select | OK | 95 passed, 1 warning in 10.11s |
 | 2026-09-19 10:44 UTC | Independently audit calibrated decisions and feedb | OK | 89 passed, 1 warning in 10.21s |
 | 2026-09-19 11:15 UTC | Compare bounded Qwen claim extraction with preserv | OK | 119 passed, 1 warning in 9.32s |
+| 2026-09-19 11:17 UTC | Audit extraction coverage and semantic preservatio | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp7416-anchored-extraction.extraction_capture_complete_score (actual=0 == expected=1) |
