@@ -20144,3 +20144,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-19: Measure source-grounded Gibbs calibration against simple controls (⚠️ Research Finding) — honest_verdict=complete_null_source_calibration_no_registered_decision_benefit; results/experiment_7413_v650_source_calibration.json
 - 2026-09-19: Measure continuous energy calibration under selected feedback (⚠️ Research Finding) — honest_verdict=complete_null_insufficient_online_support; results/experiment_7414_v650_selected_feedback.json
 - 2026-09-19: Independently audit calibrated decisions and feedback causality (⚠️ Research Finding) — honest_verdict=complete_null_independent_decision_audits_no_joint_registered_value; results/experiment_7415_v650_decision_audit.json
+- 2026-09-19: Compare bounded Qwen claim extraction with preserved source spans (⚠️ Blocked) — honest_verdict=blocked_one_owned_rtx3090_slot; results/experiment_7416_v650_anchored_extraction.json
