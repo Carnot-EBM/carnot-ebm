@@ -991,6 +991,13 @@ rows,
 **then** changed masks, metrics, state lineage, counters, hashes, or gates fail
 **and** terminal JSON is published atomically only after all readers pass.
 
+#### SCENARIO-AUTO-7414-08: Service costs include durable online work
+
+**Given** prediction, feedback, restart, and revocation operations,
+**when** the replay reports its CPU service path,
+**then** it measures prediction, persistence, update, and reconstruction costs
+**and** it reports p50 and p95 latency without claiming a hardware speedup.
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the

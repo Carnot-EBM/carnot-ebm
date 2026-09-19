@@ -1,0 +1,94 @@
+{
+  "affine": {
+    "a": 1.186453539985183,
+    "b": -0.08286289011784984
+  },
+  "gibbs_weights": {
+    "b1": [
+      1.4896160892752168,
+      1.2036816049138317,
+      -0.11365309155950626,
+      1.4107046289313632
+    ],
+    "b_out": 0.583553680247263,
+    "w1": [
+      [
+        0.8760008913941022,
+        4.643173230743385e-13,
+        0.4146276537108426,
+        -0.7873779652104804,
+        -0.845332514515306,
+        7.102962400623408e-13
+      ],
+      [
+        0.5767497815956036,
+        -2.1310148444696285e-12,
+        0.2830829574300301,
+        -0.6780320274130717,
+        -0.6244040005264359,
+        8.916314056396864e-13
+      ],
+      [
+        -0.38738098791381126,
+        3.868382331480452e-11,
+        -0.21820742026960485,
+        1.18140045284297,
+        1.1811076310156674,
+        -1.2040515319065081e-12
+      ],
+      [
+        0.7572209326714643,
+        -1.0078931360398563e-11,
+        0.3990512717148667,
+        -0.8288441575078779,
+        -0.7568347615763632,
+        7.403761096185713e-12
+      ]
+    ],
+    "w_out": [
+      1.295509468759898,
+      0.9544850233252927,
+      -0.9896934953355143,
+      1.2645497614507943
+    ]
+  },
+  "logistic": {
+    "bias": 2.190413855371926,
+    "coef": [
+      1.5034038124935851,
+      2.2998588508012405e-14,
+      0.8455602961078128,
+      0.1718007837490715,
+      0.17427958123456486,
+      3.2826189827060487e-14
+    ]
+  },
+  "schema": "carnot.exp7414.initial_state.v1",
+  "seed": 65002,
+  "selected_policy": {
+    "accept_enabled": false,
+    "accept_threshold": 0.01,
+    "coverage": 0.9782608695652174,
+    "reject_enabled": true,
+    "reject_threshold": 0.9,
+    "representative_groups": 92,
+    "selection_partition": "policy_calibration",
+    "selection_rule": "coverage_then_utility_then_registered_order",
+    "utility": 0.9130434782608695
+  },
+  "training_receipt": {
+    "architecture": [
+      6,
+      4,
+      1
+    ],
+    "calibration_partition": "probability_calibration",
+    "fit_partition": "train",
+    "generator_weights_fitted": false,
+    "gibbs_input_hash": "sha256:469530fb90a6019acc8ccdeba7164a3e517e2024c8f7c604cf2af52729dea63e",
+    "online_labels_used_for_initialization": 0,
+    "policy_partition": "policy_calibration",
+    "receipt_class": "small_ebm_training",
+    "steps": 500
+  }
+}

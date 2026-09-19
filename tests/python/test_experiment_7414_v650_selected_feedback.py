@@ -69,7 +69,7 @@ def test_req_auto_7414_spec_precedes_implementation() -> None:
 
     text = (ROOT / exp.SPEC_PATH).read_text(encoding="utf-8")
     assert "### REQ-AUTO-7414:" in text
-    for number in range(1, 8):
+    for number in range(1, 9):
         assert f"SCENARIO-AUTO-7414-{number:02d}" in text
 
 
@@ -116,7 +116,7 @@ def test_scenario_7414_02_adapter_prediction_update_and_authority() -> None:
     assert adapter.commit_feedback("missing", 1, visible_at=2)["status"] == "unknown_event"
 
 
-def test_scenario_7414_03_fixed_masks_and_constructed_orders() -> None:
+def test_scenario_7414_03_fixed_masks_and_constructed_orders(tmp_path: Path) -> None:
     """SCENARIO-AUTO-7414-03: registered masks are shared and label blind."""
 
     rows = [_row("online_stream", index, index % 2) for index in range(40)]
@@ -140,6 +140,7 @@ def test_scenario_7414_03_fixed_masks_and_constructed_orders() -> None:
         ordering="hash_order",
         feedback_regime="primary_label_blind_75",
         delay=1,
+        journal_path=tmp_path / "feedback.jsonl",
     )
     assert len(replay["feedback_event_rows"]) == 8 * len(exp.ARMS)
     for observation_id in {row["observation_id"] for row in replay["feedback_event_rows"]}:
@@ -152,6 +153,8 @@ def test_scenario_7414_03_fixed_masks_and_constructed_orders() -> None:
         row for row in replay["feedback_event_rows"] if row["arm"] == exp.NO_FEEDBACK_ARM
     ]
     assert [row["probability"] for row in frozen] == [row["probability"] for row in no_feedback]
+    assert all(row["prediction_persisted"] for row in replay["feedback_event_rows"])
+    assert len((tmp_path / "feedback.jsonl").read_text(encoding="utf-8").splitlines()) == 8
     assert replay["pending_feedback_at_end"] >= 0
 
 
@@ -237,6 +240,18 @@ def test_scenario_7414_07_fixture_artifact_cold_reduction_and_mutations(tmp_path
     assert exp.cold_replay(path) == ["artifact_unreadable_or_not_object"]
 
 
+def test_scenario_7414_08_service_costs_cover_durable_work() -> None:
+    """SCENARIO-AUTO-7414-08: CPU receipts measure each durable operation."""
+
+    artifact = exp.build_fixture_artifact(validation_receipts=_passing_receipts())
+    hardware = artifact["hardware_path"]
+    assert hardware["path"] == "cpu_bounded_numeric_updates_fixed_size_memory"
+    assert hardware["speedup_claimed"] is False
+    for operation in ("prediction", "persistence", "update", "reconstruction"):
+        assert hardware["latency_s"][operation]["p50"] >= 0
+        assert hardware["latency_s"][operation]["p95"] >= 0
+
+
 def test_blocked_artifact_and_cli_contract(monkeypatch: pytest.MonkeyPatch) -> None:
     """REQ-AUTO-7414: blocked inputs and reader modes retain terminal semantics."""
 
@@ -270,9 +285,7 @@ def test_numeric_and_reducer_defenses() -> None:
 
     rows = _fixture_rows()
     with pytest.raises(ValueError, match="both labels"):
-        exp.initialize_seed_states(
-            [{**row, "label": 1} for row in rows], seeds=(65001,), steps=1
-        )
+        exp.initialize_seed_states([{**row, "label": 1} for row in rows], seeds=(65001,), steps=1)
     with pytest.raises(ValueError, match="registered replay condition"):
         exp.replay_condition(
             exp.initialize_seed_states(rows, seeds=(65001,), steps=1)[0],
@@ -291,3 +304,119 @@ def test_numeric_and_reducer_defenses() -> None:
     assert all(row["real_world_chronology"] is False for row in report)
     assert all(row["iid_guarantee_asserted"] is False for row in report)
     assert all(row["conformal_guarantee_asserted"] is False for row in report)
+
+
+def test_req_auto_7414_defensive_journal_and_feature_boundaries(tmp_path: Path) -> None:
+    """REQ-AUTO-7414: malformed feature, journal, and policy inputs fail closed."""
+
+    malformed = tmp_path / "malformed.json"
+    malformed.write_text("{", encoding="utf-8")
+    assert exp.cold_replay(malformed) == ["artifact_unreadable_or_not_object"]
+
+    rows = _fixture_rows()
+    with pytest.raises(ValueError, match="frozen protocol"):
+        exp.initialize_seed_states(
+            [{**rows[0], "source_features": {}}, *rows[1:]], seeds=(65001,), steps=1
+        )
+    with pytest.raises(ValueError, match=r"\[0, 1\]"):
+        exp.initialize_seed_states(
+            [
+                {**rows[0], "source_features": {**_feature(0), "falsifiability_score": 2.0}},
+                *rows[1:],
+            ],
+            seeds=(65001,),
+            steps=1,
+        )
+
+    adapter = exp.SourceAffineAdapter(exp.fixture_weights())
+    with pytest.raises(ValueError, match="affine b"):
+        exp.SourceAffineAdapter(exp.fixture_weights(), b=9.0)
+    adapter.record_prediction("event", 0.0, prediction_index=0, available_at=1)
+    with pytest.raises(ValueError, match="already exists"):
+        adapter.record_prediction("event", 0.0, prediction_index=0, available_at=1)
+    with pytest.raises(ValueError, match="binary"):
+        adapter.commit_feedback("event", 2, visible_at=1)
+    assert adapter.revoke_feedback("missing", replacement_label=None)["status"] == "unknown_event"
+    adapter.commit_feedback("event", 1, visible_at=1)
+    with pytest.raises(ValueError, match="binary or absent"):
+        adapter.revoke_feedback("event", replacement_label=2)
+    checkpoint = adapter.to_dict()
+    with pytest.raises(ValueError, match="weights changed"):
+        exp.SourceAffineAdapter.from_dict({**checkpoint, "weights_hash": "sha256:changed"})
+
+    policy = {
+        "accept_threshold": 0.1,
+        "reject_threshold": 0.9,
+        "accept_enabled": True,
+        "reject_enabled": True,
+    }
+    assert exp._policy_action(0.05, policy) == "accept"
+    assert exp._policy_action(0.95, policy) == "reject"
+    with pytest.raises(ValueError, match="identities"):
+        exp.build_streams([{**_row("online_stream", 0, 0), "group_id": ""}])
+
+
+def test_scenario_7414_03_frequency_window_and_paired_defenses() -> None:
+    """SCENARIO-AUTO-7414-03: replay bounds history and requires complete pairs."""
+
+    initial = exp.initialize_seed_states(_fixture_rows(), seeds=(65001,), steps=1)[0]
+    online = [_row("online_stream", index, index % 2) for index in range(180)]
+    stream = exp.build_streams(online)["hash_order"]
+    replay = exp.replay_condition(
+        initial,
+        stream,
+        ordering="hash_order",
+        feedback_regime="primary_label_blind_75",
+        delay=1,
+    )
+    assert replay["frequency_history_at_end"] <= 128
+
+    paired = exp.synthetic_metric_rows(20, 2)
+    missing_one = [
+        row
+        for row in paired
+        if not (row["observation_id"] == "observation-0000" and row["arm"] == exp.FROZEN_ARM)
+    ]
+    with pytest.raises(ValueError, match="every event"):
+        exp.paired_moving_block_intervals(missing_one, draws=10)
+    wrong_order = [{**row, "ordering": "reversed_block_order"} for row in paired]
+    with pytest.raises(ValueError, match="paired rows"):
+        exp.paired_moving_block_intervals(wrong_order, draws=10)
+    missing_control = [row for row in paired if row["arm"] == exp.NO_FEEDBACK_ARM]
+    with pytest.raises(ValueError, match="every control"):
+        exp.paired_moving_block_intervals(missing_control, draws=10)
+
+
+def test_scenario_7414_07_validation_defenses_and_cli_reducer(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-AUTO-7414-07: identity and terminal mutations fail closed."""
+
+    passing = exp.build_fixture_artifact(validation_receipts=_passing_receipts())
+    assert exp.build_fixture_artifact()["verdict_class"] == "disqualified"
+    mutations = [
+        ("schema", "changed", "schema_mismatch"),
+        ("experiment_id", "changed", "experiment_id_mismatch"),
+        ("milestone", "changed", "run_identity_mismatch"),
+        ("model_invoked", True, "model_declaration_mismatch"),
+        ("invocation_counts", {}, "invocation_counts_mismatch"),
+        ("online_value_score", 1, "online_value_score_mismatch"),
+        ("promotion_score", 1, "promotion_score_mismatch"),
+        ("verdict_class", "other", "verdict_class_invalid"),
+        ("honest_verdict", "bad", "complete_verdict_prefix_invalid"),
+    ]
+    for field, changed_value, expected_error in mutations:
+        changed = deepcopy(passing)
+        changed[field] = changed_value
+        assert expected_error in exp.validate_artifact(changed)
+    blocked = exp.build_blocked_artifact(passing["preconditions_checked"][0])
+    blocked["honest_verdict"] = "bad"
+    assert "blocked_verdict_prefix_invalid" in exp.validate_artifact(blocked)
+
+    path = tmp_path / "candidate.json"
+    path.write_text(json.dumps(passing), encoding="utf-8")
+    assert exp.main(["--date", exp.RUN_DATE, "--independent-reduce", str(path)]) == 0
+    path.write_text("[]", encoding="utf-8")
+    assert exp.main(["--date", exp.RUN_DATE, "--independent-reduce", str(path)]) == 1
+    monkeypatch.setattr(exp, "run_experiment", lambda *_args, **_kwargs: {})
+    assert exp.main(["--date", exp.RUN_DATE]) == 0
