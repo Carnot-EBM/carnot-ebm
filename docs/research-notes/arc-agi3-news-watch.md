@@ -320,3 +320,13 @@ Ebi moved into second place at 8.68%, pushing NVARC3 to third and Third Intellig
 
 - The competition host analyzed 500 failed submissions: roughly one-third had no traceable visible notebook error, while almost 20% required a GPU but had not enabled one. [Kaggle host announcement](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
 
+## 2026-09-19 13:17 UTC -- NEW
+
+- Leaderboard shakeup: **Matija Ludvig & Zhongwei Wang** moved into #3 at **11.64%**; **Lord Han Solo** is #4 at **11.54%**, and **NVARC3** fell to #5 at **11.04%**. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- ARC Prize reported GPT-6 Astra scoring **62.7%** on Semi-Private with the Standard harness and **99.9%** with the Provider Adapter harness. ARC Prize will now label and report both harness conditions separately. [Official announcement](https://arcprize.org/blog/astra)
+
+- The host clarified final scoring: selected final notebooks are **not rerun**; their private scores are computed during the original submission run. Each run plays all 110 hidden environments, although only the public half determines the visible leaderboard score. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
+
+- Kaggle analyzed 500 failed submissions: roughly one-third had no traceable visible error, while nearly 20% involved GPU-dependent code submitted without enabling a GPU. [Host announcement](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+

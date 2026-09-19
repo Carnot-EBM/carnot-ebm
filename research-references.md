@@ -1,3 +1,99 @@
+## 2026-09-19 — V651 planning source review
+
+This review precedes the V651 experiment design. The V650 terminal artifacts,
+not the completion log alone, define the starting evidence. Static calibration
+had no registered benefit. Online replay had 149 independent groups but only
+five negative labels. Extraction attempted no calls because a GPU precondition
+compared the available-slot dictionary with an exact one-slot dictionary.
+The ARC callback experiment failed current-versus-scripted invocation checks.
+
+### Methods selected for bounded evaluation
+
+- **Ultrafast On-Chip Online Learning via Spline Locality in
+  Kolmogorov-Arnold Networks**, 2026-02-02, revised 2026-06-19,
+  [arXiv:2602.02056v4](https://arxiv.org/abs/2602.02056v4).
+  Sparse B-spline updates offer a concrete hardware path for online learning.
+  Test a small local spline energy head against the shipped Gibbs head and
+  same-information logistic controls. Measure touched coefficients, update
+  bytes, persistence, and whole-service latency. The paper's FPGA result is
+  external evidence; host measurements cannot reproduce its device speed.
+- **Online Selective Generation with Adversarial Bandit Feedback**,
+  [arXiv:2506.14067v2](https://arxiv.org/html/2506.14067v2).
+  The first version was titled *A Regret Perspective on Online Selective
+  Generation* (2025-06-16). Its partial-feedback formulation motivates a
+  randomized audit arm with recorded reveal probabilities. Test this against
+  selected-only feedback and equal-budget uniform auditing. Carnot's delayed
+  three-action learner does not inherit the paper's FDR guarantee.
+- **Decomposed Entailment for Factuality Checking and Hallucination
+  Detection**, 2026-08-06,
+  [arXiv:2608.05823](https://arxiv.org/abs/2608.05823).
+  Claim decomposition and claim-to-source attribution motivate separate
+  extraction coverage, contradiction, and qualifier-retention measurements.
+  Reuse the sealed Qwen span comparison after repairing its measured resource
+  check. Do not install a second pretrained entailment model or treat an
+  extractor's self-score as independent truth.
+- **Leveraging Low-Level Symbolic Competences for Unsupervised Grounding
+  in Hallucination Detection**, 2026-09-04,
+  [arXiv:2609.05025](https://arxiv.org/abs/2609.05025).
+  Its SQL grounding experiment reinforces the source-fidelity boundary:
+  executing a database does not validate its extraction. Use source-aware
+  features and independently supplied labels. This is an adaptation, not a
+  reproduction of the SQL system.
+- **KANELE: Kolmogorov-Arnold Networks for Efficient LUT-based Evaluation**,
+  2025-12-14, revised 2026-06-16,
+  [arXiv:2512.12850](https://arxiv.org/abs/2512.12850) and
+  [author code](https://github.com/Duchstf/KANELE).
+  Quantization and LUT mapping inform a fixed-point update/parity experiment.
+  Keep the complete CPU service in the cost boundary. No board acceleration
+  follows from a host LUT emulator.
+
+**Data prerequisite.** The older
+[RAGTruth author release](https://github.com/ParticleMedia/RAGTruth) provides
+human span annotations, source IDs, train/test membership, quality flags, and
+an `implicit_true` distinction. It is a benchmark substrate, not a new 2026
+paper. Group all responses from one source and normalized source duplicates.
+Keep official test untouched; distinguish unsupported-by-source content from
+false-in-the-world content. These labels are fallible human annotations, not
+formal proofs. Check prior graph-grounding experiments before reuse; a small
+typed decision policy is a different question from factual graph extraction.
+
+### Broader scan and deferred mechanisms
+
+| Area | Primary source checked | Disposition |
+|---|---|---|
+| Native EBM reasoning | [EBT](https://arxiv.org/abs/2507.02092) and its [ICLR 2026 proceedings record](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html) | Retain as architectural context. No foundation-model training fits this milestone. |
+| ARM/EBM relation | [ARM-EBM](https://arxiv.org/abs/2512.15605) | Function-space equivalence does not establish correctness or a drop-in verifier. |
+| Neural constraint satisfaction | [Minimal-core-guided repair](https://arxiv.org/abs/2608.14771), 2026-08-14 | Useful translation-fidelity warning. Defer another repair loop until extraction evidence exists. |
+| Ising learning | [Learning-to-sample phase transition](https://arxiv.org/abs/2605.24752), 2026-05-23; [learning from evolutions](https://proceedings.mlr.press/v336/gaitonde26a.html), COLT 2026 | Parameter recovery and correct sampling require distinct tests. No new sampler sweep without a measured bottleneck. |
+| Energy-guided generation | [ETS](https://arxiv.org/abs/2601.21484), 2026; [energy matching and Lyapunov analysis](https://arxiv.org/abs/2605.05530), 2026-05-07 | Defer generation steering. Energy reduction alone cannot establish faithful constraint extraction. |
+| Thermodynamic hardware | [Extropic Z1T](https://extropic.ai/writing/z1t) | The vendor describes a sparse fixed-connectivity Z1/FPGA partition and releases training code. No authenticated local Z1 is available. Do not transfer vendor efficiency figures to Carnot. |
+| Kona | [Logical Intelligence Kona](https://logicalintelligence.com/kona-ebms-energy-based-models) | Product-level constraint-engine description; the inspected page supplies no reproducible training recipe or local model artifact. |
+
+### Secondary-source coverage and access limits
+
+- **OpenReview:** checked the EBT and online-selective-generation records and
+  indexed ICLR PDFs, plus NeurIPS/ICML EBM searches. Forum pages returned a
+  browser challenge; primary arXiv text and conference records supplied the
+  usable evidence. Do not infer acceptance from an anonymous submission.
+- **Semantic Scholar:** searched both seed IDs and attempted their Graph API
+  citation endpoints. The citation endpoint reads failed. A complete citing
+  paper census is therefore unavailable; no citation counts or completeness
+  claim follows. Preserve this limitation in ingestion.
+- **Hugging Face:** checked the
+  [2026-09-18 papers feed](https://huggingface.co/papers/date/2026-09-18)
+  and verification search results, including
+  [SURE-RAG](https://huggingface.co/papers/2605.03534). Direct pages for some
+  selected IDs failed, so method claims above use arXiv originals.
+- **GitHub:** checked weekly
+  [Python](https://github.com/trending/python?since=weekly) and
+  [Rust](https://github.com/trending/rust?since=weekly) trending pages, then
+  author repositories. Trending supplied no verified replacement for the
+  current solver or local model runtime. KANELE is an author-code reference,
+  not a claim about its trending rank.
+- **Extropic and Logical Intelligence:** inspected current first-party pages.
+  These describe external systems; they do not change the attached-board
+  inventory or authorize a purchase or vendor contact.
+
 ## V620 Planner Refresh - 2026-09-06
 
 This sweep follows terminal milestone `2026.09.619`. V619 validated its exact

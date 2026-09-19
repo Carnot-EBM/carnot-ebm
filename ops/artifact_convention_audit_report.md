@@ -9,11 +9,11 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| AGGREGATE_ONLY | 1 |
+| CHECKABLE | 5 |
+| AGGREGATE_ONLY | 2 |
 | CANNOT_DETERMINE | 1 |
 
-## experiment_7401_v649_online_audit.json
+## experiment_7413_v650_source_calibration.json
 
 **CHECKABLE**
 
@@ -21,7 +21,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The online audit was blocked because two required producer artifacts were missing or unreadable.
+The completed experiment found no registered decision benefit because the scientific-benefit gate failed.
 
 ## WHAT IS MISSING
 nothing
@@ -29,7 +29,39 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7402_v649_proposal_capture.json
+## experiment_7414_v650_selected_feedback.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The registered online-value gate was not met because the simultaneous Brier, log-loss, coverage, and action-risk requirement failed.
+
+## WHAT IS MISSING
+nothing; `"acceptance_gate_results"` identifies the failed check and observed value, while `"condition_reports"` and `"feedback_event_rows"` provide condition-level and per-observation metrics.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7415_v650_decision_audit.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The static and online branches are complete nulls with no jointly registered scientific value.
+
+## WHAT IS MISSING
+The supplied JSON is truncated inside `"phase_spans"`; although `"field_principles"` describes a `"rows"` field, the actual per-unit `"rows"` data are not visible, so per-seed/cell metrics underlying `"static_reduction"`, `"online_reduction"`, and `"acceptance_gate_results"` cannot be confirmed present or absent.
+
+## THE CHECK A READER CANNOT DO
+Do the null results hold across individual seeds and conditions, or are they artifacts of pooled aggregates hiding outliers, degenerate controls, or floor/ceiling cases?
+
+## experiment_7416_v650_anchored_extraction.json
 
 **CHECKABLE**
 
@@ -45,7 +77,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7403_v649_synthetic_memory.json
+## experiment_7417_extraction_audit.json
 
 **CHECKABLE**
 
@@ -53,7 +85,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The efficacy gates passed because the reported paid-query and full-cost ratio CI95 upper bounds beat their thresholds against both persistent comparator arms.
+The experiment was blocked because 2 of 3 upstream gates failed.
 
 ## WHAT IS MISSING
 nothing
@@ -61,23 +93,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7404_live_memory.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because 2 of 6 upstream gates failed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7405_v649_proof_audit.json
+## experiment_7418_v650_revision_memory.json
 
 **AGGREGATE_ONLY**
 
@@ -85,15 +101,31 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The synthetic cohort passed the efficacy gate because both persistent methods achieved acceptable aggregate full-cost and paid-query ratio confidence bounds.
+Both persistent arms passed the paid-query reduction gate but failed the total-cost benefit gate.
 
 ## WHAT IS MISSING
-Per-stream or per-formula-family arm-level cost and paid-query measurements underlying `"full_cost_ratio_ci95_upper"` and `"paid_query_ratio_ci95_upper"`; `"erasure_witness_rows"` contains per-request diagnostic booleans but not those comparative metric values.
+Per-unit rows by `"arm"`, `"stream_id"`, `"condition"`, and `"request_id"` containing the paid-query and total-cost measurements used to calculate the four aggregate CI bounds in `"acceptance_gate_results"`; the present `"erasure_witness_rows"` establish individual erasure witnesses but not those benefit ratios.
 
 ## THE CHECK A READER CANNOT DO
-Did the reported efficacy hold broadly across the 32 independent stream groups, or was it driven by a few outliers or units with no headroom?
+Were the paid-query reductions and excessive total costs broad across units, or driven by a small number of outlier streams or requests?
 
-## experiment_7406_v649_arc_generalization.json
+## experiment_7419_v650_precision_placement.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The int8 arm achieved no registered full-service speed benefit because `"int8_total_time_ratio_upper_paired_95"` was 1.0377982860931962, failing the `< 1.0` gate.
+
+## WHAT IS MISSING
+Per-unit `"timing_rows"` containing each paired block’s arm, batch size, and full-service timing; only the aggregate gate value appears in `"acceptance_gate_results"`, while `"field_principles"` merely describes `"timing_rows"` and `"timing_summary"`.
+
+## THE CHECK A READER CANNOT DO
+Was the failed speed gate broad across the paired timing blocks, or driven by a few extreme measurements?
+
+## experiment_7420_v650_capstone.json
 
 **CHECKABLE**
 
@@ -101,42 +133,10 @@ Did the reported efficacy hold broadly across the 32 independent stream groups, 
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was completed but disqualified because required evidence checks failed.
+The capstone completed all twelve dispositions but remained blocked because required extraction science was unavailable.
 
 ## WHAT IS MISSING
-nothing; `"gate_check_summary.failed_checks"` identifies both failures and records each `"check"`, `"artifact_field"`, `"expected"`, `"observed"`, and `"upstream"` value.
+nothing; `"gate_check_summary.failures"` records the failed checks, expected and observed values, fields, paths, and upstream tasks.
 
 ## THE CHECK A READER CANNOT DO
 none
-
-## experiment_7407_v649_service_cost.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The vectorized NumPy arm provides a positive full-service benefit over the scalar NumPy arm.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7408_v649_capstone.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The capstone claims completion with fourteen honest dispositions, while combined scientific benefit was not established and several branches remained blocked.
-
-## WHAT IS MISSING
-The artifact is truncated mid-value inside `"field_principles"`, so the actual `"gate_check_summary"` and any per-unit metric rows supporting the positive `"claim_matrix"` entries cannot be found; only summaries such as `"acceptance_gate_results"` and `"continuation_rows"` are visible.
-
-## THE CHECK A READER CANNOT DO
-Do later, omitted fields contain per-unit evidence showing that the claimed synthetic-memory and host-service benefits were broad effects rather than aggregate results driven by outliers or degenerate controls?
