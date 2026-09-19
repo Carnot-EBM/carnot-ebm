@@ -4858,3 +4858,33 @@ worthless corpus — which is exactly the case layer 1 catches before induction 
   gate before any wider architecture or online claim.
 - **priority:** high for the calibrated-decision branch. Keep the valid static null available to
   downstream decisions while `static_value_confirmed_score` remains zero.
+
+### GAP-V649-CAPSTONE-7408: eligible online, live-memory, and current ARC evidence is absent or invalid
+
+- **status:** open after the V649 capstone on 2026-09-19.
+- **static calibration:** Exp7396 is an eligible completed null. It keeps
+  `static_audit_complete_score=1` and `static_value_confirmed_score=0`. The
+  source-grounding limit in `GAP-DECISION-PCIB-OBSERVABLES-7396` is unchanged.
+- **online learning:** conductor records show Exp7397 and Exp7399 completed,
+  but their declared terminal artifacts are absent. Exp7401 is blocked and
+  flagged. No online value or clean audit claim is available.
+- **proof memory:** Exp7403 supplies source-certified circular-positive
+  synthetic evidence. Exp7405 independently completes that audit. Exp7402
+  attempted zero panel calls, and Exp7404 was pre-gated. No live-model memory
+  benefit is available.
+- **ARC:** Exp7398 qualifies durable checkpoint recovery only. Exp7406 records
+  zero current inductions, no reproduced levels, no official score, and a
+  disqualified flagged result. Historical proxy observations do not fill the
+  current-evidence gap.
+- **hardware:** Exp7407 measures host CPU service benefit. It keeps hardware
+  readiness and hardware value at zero. A blocked GateMate row does not
+  invalidate the host measurement or qualify a board.
+- **retirement boundary:** Exp7404 exactly repeats `blocked_gate_check_failed`.
+  Exp7406 exactly repeats `complete_disqualified_required_evidence` from
+  Exp7376. Only those two unchanged mechanisms receive V649 retirement
+  receipts. Other absent or changed verdicts remain open without reopening
+  retired dependency IDs.
+- **next evidence:** recover hash-authenticated online producer artifacts;
+  require a new eligible proposal source for live memory; require a new current
+  ARC invocation and evidence mechanism. Keep generator weights, production
+  defaults, and publication gates unchanged.

@@ -1183,3 +1183,38 @@ retired_extras:
   blocked_patterns:
   - repeat exp7363 learning audit without eligible learning capture
   - rerun v646 learning audit on disqualified exp7362
+- id: v649_live_memory_unchanged_dependency_repeat_retired_exp7404
+  experiment_scope: rerun the V649 live proof-memory cohort through the same
+    ineligible proposal-capture dependency chain
+  reason: 'retire_if_same_verdict: Exp7404 repeated the exact
+    blocked_gate_check_failed verdict from Exp7389. Synthetic proof evidence
+    remains eligible. The live cohort waits for a new eligible proposal-capture
+    mechanism and an owned GPU lease.'
+  experiment_ids:
+  - exp7389-proof-learning
+  - exp7404-live-memory
+  retired_milestone: 2026.09.649
+  retired_by_artifact: results/experiment_7408_v649_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - rerun exp7404 live memory through an ineligible exp7402 capture
+  - reopen retired proof-memory dependencies without a new eligible proposal source
+- id: v649_arc_unchanged_evidence_mechanism_retired_exp7406
+  experiment_scope: rerun the V649 ARC panel through the same current-evidence
+    mechanism after durable checkpoint qualification
+  reason: 'retire_if_same_verdict: Exp7406 repeated the exact
+    complete_disqualified_required_evidence verdict from Exp7376. Exp7398
+    qualified durable checkpoint recovery, but Exp7406 recorded zero current
+    inductions and failed required terminal evidence. Historical proxy solves
+    do not reopen this mechanism.'
+  experiment_ids:
+  - exp7376-arc-outcomes
+  - exp7406-arc-generalization
+  retired_milestone: 2026.09.649
+  retired_by_artifact: results/experiment_7408_v649_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - rerun exp7406 through the unchanged current-invocation evidence mechanism
+  - promote historical ARC proxy rows as current live generalization evidence

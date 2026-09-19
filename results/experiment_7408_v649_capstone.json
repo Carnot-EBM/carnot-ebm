@@ -1,0 +1,4678 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "completion",
+      "check": "active_v649_roster",
+      "expected": 14,
+      "observed": 14,
+      "operator": "==",
+      "passed": true,
+      "required_for_capstone_completion": true
+    },
+    {
+      "category": "completion",
+      "check": "fourteen_honest_dispositions",
+      "expected": 14,
+      "observed": 14,
+      "operator": "==",
+      "passed": true,
+      "required_for_capstone_completion": true
+    },
+    {
+      "category": "completion",
+      "check": "all_sources_authenticated",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "required_for_capstone_completion": true
+    },
+    {
+      "category": "advisory_contract",
+      "check": "markdown_exact_contract_match",
+      "expected": true,
+      "observed": false,
+      "operator": "==",
+      "passed": false,
+      "required_for_capstone_completion": false
+    },
+    {
+      "category": "required_validation",
+      "check": "affected_validation",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "required_for_capstone_completion": true
+    },
+    {
+      "category": "required_validation",
+      "check": "terminal_readers",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "required_for_capstone_completion": true
+    },
+    {
+      "category": "scientific_validity",
+      "check": "required_science_valid",
+      "expected": false,
+      "observed": true,
+      "operator": "==",
+      "passed": false,
+      "required_for_capstone_completion": false
+    },
+    {
+      "category": "scientific_efficacy",
+      "check": "registered_combined_benefit",
+      "expected": true,
+      "observed": false,
+      "operator": "==",
+      "passed": false,
+      "required_for_capstone_completion": false
+    },
+    {
+      "category": "promotion",
+      "check": "automatic_promotion",
+      "expected": 0,
+      "observed": 0,
+      "operator": "==",
+      "passed": true,
+      "required_for_capstone_completion": false
+    }
+  ],
+  "active_research_roadmap_changed": false,
+  "capstone_complete_score": 1,
+  "claim_matrix": {
+    "arc": {
+      "capture_complete_score": 0,
+      "checkpoint_ready_score": 1,
+      "current_induction_count": 0,
+      "historical_induction_count": 10,
+      "historical_proxy_is_current_arc_evidence": false,
+      "new_solve_claimed": false,
+      "official_score": null,
+      "reproduced_levels": [],
+      "source_tasks": [
+        "exp7398-arc-checkpoint",
+        "exp7406-arc-generalization"
+      ],
+      "validity": "checkpoint_ready_but_current_panel_disqualified",
+      "verdict_class": "disqualified",
+      "verifier_is_oracle": false
+    },
+    "host_service_cost": {
+      "board_disposition": {
+        "complete": true,
+        "gatemate_terminal_state": "blocked_changed_physical_state",
+        "independent_of_cpu_cost_verdict": true
+      },
+      "completion_score": 1,
+      "hardware_ready_score": 0,
+      "hardware_value_score": 0,
+      "host_cost_is_board_qualification": false,
+      "source_tasks": [
+        "exp7407-service-cost"
+      ],
+      "validity": "eligible_host_cpu_cost_only",
+      "value_score": 1,
+      "verdict_class": "positive",
+      "verifier_is_oracle": false
+    },
+    "live_memory": {
+      "attempted_current_panel_calls": 0,
+      "completion_score": 0,
+      "source_tasks": [
+        "exp7402-proposal-capture",
+        "exp7404-live-memory"
+      ],
+      "unstarted_current_panel_calls": 64,
+      "validity": "fresh_model_panel_and_live_cohort_unavailable",
+      "value_score": 0,
+      "verdict_class": "blocked",
+      "verifier_is_oracle": true
+    },
+    "online_learning": {
+      "completion_score": 0,
+      "producer_artifacts_present": false,
+      "source_tasks": [
+        "exp7397-delayed-adapter",
+        "exp7399-online-trial",
+        "exp7401-online-audit"
+      ],
+      "validity": "producer_artifacts_unavailable_and_audit_flagged",
+      "value_score": 0,
+      "verdict_class": "blocked",
+      "verifier_is_oracle": false
+    },
+    "proof_audit": {
+      "audit_complete_score": 1,
+      "combined_live_claim_available": false,
+      "source_tasks": [
+        "exp7403-synthetic-memory",
+        "exp7404-live-memory",
+        "exp7405-proof-audit"
+      ],
+      "synthetic_result_preserved": true,
+      "validity": "synthetic_audit_complete_live_cohort_unavailable",
+      "value_score": 0,
+      "verdict_class": "blocked",
+      "verifier_is_oracle": true
+    },
+    "static_calibration": {
+      "completion_score": 1,
+      "feature_limits": {
+        "claim_scope": "descriptive_sample_floors_only",
+        "conflicting_cell_count": 22,
+        "diagnostic_row_count": 3950,
+        "empirical_bayes_brier_floor": 0.008446897440846333
+      },
+      "independent_external_sample": false,
+      "source_tasks": [
+        "exp7396-decision-diagnosis"
+      ],
+      "validity": "eligible_completed_static_null",
+      "value_score": 0,
+      "verdict_class": "null",
+      "verifier_is_oracle": false
+    },
+    "synthetic_memory": {
+      "completion_score": 1,
+      "live_model_benefit_established": false,
+      "proof_safety_ready_score": 1,
+      "source_tasks": [
+        "exp7403-synthetic-memory"
+      ],
+      "validity": "eligible_source_certified_synthetic_cohort",
+      "value_score": 1,
+      "verdict_class": "circular_positive",
+      "verifier_is_oracle": true
+    }
+  },
+  "completed_at_utc": "2026-09-19T04:09:20.890180+00:00",
+  "continuation_rows": [
+    {
+      "branch": "static_calibration",
+      "decision": "continue-with-measured-cause",
+      "measured_cause": "The eligible static audit found 22 conflicting feature cells and no registered Brier benefit.",
+      "required_change": "Recover authenticated source questions and add source-grounded claim features before another fixed gate."
+    },
+    {
+      "branch": "online_learning",
+      "decision": "wait-for-named-external-change",
+      "measured_cause": "The declared Exp7397 and Exp7399 terminal artifacts are absent, and the audit is blocked and flagged.",
+      "required_change": "Provide hash-authenticated terminal producer artifacts with clean required validation before any value audit."
+    },
+    {
+      "branch": "synthetic_memory",
+      "decision": "continue-with-measured-cause",
+      "measured_cause": "Source-certified synthetic memory completed with circular-positive proof value and passed safety controls.",
+      "required_change": "Use an independently grounded or eligible live cohort before making an oracle-distinct or model-benefit claim."
+    },
+    {
+      "branch": "live_memory",
+      "decision": "retire-unchanged-mechanism",
+      "measured_cause": "The live cohort repeated blocked_gate_check_failed after candidate capture completed zero of 64 calls.",
+      "required_change": "Do not rerun the unchanged dependency chain; require a new eligible proposal-capture mechanism and owned GPU lease."
+    },
+    {
+      "branch": "proof_audit",
+      "decision": "continue-with-measured-cause",
+      "measured_cause": "The synthetic audit completed, but combined value stayed unavailable because the live cohort was blocked.",
+      "required_change": "Audit a future eligible live cohort separately while retaining the current synthetic result."
+    },
+    {
+      "branch": "arc",
+      "decision": "retire-unchanged-mechanism",
+      "measured_cause": "Durable checkpoint readiness passed, but the current panel repeated complete_disqualified_required_evidence with zero current inductions.",
+      "required_change": "Require a new current invocation and evidence mechanism; do not rerun the unchanged panel launcher."
+    },
+    {
+      "branch": "host_service_cost",
+      "decision": "wait-for-named-external-change",
+      "measured_cause": "Host vectorized full-service benefit is measured, while hardware readiness and value remain zero.",
+      "required_change": "Wait for a dated operator-authored GateMate physical-state change or measured board service before qualification."
+    }
+  ],
+  "contract_comparison": {
+    "advisory_only": true,
+    "contract_complete_score": 0,
+    "contract_rows": [
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": true,
+          "id": false,
+          "phase": true,
+          "substrate": true,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7381_v648_contract.json",
+          "gates": [],
+          "id": "exp7381-contract",
+          "milestone": "2026.09.648",
+          "order": 1,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Bind V648 sources and the exact fourteen-task contract"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7395_v649_receipt_protocol.json",
+          "gates": [],
+          "id": "exp7395-receipt-protocol",
+          "milestone": "2026.09.649",
+          "order": 1,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Qualify current-work receipts and the assignment reducer"
+        },
+        "order": 1,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": true,
+          "id": false,
+          "phase": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7382_v648_decision_protocol.json",
+          "gates": [],
+          "id": "exp7382-decision-protocol",
+          "milestone": "2026.09.648",
+          "order": 2,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Prototype typed energy decisions and seal calibration partitions"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "substrate"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7396_v649_decision_diagnosis.json",
+          "gates": [],
+          "id": "exp7396-decision-diagnosis",
+          "milestone": "2026.09.649",
+          "order": 2,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Independently explain the frozen calibrated-decision null"
+        },
+        "order": 2,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": true,
+          "id": false,
+          "phase": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7383_v648_canary_reducer.json",
+          "gates": [],
+          "id": "exp7383-canary-reducer",
+          "milestone": "2026.09.648",
+          "order": 3,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Repair assignment receipt reduction without repeating inference"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "substrate"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7397_v649_delayed_adapter.json",
+          "gates": [],
+          "id": "exp7397-delayed-adapter",
+          "milestone": "2026.09.649",
+          "order": 3,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Prototype a bounded energy-offset learner with delayed feedback"
+        },
+        "order": 3,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": true,
+          "id": false,
+          "phase": true,
+          "substrate": true,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7384_v648_arc_invocation_boundary.json",
+          "gates": [],
+          "id": "exp7384-arc-invocation-boundary",
+          "milestone": "2026.09.648",
+          "order": 4,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Harden the live ARC child invocation and first-action boundary"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7398_v649_arc_checkpoint.json",
+          "gates": [],
+          "id": "exp7398-arc-checkpoint",
+          "milestone": "2026.09.649",
+          "order": 4,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Qualify durable ARC episodes across timeout and restart"
+        },
+        "order": 4,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "substrate": true,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7385_v648_decision_training.json",
+          "gates": [
+            {
+              "artifact_field": "decision_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7382-decision-protocol",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7382-decision-protocol",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7382-decision-protocol",
+              "value": false
+            }
+          ],
+          "id": "exp7385-decision-training",
+          "milestone": "2026.09.648",
+          "order": 5,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Train and measure calibrated Gibbs decisions against simple controls"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "gates"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7399_v649_online_trial.json",
+          "gates": [
+            {
+              "artifact_field": "delayed_adapter_ready_score",
+              "op": "==",
+              "upstream": "exp7397-delayed-adapter",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7397-delayed-adapter",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7397-delayed-adapter",
+              "value": false
+            }
+          ],
+          "id": "exp7399-online-trial",
+          "milestone": "2026.09.649",
+          "order": 5,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure continuous affine calibration on later verified outcomes"
+        },
+        "order": 5,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7386_v648_online_decisions.json",
+          "gates": [
+            {
+              "artifact_field": "decision_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7382-decision-protocol",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7382-decision-protocol",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7382-decision-protocol",
+              "value": false
+            }
+          ],
+          "id": "exp7386-online-decisions",
+          "milestone": "2026.09.648",
+          "order": 6,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure continuous decision learning with delayed verified feedback"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "substrate",
+          "gates"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7400_v649_assignment_canary.json",
+          "gates": [
+            {
+              "artifact_field": "assignment_reducer_ready_score",
+              "op": "==",
+              "upstream": "exp7395-receipt-protocol",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7395-receipt-protocol",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7395-receipt-protocol",
+              "value": false
+            }
+          ],
+          "id": "exp7400-assignment-canary",
+          "milestone": "2026.09.649",
+          "order": 6,
+          "phase": 2,
+          "substrate": "model_bounded_generation",
+          "title": "Requalify bounded Qwen3.8 assignment transport"
+        },
+        "order": 6,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": false,
+          "substrate": true,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7387_v648_decision_audit.json",
+          "gates": [
+            {
+              "artifact_field": "decision_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7385-decision-training",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7385-decision-training",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7385-decision-training",
+              "value": false
+            },
+            {
+              "artifact_field": "online_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7386-online-decisions",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7386-online-decisions",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7386-online-decisions",
+              "value": false
+            }
+          ],
+          "id": "exp7387-decision-audit",
+          "milestone": "2026.09.648",
+          "order": 7,
+          "phase": 2,
+          "substrate": "aggregation",
+          "title": "Audit policy calibration leakage and continuous-learning causality"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "gates"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7401_v649_online_audit.json",
+          "gates": [],
+          "id": "exp7401-online-audit",
+          "milestone": "2026.09.649",
+          "order": 7,
+          "phase": 3,
+          "substrate": "aggregation",
+          "title": "Independently audit online learning and its failed controls"
+        },
+        "order": 7,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "substrate": true,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7388_v648_proposal_capture.json",
+          "gates": [
+            {
+              "artifact_field": "assignment_reducer_ready_score",
+              "op": "==",
+              "upstream": "exp7383-canary-reducer",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7383-canary-reducer",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7383-canary-reducer",
+              "value": false
+            },
+            {
+              "artifact_field": "proof_boundary_replay_ready_score",
+              "op": "==",
+              "upstream": "exp7383-canary-reducer",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7383-canary-reducer",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7383-canary-reducer",
+              "value": false
+            }
+          ],
+          "id": "exp7388-proposal-capture",
+          "milestone": "2026.09.648",
+          "order": 8,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Capture bounded Qwen3.8 proposals through the corrected receipt path"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "gates"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7402_v649_proposal_capture.json",
+          "gates": [
+            {
+              "artifact_field": "qwen_assignment_transport_ready_score",
+              "op": "==",
+              "upstream": "exp7400-assignment-canary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7400-assignment-canary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7400-assignment-canary",
+              "value": false
+            }
+          ],
+          "id": "exp7402-proposal-capture",
+          "milestone": "2026.09.649",
+          "order": 8,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Capture the sealed Qwen3.8 implication-query panel"
+        },
+        "order": 8,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "substrate": true,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7389_v648_proof_learning.json",
+          "gates": [
+            {
+              "artifact_field": "candidate_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7388-proposal-capture",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7388-proposal-capture",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7388-proposal-capture",
+              "value": false
+            },
+            {
+              "artifact_field": "proof_boundary_replay_ready_score",
+              "op": "==",
+              "upstream": "exp7383-canary-reducer",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7383-canary-reducer",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7383-canary-reducer",
+              "value": false
+            }
+          ],
+          "id": "exp7389-proof-learning",
+          "milestone": "2026.09.648",
+          "order": 9,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Measure prospective implication-memory value on sealed later requests"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "gates"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7403_v649_synthetic_memory.json",
+          "gates": [],
+          "id": "exp7403-synthetic-memory",
+          "milestone": "2026.09.649",
+          "order": 9,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Measure certified memory independently on sealed synthetic streams"
+        },
+        "order": 9,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7390_v648_proof_audit.json",
+          "gates": [
+            {
+              "artifact_field": "proof_learning_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7389-proof-learning",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7389-proof-learning",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7389-proof-learning",
+              "value": false
+            }
+          ],
+          "id": "exp7390-proof-audit",
+          "milestone": "2026.09.648",
+          "order": 10,
+          "phase": 3,
+          "substrate": "aggregation",
+          "title": "Independently audit proof-memory causality and complete cost"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "substrate",
+          "gates"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7404_v649_live_memory.json",
+          "gates": [
+            {
+              "artifact_field": "candidate_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7402-proposal-capture",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7402-proposal-capture",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7402-proposal-capture",
+              "value": false
+            },
+            {
+              "artifact_field": "proof_safety_ready_score",
+              "op": "==",
+              "upstream": "exp7403-synthetic-memory",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7403-synthetic-memory",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7403-synthetic-memory",
+              "value": false
+            }
+          ],
+          "id": "exp7404-live-memory",
+          "milestone": "2026.09.649",
+          "order": 10,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Measure certified memory on fresh bounded model proposals"
+        },
+        "order": 10,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7391_v648_arc_generalization.json",
+          "gates": [
+            {
+              "artifact_field": "arc_invocation_ready_score",
+              "op": "==",
+              "upstream": "exp7384-arc-invocation-boundary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7384-arc-invocation-boundary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7384-arc-invocation-boundary",
+              "value": false
+            }
+          ],
+          "id": "exp7391-arc-generalization",
+          "milestone": "2026.09.648",
+          "order": 11,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Measure adapter-withheld live ARC after first-action repair"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "substrate",
+          "gates"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7405_v649_proof_audit.json",
+          "gates": [],
+          "id": "exp7405-proof-audit",
+          "milestone": "2026.09.649",
+          "order": 11,
+          "phase": 3,
+          "substrate": "aggregation",
+          "title": "Audit synthetic and live proof claims independently"
+        },
+        "order": 11,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "phase": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7392_v648_ising_reduction.json",
+          "gates": [],
+          "id": "exp7392-ising-reduction",
+          "milestone": "2026.09.648",
+          "order": 12,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Recompute frozen Ising evidence with explicit support accounting"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "substrate",
+          "gates"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7406_v649_arc_generalization.json",
+          "gates": [
+            {
+              "artifact_field": "arc_checkpoint_ready_score",
+              "op": "==",
+              "upstream": "exp7398-arc-checkpoint",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7398-arc-checkpoint",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7398-arc-checkpoint",
+              "value": false
+            }
+          ],
+          "id": "exp7406-arc-generalization",
+          "milestone": "2026.09.649",
+          "order": 12,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Measure adapter-withheld ARC with durable episode evidence"
+        },
+        "order": 12,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": true,
+          "id": false,
+          "phase": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7393_v648_hardware_placement.json",
+          "gates": [],
+          "id": "exp7393-hardware-placement",
+          "milestone": "2026.09.648",
+          "order": 13,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Bound decision-head placement and preserve attached-board prerequisites"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable",
+          "substrate"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7407_v649_service_cost.json",
+          "gates": [],
+          "id": "exp7407-service-cost",
+          "milestone": "2026.09.649",
+          "order": 13,
+          "phase": 4,
+          "substrate": "no_model_load",
+          "title": "Measure selector service cost and preserve board prerequisites"
+        },
+        "order": 13,
+        "passed": false
+      },
+      {
+        "checks": {
+          "deliverable": false,
+          "gates": true,
+          "id": false,
+          "phase": true,
+          "substrate": true,
+          "title": false
+        },
+        "expected": {
+          "deliverable": "results/experiment_7394_v648_capstone.json",
+          "gates": [],
+          "id": "exp7394-capstone",
+          "milestone": "2026.09.648",
+          "order": 14,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Reconcile fourteen outcomes and decide calibrated-learning continuation"
+        },
+        "failures": [
+          "id",
+          "title",
+          "deliverable"
+        ],
+        "observed": {
+          "deliverable": "results/experiment_7408_v649_capstone.json",
+          "gates": [],
+          "id": "exp7408-capstone",
+          "milestone": "2026.09.649",
+          "order": 14,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Reconcile fourteen dispositions and set evidence-based continuation"
+        },
+        "order": 14,
+        "passed": false
+      }
+    ],
+    "errors": [
+      "markdown_milestone_mismatch",
+      "contract_rows_mismatch"
+    ],
+    "markdown_contract": {
+      "milestone": "2026.09.648",
+      "tasks": [
+        {
+          "deliverable": "results/experiment_7381_v648_contract.json",
+          "gates": [],
+          "id": "exp7381-contract",
+          "milestone": "2026.09.648",
+          "order": 1,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Bind V648 sources and the exact fourteen-task contract"
+        },
+        {
+          "deliverable": "results/experiment_7382_v648_decision_protocol.json",
+          "gates": [],
+          "id": "exp7382-decision-protocol",
+          "milestone": "2026.09.648",
+          "order": 2,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Prototype typed energy decisions and seal calibration partitions"
+        },
+        {
+          "deliverable": "results/experiment_7383_v648_canary_reducer.json",
+          "gates": [],
+          "id": "exp7383-canary-reducer",
+          "milestone": "2026.09.648",
+          "order": 3,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Repair assignment receipt reduction without repeating inference"
+        },
+        {
+          "deliverable": "results/experiment_7384_v648_arc_invocation_boundary.json",
+          "gates": [],
+          "id": "exp7384-arc-invocation-boundary",
+          "milestone": "2026.09.648",
+          "order": 4,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Harden the live ARC child invocation and first-action boundary"
+        },
+        {
+          "deliverable": "results/experiment_7385_v648_decision_training.json",
+          "gates": [
+            {
+              "artifact_field": "decision_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7382-decision-protocol",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7382-decision-protocol",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7382-decision-protocol",
+              "value": false
+            }
+          ],
+          "id": "exp7385-decision-training",
+          "milestone": "2026.09.648",
+          "order": 5,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Train and measure calibrated Gibbs decisions against simple controls"
+        },
+        {
+          "deliverable": "results/experiment_7386_v648_online_decisions.json",
+          "gates": [
+            {
+              "artifact_field": "decision_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7382-decision-protocol",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7382-decision-protocol",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7382-decision-protocol",
+              "value": false
+            }
+          ],
+          "id": "exp7386-online-decisions",
+          "milestone": "2026.09.648",
+          "order": 6,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure continuous decision learning with delayed verified feedback"
+        },
+        {
+          "deliverable": "results/experiment_7387_v648_decision_audit.json",
+          "gates": [
+            {
+              "artifact_field": "decision_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7385-decision-training",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7385-decision-training",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7385-decision-training",
+              "value": false
+            },
+            {
+              "artifact_field": "online_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7386-online-decisions",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7386-online-decisions",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7386-online-decisions",
+              "value": false
+            }
+          ],
+          "id": "exp7387-decision-audit",
+          "milestone": "2026.09.648",
+          "order": 7,
+          "phase": 2,
+          "substrate": "aggregation",
+          "title": "Audit policy calibration leakage and continuous-learning causality"
+        },
+        {
+          "deliverable": "results/experiment_7388_v648_proposal_capture.json",
+          "gates": [
+            {
+              "artifact_field": "assignment_reducer_ready_score",
+              "op": "==",
+              "upstream": "exp7383-canary-reducer",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7383-canary-reducer",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7383-canary-reducer",
+              "value": false
+            },
+            {
+              "artifact_field": "proof_boundary_replay_ready_score",
+              "op": "==",
+              "upstream": "exp7383-canary-reducer",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7383-canary-reducer",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7383-canary-reducer",
+              "value": false
+            }
+          ],
+          "id": "exp7388-proposal-capture",
+          "milestone": "2026.09.648",
+          "order": 8,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Capture bounded Qwen3.8 proposals through the corrected receipt path"
+        },
+        {
+          "deliverable": "results/experiment_7389_v648_proof_learning.json",
+          "gates": [
+            {
+              "artifact_field": "candidate_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7388-proposal-capture",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7388-proposal-capture",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7388-proposal-capture",
+              "value": false
+            },
+            {
+              "artifact_field": "proof_boundary_replay_ready_score",
+              "op": "==",
+              "upstream": "exp7383-canary-reducer",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7383-canary-reducer",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7383-canary-reducer",
+              "value": false
+            }
+          ],
+          "id": "exp7389-proof-learning",
+          "milestone": "2026.09.648",
+          "order": 9,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Measure prospective implication-memory value on sealed later requests"
+        },
+        {
+          "deliverable": "results/experiment_7390_v648_proof_audit.json",
+          "gates": [
+            {
+              "artifact_field": "proof_learning_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7389-proof-learning",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7389-proof-learning",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7389-proof-learning",
+              "value": false
+            }
+          ],
+          "id": "exp7390-proof-audit",
+          "milestone": "2026.09.648",
+          "order": 10,
+          "phase": 3,
+          "substrate": "aggregation",
+          "title": "Independently audit proof-memory causality and complete cost"
+        },
+        {
+          "deliverable": "results/experiment_7391_v648_arc_generalization.json",
+          "gates": [
+            {
+              "artifact_field": "arc_invocation_ready_score",
+              "op": "==",
+              "upstream": "exp7384-arc-invocation-boundary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7384-arc-invocation-boundary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7384-arc-invocation-boundary",
+              "value": false
+            }
+          ],
+          "id": "exp7391-arc-generalization",
+          "milestone": "2026.09.648",
+          "order": 11,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Measure adapter-withheld live ARC after first-action repair"
+        },
+        {
+          "deliverable": "results/experiment_7392_v648_ising_reduction.json",
+          "gates": [],
+          "id": "exp7392-ising-reduction",
+          "milestone": "2026.09.648",
+          "order": 12,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Recompute frozen Ising evidence with explicit support accounting"
+        },
+        {
+          "deliverable": "results/experiment_7393_v648_hardware_placement.json",
+          "gates": [],
+          "id": "exp7393-hardware-placement",
+          "milestone": "2026.09.648",
+          "order": 13,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Bound decision-head placement and preserve attached-board prerequisites"
+        },
+        {
+          "deliverable": "results/experiment_7394_v648_capstone.json",
+          "gates": [],
+          "id": "exp7394-capstone",
+          "milestone": "2026.09.648",
+          "order": 14,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Reconcile fourteen outcomes and decide calibrated-learning continuation"
+        }
+      ]
+    },
+    "markdown_milestone": "2026.09.648",
+    "markdown_task_count": 14,
+    "passed": false,
+    "yaml_contract": {
+      "milestone": "2026.09.649",
+      "tasks": [
+        {
+          "deliverable": "results/experiment_7395_v649_receipt_protocol.json",
+          "gates": [],
+          "id": "exp7395-receipt-protocol",
+          "milestone": "2026.09.649",
+          "order": 1,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Qualify current-work receipts and the assignment reducer"
+        },
+        {
+          "deliverable": "results/experiment_7396_v649_decision_diagnosis.json",
+          "gates": [],
+          "id": "exp7396-decision-diagnosis",
+          "milestone": "2026.09.649",
+          "order": 2,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Independently explain the frozen calibrated-decision null"
+        },
+        {
+          "deliverable": "results/experiment_7397_v649_delayed_adapter.json",
+          "gates": [],
+          "id": "exp7397-delayed-adapter",
+          "milestone": "2026.09.649",
+          "order": 3,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Prototype a bounded energy-offset learner with delayed feedback"
+        },
+        {
+          "deliverable": "results/experiment_7398_v649_arc_checkpoint.json",
+          "gates": [],
+          "id": "exp7398-arc-checkpoint",
+          "milestone": "2026.09.649",
+          "order": 4,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Qualify durable ARC episodes across timeout and restart"
+        },
+        {
+          "deliverable": "results/experiment_7399_v649_online_trial.json",
+          "gates": [
+            {
+              "artifact_field": "delayed_adapter_ready_score",
+              "op": "==",
+              "upstream": "exp7397-delayed-adapter",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7397-delayed-adapter",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7397-delayed-adapter",
+              "value": false
+            }
+          ],
+          "id": "exp7399-online-trial",
+          "milestone": "2026.09.649",
+          "order": 5,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure continuous affine calibration on later verified outcomes"
+        },
+        {
+          "deliverable": "results/experiment_7400_v649_assignment_canary.json",
+          "gates": [
+            {
+              "artifact_field": "assignment_reducer_ready_score",
+              "op": "==",
+              "upstream": "exp7395-receipt-protocol",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7395-receipt-protocol",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7395-receipt-protocol",
+              "value": false
+            }
+          ],
+          "id": "exp7400-assignment-canary",
+          "milestone": "2026.09.649",
+          "order": 6,
+          "phase": 2,
+          "substrate": "model_bounded_generation",
+          "title": "Requalify bounded Qwen3.8 assignment transport"
+        },
+        {
+          "deliverable": "results/experiment_7401_v649_online_audit.json",
+          "gates": [],
+          "id": "exp7401-online-audit",
+          "milestone": "2026.09.649",
+          "order": 7,
+          "phase": 3,
+          "substrate": "aggregation",
+          "title": "Independently audit online learning and its failed controls"
+        },
+        {
+          "deliverable": "results/experiment_7402_v649_proposal_capture.json",
+          "gates": [
+            {
+              "artifact_field": "qwen_assignment_transport_ready_score",
+              "op": "==",
+              "upstream": "exp7400-assignment-canary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7400-assignment-canary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7400-assignment-canary",
+              "value": false
+            }
+          ],
+          "id": "exp7402-proposal-capture",
+          "milestone": "2026.09.649",
+          "order": 8,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Capture the sealed Qwen3.8 implication-query panel"
+        },
+        {
+          "deliverable": "results/experiment_7403_v649_synthetic_memory.json",
+          "gates": [],
+          "id": "exp7403-synthetic-memory",
+          "milestone": "2026.09.649",
+          "order": 9,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Measure certified memory independently on sealed synthetic streams"
+        },
+        {
+          "deliverable": "results/experiment_7404_v649_live_memory.json",
+          "gates": [
+            {
+              "artifact_field": "candidate_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7402-proposal-capture",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7402-proposal-capture",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7402-proposal-capture",
+              "value": false
+            },
+            {
+              "artifact_field": "proof_safety_ready_score",
+              "op": "==",
+              "upstream": "exp7403-synthetic-memory",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7403-synthetic-memory",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7403-synthetic-memory",
+              "value": false
+            }
+          ],
+          "id": "exp7404-live-memory",
+          "milestone": "2026.09.649",
+          "order": 10,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Measure certified memory on fresh bounded model proposals"
+        },
+        {
+          "deliverable": "results/experiment_7405_v649_proof_audit.json",
+          "gates": [],
+          "id": "exp7405-proof-audit",
+          "milestone": "2026.09.649",
+          "order": 11,
+          "phase": 3,
+          "substrate": "aggregation",
+          "title": "Audit synthetic and live proof claims independently"
+        },
+        {
+          "deliverable": "results/experiment_7406_v649_arc_generalization.json",
+          "gates": [
+            {
+              "artifact_field": "arc_checkpoint_ready_score",
+              "op": "==",
+              "upstream": "exp7398-arc-checkpoint",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7398-arc-checkpoint",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7398-arc-checkpoint",
+              "value": false
+            }
+          ],
+          "id": "exp7406-arc-generalization",
+          "milestone": "2026.09.649",
+          "order": 12,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Measure adapter-withheld ARC with durable episode evidence"
+        },
+        {
+          "deliverable": "results/experiment_7407_v649_service_cost.json",
+          "gates": [],
+          "id": "exp7407-service-cost",
+          "milestone": "2026.09.649",
+          "order": 13,
+          "phase": 4,
+          "substrate": "no_model_load",
+          "title": "Measure selector service cost and preserve board prerequisites"
+        },
+        {
+          "deliverable": "results/experiment_7408_v649_capstone.json",
+          "gates": [],
+          "id": "exp7408-capstone",
+          "milestone": "2026.09.649",
+          "order": 14,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Reconcile fourteen dispositions and set evidence-based continuation"
+        }
+      ]
+    },
+    "yaml_milestone": "2026.09.649",
+    "yaml_task_count": 14
+  },
+  "duration_s": 24.15980035602115,
+  "execution_venue": "host",
+  "experiment_id": "exp7408-capstone",
+  "external_publication_authorized": false,
+  "field_principles": {
+    "MODEL_SPECS": "Keep this empty because the current capstone performs no LLM work.",
+    "acceptance_gate_results": "Keep validation, safety, completion, efficacy, advisory, and promotion checks separate.",
+    "active_research_roadmap_changed": "Record the measured V649 capstone value for active research roadmap changed.",
+    "capstone_complete_score": "One means fourteen honest dispositions and passing current capstone checks, not scientific success.",
+    "claim_matrix": "Keep static, online, synthetic, live, proof-audit, ARC, and host-cost claims independently valid or unavailable.",
+    "completed_at_utc": "Record the measured V649 capstone value for completed at utc.",
+    "continuation_rows": "Choose one closed continuation action per branch from a measured cause or named prerequisite.",
+    "contract_comparison": "Record the measured V649 capstone value for contract comparison.",
+    "duration_s": "Measure the current task with a monotonic clock and never add sleep.",
+    "execution_venue": "Use the closed string host; put device and software facts in details.",
+    "experiment_id": "Record the measured V649 capstone value for experiment id.",
+    "external_publication_authorized": "Record the measured V649 capstone value for external publication authorized.",
+    "field_principles": "Explain ordinary top-level fields without wrapping values in value and principle envelopes.",
+    "flagged_adversarial": "Preserve producer flags in rows; this field reports only a critical finding against the capstone producer.",
+    "gate_check_summary": "Name each unavailable or invalid upstream, path, check, field, expected value, and observed value.",
+    "generator_weights_changed": "Record the measured V649 capstone value for generator weights changed.",
+    "historical_model_receipt_sidecars": "Record the measured V649 capstone value for historical model receipt sidecars.",
+    "honest_verdict": "Use complete scope for finished aggregation; unchanged missing evidence remains blocked within its branch.",
+    "inference_substrate": "Use a truthful string for current CPU JSON, YAML, Markdown, and exact-reducer work.",
+    "inference_substrate_class": "Use aggregation for the current host reduction and do not pad runtime.",
+    "inference_substrate_details": "Record the measured V649 capstone value for inference substrate details.",
+    "invocation_counts": "Count only current owned LLM attempts and outcomes; historical calls remain outside these counters.",
+    "literature_control_rows": "Record the measured V649 capstone value for literature control rows.",
+    "milestone": "Record the measured V649 capstone value for milestone.",
+    "model_invoked": "Set true for an attempted current real LLM load or generation, including failure.",
+    "north_star_publication_gates_changed": "Record the measured V649 capstone value for north star publication gates changed.",
+    "numeric_experiment_id": "Record the measured V649 capstone value for numeric experiment id.",
+    "phase": "Record the measured V649 capstone value for phase.",
+    "phase_spans": "Retain actual phase boundaries, checkpoints, and elapsed time without inferred utilization.",
+    "preconditions_checked": "Record exact input paths, hashes, eligibility, runtime, and entrypoint checks before dependent work.",
+    "production_defaults_changed": "Record the measured V649 capstone value for production defaults changed.",
+    "promotion_score": "Always remain zero; no rollout, weight change, publication, or leaderboard submission follows.",
+    "random_seed": "Freeze capstone and inherited resampling seeds; use null only when no seed applies.",
+    "repository_health": "Keep unrelated broad-suite history separate; affected failures still disqualify current readiness.",
+    "reproducibility_checksum": "Bind current code, configuration, source hashes, raw rows, gates, and reductions.",
+    "required_checks_passed": "Record the measured V649 capstone value for required checks passed.",
+    "research_conductor_changed": "Record the measured V649 capstone value for research conductor changed.",
+    "retirement_manifest_enforced": "Record the measured V649 capstone value for retirement manifest enforced.",
+    "retirement_rows": "Record the measured V649 capstone value for retirement rows.",
+    "rows": "Retain every V649 task disposition with cost, failure, censoring, and evidence scope.",
+    "run_date": "Use 20260919 and include actual UTC start and completion timestamps.",
+    "sample_size_budget": "Separate planned, attempted, completed, censored, and unstarted units plus independent groups.",
+    "schema": "Use a versioned schema with ordinary experiment identity and terminal status.",
+    "scientific_value_score": "Record the measured V649 capstone value for scientific value score.",
+    "scope_reduction_compliance": "Account for calibrated-decision, self-learning, ARC, hardware, and deferred mechanism floors.",
+    "small_ebm_training": "Record the measured V649 capstone value for small ebm training.",
+    "source_artifact_hashes": "Bind exact authority, artifact, and conductor-record bytes with original class and flag.",
+    "started_at_utc": "Record the measured V649 capstone value for started at utc.",
+    "status": "Record the measured V649 capstone value for status.",
+    "task_dispositions": "Keep exactly fourteen ordered task IDs with title, path, class, flags, failures, and preserved evidence.",
+    "terminal_validation_passed": "Record the measured V649 capstone value for terminal validation passed.",
+    "title": "Record the measured V649 capstone value for title.",
+    "validation_receipts": "Retain exact argv, local environment, exit, duration, and hashed logs for each executed check.",
+    "verdict_class": "Use the closed class and reserve partial for retryable unfinished work owned by this capstone.",
+    "verifier_is_oracle": "True because source-certified proof truth shares the deployed formal correctness oracle."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "blocking_failed_count": 0,
+    "capstone_check_failures": [],
+    "failed_count": 7,
+    "failures": [
+      {
+        "category": "required_science_validity",
+        "check": "producer_science_eligibility",
+        "expected": {
+          "flag": false,
+          "verdict_class": [
+            "circular_positive",
+            "null",
+            "positive"
+          ]
+        },
+        "field": "verdict_class/flagged_adversarial",
+        "observed": {
+          "flag": true,
+          "verdict_class": "disqualified"
+        },
+        "passed": false,
+        "path": "results/experiment_7406_v649_arc_generalization.json",
+        "upstream": "exp7406-arc-generalization"
+      },
+      {
+        "category": "required_science_availability",
+        "check": "producer_science_availability",
+        "expected": "eligible_terminal_science_or_honest_branch_disposition",
+        "field": "declared_path/verdict_class/flagged_adversarial",
+        "observed": {
+          "flag": false,
+          "source_kind": "conductor_completion_without_artifact",
+          "verdict_class": "blocked"
+        },
+        "passed": false,
+        "path": "results/experiment_7397_v649_delayed_adapter.json",
+        "upstream": "exp7397-delayed-adapter"
+      },
+      {
+        "category": "required_science_availability",
+        "check": "producer_science_availability",
+        "expected": "eligible_terminal_science_or_honest_branch_disposition",
+        "field": "declared_path/verdict_class/flagged_adversarial",
+        "observed": {
+          "flag": false,
+          "source_kind": "conductor_completion_without_artifact",
+          "verdict_class": "blocked"
+        },
+        "passed": false,
+        "path": "results/experiment_7399_v649_online_trial.json",
+        "upstream": "exp7399-online-trial"
+      },
+      {
+        "category": "required_science_availability",
+        "check": "producer_science_availability",
+        "expected": "eligible_terminal_science_or_honest_branch_disposition",
+        "field": "declared_path/verdict_class/flagged_adversarial",
+        "observed": {
+          "flag": true,
+          "source_kind": "declared_artifact",
+          "verdict_class": "blocked"
+        },
+        "passed": false,
+        "path": "results/experiment_7401_v649_online_audit.json",
+        "upstream": "exp7401-online-audit"
+      },
+      {
+        "category": "required_science_availability",
+        "check": "producer_science_availability",
+        "expected": "eligible_terminal_science_or_honest_branch_disposition",
+        "field": "declared_path/verdict_class/flagged_adversarial",
+        "observed": {
+          "flag": false,
+          "source_kind": "declared_artifact",
+          "verdict_class": "blocked"
+        },
+        "passed": false,
+        "path": "results/experiment_7402_v649_proposal_capture.json",
+        "upstream": "exp7402-proposal-capture"
+      },
+      {
+        "category": "required_science_availability",
+        "check": "producer_science_availability",
+        "expected": "eligible_terminal_science_or_honest_branch_disposition",
+        "field": "declared_path/verdict_class/flagged_adversarial",
+        "observed": {
+          "flag": false,
+          "source_kind": "conductor_pre_gate_record",
+          "verdict_class": "blocked"
+        },
+        "passed": false,
+        "path": "results/experiment_7404_v649_live_memory.json",
+        "upstream": "exp7404-live-memory"
+      },
+      {
+        "category": "required_science_availability",
+        "check": "producer_science_availability",
+        "expected": "eligible_terminal_science_or_honest_branch_disposition",
+        "field": "declared_path/verdict_class/flagged_adversarial",
+        "observed": {
+          "flag": false,
+          "source_kind": "declared_artifact",
+          "verdict_class": "blocked"
+        },
+        "passed": false,
+        "path": "results/experiment_7405_v649_proof_audit.json",
+        "upstream": "exp7405-proof-audit"
+      }
+    ],
+    "first_failure": {
+      "category": "required_science_validity",
+      "check": "producer_science_eligibility",
+      "expected": {
+        "flag": false,
+        "verdict_class": [
+          "circular_positive",
+          "null",
+          "positive"
+        ]
+      },
+      "field": "verdict_class/flagged_adversarial",
+      "observed": {
+        "flag": true,
+        "verdict_class": "disqualified"
+      },
+      "passed": false,
+      "path": "results/experiment_7406_v649_arc_generalization.json",
+      "upstream": "exp7406-arc-generalization"
+    },
+    "passed": true,
+    "science_failed_count": 7
+  },
+  "generator_weights_changed": false,
+  "historical_model_receipt_sidecars": [
+    {
+      "counted_as_current_inference": false,
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "circular_positive",
+      "path": "results/experiment_7400_v649_assignment_canary.json",
+      "scope": "historical_producer_only",
+      "sha256": "sha256:ab4604e692aaedfe1afed4764b61ad324fc81901bc5aafd6378b76b918460c62",
+      "task_id": "exp7400-assignment-canary"
+    },
+    {
+      "counted_as_current_inference": false,
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7402_v649_proposal_capture.json",
+      "scope": "historical_producer_only",
+      "sha256": "sha256:02604a41e4dd2d07aecd1d2e2b73091f5cb577b5bf59143b2f89663435fe0209",
+      "task_id": "exp7402-proposal-capture"
+    },
+    {
+      "counted_as_current_inference": false,
+      "original_flagged_adversarial": true,
+      "original_verdict_class": "disqualified",
+      "path": "results/experiment_7406_v649_arc_generalization.json",
+      "scope": "historical_producer_only",
+      "sha256": "sha256:0984ba31ec60ad6c1a1fd395e0bbe7d88a804a609f0eac1801220889222f2b42",
+      "task_id": "exp7406-arc-generalization"
+    }
+  ],
+  "honest_verdict": "complete_disqualified_required_science: all fourteen V649 tasks are accounted for; current ARC evidence is disqualified, online and live evidence is unavailable, and the static null, synthetic proof, proof audit, and host cost retain independent scope",
+  "inference_substrate": "host CPU aggregation of JSON, YAML, Markdown, hashes, exact gate operands, and scoped subprocess receipts; zero current LLM or board operations",
+  "inference_substrate_class": "aggregation",
+  "inference_substrate_details": {
+    "device": "host CPU",
+    "jax_platform": "cpu",
+    "machine": "x86_64",
+    "python": "3.12.13",
+    "work": "JSON and YAML parsing, SHA-256 hashing, exact gate reduction, and scoped validation"
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "literature_control_rows": [
+    {
+      "executed_controls": [
+        "bounded two-scalar energy offset",
+        "predict before delayed feedback",
+        "frozen, logistic, recent-frequency, and no-feedback controls"
+      ],
+      "limit": "Declared terminal artifacts are absent; hidden-state meta-learning and conformal transfer were not tested.",
+      "local_result_eligible": false,
+      "mapped_tasks": [
+        "exp7397-delayed-adapter",
+        "exp7399-online-trial"
+      ],
+      "paper_assumption_satisfied_locally": false,
+      "source_id": "arXiv:2604.01170v2",
+      "source_name": "ORCA"
+    },
+    {
+      "executed_controls": [
+        "fixed answer identity",
+        "raw-to-calibrated decision changes",
+        "typed accept, reject, and escalate accounting"
+      ],
+      "limit": "The local binary risk head does not reproduce CORD's multiclass repair construction.",
+      "local_result_eligible": true,
+      "mapped_tasks": [
+        "exp7396-decision-diagnosis"
+      ],
+      "paper_assumption_satisfied_locally": false,
+      "source_id": "arXiv:2609.01072v2",
+      "source_name": "CORD"
+    },
+    {
+      "executed_controls": [
+        "frozen stream identity",
+        "separate source size and exact-solver effort",
+        "separate parse and semantic outcomes"
+      ],
+      "limit": "The panel made zero calls, so no model-hardness or relabeling conclusion is available.",
+      "local_result_eligible": false,
+      "mapped_tasks": [
+        "exp7402-proposal-capture"
+      ],
+      "paper_assumption_satisfied_locally": false,
+      "source_id": "arXiv:2607.17047",
+      "source_name": "Solver-Hard"
+    },
+    {
+      "executed_controls": [
+        "separate prediction and commit phases",
+        "restart equivalence",
+        "erasure witnesses",
+        "withheld live cohort"
+      ],
+      "limit": "Source-certified synthetic memory is not Memoir's procedural-recall task or a live-model benefit.",
+      "local_result_eligible": true,
+      "mapped_tasks": [
+        "exp7403-synthetic-memory",
+        "exp7405-proof-audit"
+      ],
+      "paper_assumption_satisfied_locally": false,
+      "source_id": "arXiv:2607.20792",
+      "source_name": "Memoir"
+    },
+    {
+      "executed_controls": [
+        "complete host service timing",
+        "scalar-vector parity",
+        "Amdahl bounds",
+        "independent KV260, GateMate, and PolarFire rows"
+      ],
+      "limit": "No board kernel ran; vendor rates and external hardware results are not local evidence.",
+      "local_result_eligible": true,
+      "mapped_tasks": [
+        "exp7407-service-cost"
+      ],
+      "paper_assumption_satisfied_locally": false,
+      "source_id": "V649 dated hardware and sampling review",
+      "source_name": "hardware_review"
+    }
+  ],
+  "milestone": "2026.09.649",
+  "model_invoked": false,
+  "north_star_publication_gates_changed": false,
+  "numeric_experiment_id": 7408,
+  "phase": 4,
+  "phase_spans": [
+    {
+      "checkpoint": "thirteen_sources_authenticated",
+      "duration_s": 0.17100001010112464,
+      "ended_elapsed_s": 0.17115724505856633,
+      "heartbeat_count": 0,
+      "phase": "preconditions",
+      "started_elapsed_s": 0.00015723495744168758
+    },
+    {
+      "checkpoint": "affected_plan_frozen",
+      "duration_s": 0.0006014998070895672,
+      "ended_elapsed_s": 0.17178073595277965,
+      "heartbeat_count": 0,
+      "phase": "build",
+      "started_elapsed_s": 0.17117923614569008
+    },
+    {
+      "checkpoint": "no_current_llm_work",
+      "duration_s": 2.403976395726204e-06,
+      "ended_elapsed_s": 0.17179096513427794,
+      "heartbeat_count": 0,
+      "phase": "load",
+      "started_elapsed_s": 0.1717885611578822
+    },
+    {
+      "checkpoint": "no_current_llm_work",
+      "duration_s": 1.692911610007286e-06,
+      "ended_elapsed_s": 0.17179482197389007,
+      "heartbeat_count": 0,
+      "phase": "generate",
+      "started_elapsed_s": 0.17179312906228006
+    },
+    {
+      "checkpoint": "affected_checks_complete",
+      "duration_s": 21.85045960196294,
+      "ended_elapsed_s": 22.022256108000875,
+      "heartbeat_count": 0,
+      "phase": "validate",
+      "started_elapsed_s": 0.17179650603793561
+    },
+    {
+      "checkpoint": "branch_rows_reduced",
+      "duration_s": 2.61492095887661e-06,
+      "ended_elapsed_s": 22.022269272012636,
+      "heartbeat_count": 0,
+      "phase": "evaluate",
+      "started_elapsed_s": 22.022266657091677
+    },
+    {
+      "checkpoint": "cold_replay_and_strict_readers_complete",
+      "duration_s": 2.0772811870556325,
+      "ended_elapsed_s": 24.15975698409602,
+      "heartbeat_count": 0,
+      "phase": "validate",
+      "started_elapsed_s": 22.082475797040388
+    },
+    {
+      "checkpoint": "terminal_artifact_ready",
+      "duration_s": 9.547919034957886e-06,
+      "ended_elapsed_s": 24.15979338204488,
+      "heartbeat_count": 0,
+      "phase": "write",
+      "started_elapsed_s": 24.159783834125847
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "source_bytes:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "source_bytes:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "source_bytes:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "sha256": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "source_bytes:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:fdab7b9ef47aa3f8be8902e30d96cd096f361d1abbe7c6de7624101383bf968e",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:4cf4f1e0f4c7b1d03c30bf3db115bc51f6bc7733df6e91477258f26bd78c9b54",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "source_bytes:research-roadmap-next.yaml",
+      "expected": "absent_or_exact_v649_staged_yaml",
+      "field": "bytes",
+      "observed": "absent",
+      "passed": true,
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "upstream": "research-roadmap-next.yaml"
+    },
+    {
+      "check": "source_bytes:research-roadmap.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:680dcaed02b0816ebb1d6c769e2127495f4f05e5b3eb744ce423eefe80a8e894",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "check": "source_bytes:openspec/change-proposals/research-roadmap-vNEXT.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:7d09eeae8e4b5e74e48d22ed85427a570b134692857d7dbca041edcf1acd4e6b",
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "check": "source_bytes:research-complete.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "research-complete.yaml",
+      "sha256": "sha256:19b430b484a976a84bd79d0816fc813599579ee3a1516c7a20dae95b1e5b96ae",
+      "upstream": "research-complete.yaml"
+    },
+    {
+      "check": "source_bytes:research-references.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "research-references.md",
+      "sha256": "sha256:e1abb68b8b759cf26667b05f945ad933234debaec20f1738e17747a840bf66c7",
+      "upstream": "research-references.md"
+    },
+    {
+      "check": "source_bytes:research-studying.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "research-studying.md",
+      "sha256": "sha256:0c690584b11c7227d8b344f11c6d3024343a52b1509af36c2cf9600f61064564",
+      "upstream": "research-studying.md"
+    },
+    {
+      "check": "source_bytes:ops/conductor-log.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:28b63e530354b59ccfb1ff73259c9b090d412e4774fa969c076dfe71836a32a8",
+      "upstream": "ops/conductor-log.md"
+    },
+    {
+      "check": "source_bytes:ops/north-star.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "ops/north-star.md",
+      "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+      "upstream": "ops/north-star.md"
+    },
+    {
+      "check": "source_bytes:ops/verifier_gaps.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "ops/verifier_gaps.md",
+      "sha256": "sha256:0fcc06f2e403cae76f23a57aa4920d18c280e61b127a917e1f174229c5005324",
+      "upstream": "ops/verifier_gaps.md"
+    },
+    {
+      "check": "source_bytes:results/experiment_7394_v648_capstone.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "results/experiment_7394_v648_capstone.json",
+      "sha256": "sha256:6b00d11323793dafff01de5c5db4fa0dbb07bc4efe1dfdea09d6e457d610fcd8",
+      "upstream": "results/experiment_7394_v648_capstone.json"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7408_v649_capstone.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "python/carnot/experiment_7408_v649_capstone.py",
+      "sha256": "sha256:f8d15742083672fc5fed095bbd95b869660680acbf2b639902c7230d7a161e1c",
+      "upstream": "python/carnot/experiment_7408_v649_capstone.py"
+    },
+    {
+      "check": "source_bytes:tests/python/test_experiment_7408_v649_capstone.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "tests/python/test_experiment_7408_v649_capstone.py",
+      "sha256": "sha256:523aa053e8f04d71a0262745e5c9f6bcfb94464990330c6d1b55c2e847847ae2",
+      "upstream": "tests/python/test_experiment_7408_v649_capstone.py"
+    },
+    {
+      "check": "source_bytes:scripts/experiments/experiment_7408_v649_capstone.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "path": "scripts/experiments/experiment_7408_v649_capstone.py",
+      "sha256": "sha256:b47b0a480384cbecbdf6a54a56227261c158d209294f5535af5410614874582b",
+      "upstream": "scripts/experiments/experiment_7408_v649_capstone.py"
+    },
+    {
+      "check": "driving_requirement",
+      "expected": "REQ-REPORT-7408",
+      "field": "REQ-*",
+      "observed": "REQ-REPORT-7408",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "active_roadmap_identity",
+      "expected": {
+        "milestone": "2026.09.649",
+        "task_ids": [
+          "exp7395-receipt-protocol",
+          "exp7396-decision-diagnosis",
+          "exp7397-delayed-adapter",
+          "exp7398-arc-checkpoint",
+          "exp7399-online-trial",
+          "exp7400-assignment-canary",
+          "exp7401-online-audit",
+          "exp7402-proposal-capture",
+          "exp7403-synthetic-memory",
+          "exp7404-live-memory",
+          "exp7405-proof-audit",
+          "exp7406-arc-generalization",
+          "exp7407-service-cost",
+          "exp7408-capstone"
+        ]
+      },
+      "field": "milestone/task_ids",
+      "observed": {
+        "milestone": "2026.09.649",
+        "task_ids": [
+          "exp7395-receipt-protocol",
+          "exp7396-decision-diagnosis",
+          "exp7397-delayed-adapter",
+          "exp7398-arc-checkpoint",
+          "exp7399-online-trial",
+          "exp7400-assignment-canary",
+          "exp7401-online-audit",
+          "exp7402-proposal-capture",
+          "exp7403-synthetic-memory",
+          "exp7404-live-memory",
+          "exp7405-proof-audit",
+          "exp7406-arc-generalization",
+          "exp7407-service-cost",
+          "exp7408-capstone"
+        ]
+      },
+      "passed": true,
+      "path": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "check": "current_runtime_boundary",
+      "expected": [
+        [],
+        false,
+        "host",
+        "cpu"
+      ],
+      "field": "MODEL_SPECS/model_invoked/execution_venue/JAX_PLATFORMS",
+      "observed": [
+        [],
+        false,
+        "host",
+        "cpu"
+      ],
+      "passed": true,
+      "path": "scripts/experiments/experiment_7408_v649_capstone.py",
+      "upstream": "exp7408-capstone"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "null",
+        "flag": false,
+        "hash": "sha256:2887bcba5a3e0161d30919a862dbd02831bbf486d85fe782fa12f8e14c7a8638",
+        "source_kind": "declared_artifact"
+      },
+      "passed": true,
+      "path": "results/experiment_7395_v649_receipt_protocol.json",
+      "upstream": "exp7395-receipt-protocol"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "null",
+        "flag": false,
+        "hash": "sha256:03c8ed4df34fdbbfaf86b8ad9bd9dcddd29348b60309561a32ac53499ffb55f4",
+        "source_kind": "declared_artifact"
+      },
+      "passed": true,
+      "path": "results/experiment_7396_v649_decision_diagnosis.json",
+      "upstream": "exp7396-decision-diagnosis"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "blocked",
+        "flag": false,
+        "hash": "sha256:3e9cb0602e2a272ecf1088d0e457e0f507024827f59de021e75604b5047306ca",
+        "source_kind": "conductor_completion_without_artifact"
+      },
+      "passed": true,
+      "path": "results/experiment_7397_v649_delayed_adapter.json",
+      "upstream": "exp7397-delayed-adapter"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "null",
+        "flag": false,
+        "hash": "sha256:bf46c2b3cff33d1a81eb3ffb4907a0d52c2fb8644fee70162e58ae6735716ad7",
+        "source_kind": "declared_artifact"
+      },
+      "passed": true,
+      "path": "results/experiment_7398_v649_arc_checkpoint.json",
+      "upstream": "exp7398-arc-checkpoint"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "blocked",
+        "flag": false,
+        "hash": "sha256:dc17ed8b859612eccfcc84050160115c472ef8ffc2c6e5d68956d4d2f6d68c9d",
+        "source_kind": "conductor_completion_without_artifact"
+      },
+      "passed": true,
+      "path": "results/experiment_7399_v649_online_trial.json",
+      "upstream": "exp7399-online-trial"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "circular_positive",
+        "flag": false,
+        "hash": "sha256:ab4604e692aaedfe1afed4764b61ad324fc81901bc5aafd6378b76b918460c62",
+        "source_kind": "declared_artifact"
+      },
+      "passed": true,
+      "path": "results/experiment_7400_v649_assignment_canary.json",
+      "upstream": "exp7400-assignment-canary"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "blocked",
+        "flag": true,
+        "hash": "sha256:5e33f67f3d1f75202f76a203b14c0d8fdbf2a2b70fec945914e7c65e98cae148",
+        "source_kind": "declared_artifact"
+      },
+      "passed": true,
+      "path": "results/experiment_7401_v649_online_audit.json",
+      "upstream": "exp7401-online-audit"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "blocked",
+        "flag": false,
+        "hash": "sha256:02604a41e4dd2d07aecd1d2e2b73091f5cb577b5bf59143b2f89663435fe0209",
+        "source_kind": "declared_artifact"
+      },
+      "passed": true,
+      "path": "results/experiment_7402_v649_proposal_capture.json",
+      "upstream": "exp7402-proposal-capture"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "circular_positive",
+        "flag": false,
+        "hash": "sha256:7985849e93927d7fecaca23eac0cb185578b70e7b6f8a2d90777bc62eacd92b6",
+        "source_kind": "declared_artifact"
+      },
+      "passed": true,
+      "path": "results/experiment_7403_v649_synthetic_memory.json",
+      "upstream": "exp7403-synthetic-memory"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "blocked",
+        "flag": false,
+        "hash": "sha256:e3fc47b46c735de8fa03a506d3b5ccf978bebbc1d001c524f771b1461f3cff9b",
+        "source_kind": "conductor_pre_gate_record"
+      },
+      "passed": true,
+      "path": "results/experiment_7404_v649_live_memory.json",
+      "upstream": "exp7404-live-memory"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "blocked",
+        "flag": false,
+        "hash": "sha256:b5eb09e4d133a51a418734558a3890e3691e6afb7f67e05383db9c00874875f8",
+        "source_kind": "declared_artifact"
+      },
+      "passed": true,
+      "path": "results/experiment_7405_v649_proof_audit.json",
+      "upstream": "exp7405-proof-audit"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "disqualified",
+        "flag": true,
+        "hash": "sha256:0984ba31ec60ad6c1a1fd395e0bbe7d88a804a609f0eac1801220889222f2b42",
+        "source_kind": "declared_artifact"
+      },
+      "passed": true,
+      "path": "results/experiment_7406_v649_arc_generalization.json",
+      "upstream": "exp7406-arc-generalization"
+    },
+    {
+      "check": "disposition_source_authenticated",
+      "expected": "authenticated artifact or exact conductor disposition",
+      "field": "path/hash/class/flag/source_kind",
+      "observed": {
+        "class": "positive",
+        "flag": false,
+        "hash": "sha256:bed7441f73378035f7eac5f82194550f83d20f2f4cf000b8d3bddd5f12a68d1e",
+        "source_kind": "declared_artifact"
+      },
+      "passed": true,
+      "path": "results/experiment_7407_v649_service_cost.json",
+      "upstream": "exp7407-service-cost"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "random_seed": {
+    "capstone": 740820260919,
+    "inherited_online_resampling": 7397001,
+    "inherited_service_cost": 7407307,
+    "inherited_static_resampling": 7385648,
+    "inherited_synthetic_memory": 7403649
+  },
+  "repository_health": {
+    "affects_required_checks": false,
+    "as_of": "20260919",
+    "historical_failures": [],
+    "status": "historical_observations_retained"
+  },
+  "reproducibility_checksum": "sha256:ea7dce4937ecbd8d3b631fb8fdb7e04f1f5d70111faefe46c90cb006966e78bd",
+  "required_checks_passed": true,
+  "research_conductor_changed": false,
+  "retirement_manifest_enforced": true,
+  "retirement_rows": [
+    {
+      "current_verdict": "complete_null_receipt_protocol_and_assignment_reducer_qualified",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Repair the evidenced missing changed-module coverage paths and string substrate boundary; test the unchanged authenticity readers before any new Qwen call.",
+      "previous_verdict": "complete_disqualified_reducer_or_validation_defect",
+      "prior_experiment_id": "exp7383-canary-reducer",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7395-receipt-protocol"
+    },
+    {
+      "current_verdict": "complete_null_receipt_protocol_and_assignment_reducer_qualified",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Exact table agreement already passed; reuse the parser and qualify current-only methodology rather than create another full contract launcher.",
+      "previous_verdict": "complete_disqualified_v648_contract_or_validation_defect",
+      "prior_experiment_id": "exp7381-contract",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7395-receipt-protocol"
+    },
+    {
+      "current_verdict": "complete_null_static_audit_confirms_registered_no_value",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Remove the unrelated online prerequisite: audit the clean Exp7385 static receipt independently and preserve Exp7386 as disqualified diagnosis only.",
+      "previous_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp7387-decision-audit",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7396-decision-diagnosis"
+    },
+    {
+      "current_verdict": "complete_null_static_audit_confirms_registered_no_value",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "No repeated fit or architecture sweep: independently explain the registered null using fixed checkpoints, collision counts and policy behavior.",
+      "previous_verdict": "complete_null_calibrated_decision_head_no_registered_value",
+      "prior_experiment_id": "exp7385-decision-training",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7396-decision-diagnosis"
+    },
+    {
+      "current_verdict": "blocked_missing_declared_artifact_after_conductor_completion",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Replace full-head streaming updates with a frozen representation plus a bounded affine energy adapter, and derive required checks from the scoped plan without the appended broad suite.",
+      "previous_verdict": "complete_disqualified_required_validation_or_safety_failure",
+      "prior_experiment_id": "exp7386-online-decisions",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7397-delayed-adapter"
+    },
+    {
+      "current_verdict": "complete_null_arc_checkpoint_ready_no_live_efficacy_claim",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "The timeout cause is known and fixed in prototype; this attempt isolates scripted/historical evidence from current counters and attacks durable per-episode restart through unchanged readers.",
+      "previous_verdict": "complete_disqualified_required_evidence",
+      "prior_experiment_id": "exp7384-arc-invocation-boundary",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7398-arc-checkpoint"
+    },
+    {
+      "current_verdict": "blocked_missing_declared_artifact_after_conductor_completion",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Run the new two-scalar bounded adapter only after its independently sealed protocol passes; separate actual affected checks from historical broad-suite health and preserve prior disqualification.",
+      "previous_verdict": "complete_disqualified_required_validation_or_safety_failure",
+      "prior_experiment_id": "exp7386-online-decisions",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7399-online-trial"
+    },
+    {
+      "current_verdict": "complete_circular_positive_assignment_transport_ready_4_of_4",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Its pre-gate failed on Exp7383 coverage/receipt defects; split a fresh four-call canary after Exp7395 qualification before paying for the frozen panel.",
+      "previous_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp7388-proposal-capture",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7400-assignment-canary"
+    },
+    {
+      "current_verdict": "complete_circular_positive_assignment_transport_ready_4_of_4",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Correct >= acceptance, closed host venue and oracle classification through the qualified reducer; four new calls cannot launder the old disqualified receipt.",
+      "previous_verdict": "complete_disqualified_internal_artifact_validation_failed",
+      "prior_experiment_id": "exp7372-qwen-canary",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7400-assignment-canary"
+    },
+    {
+      "current_verdict": "blocked_missing_unchanged_online_producer_inputs",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Audit an attempted producer without making its success a dispatch prerequisite; failure diagnosis is terminal and cannot promote disqualified evidence.",
+      "previous_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp7387-decision-audit",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7401-online-audit"
+    },
+    {
+      "current_verdict": "blocked_one_owned_rtx3090_slot",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Execute the original panel only after a new independently qualified four-call canary; repaired producer receipts and coverage are established before this stage.",
+      "previous_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp7388-proposal-capture",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7402-proposal-capture"
+    },
+    {
+      "current_verdict": "blocked_one_owned_rtx3090_slot",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "The original canary receipt was disqualified; use current qualified evidence rather than require the retired old task.",
+      "previous_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp7373-proposal-capture",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7402-proposal-capture"
+    },
+    {
+      "current_verdict": "complete_circular_positive_source_certified_synthetic_memory_value",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Split the independent deterministic cohort from missing Qwen transport; unchanged registered synthetic protocol now runs without a retired LLM dependency.",
+      "previous_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp7389-proof-learning",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7403-synthetic-memory"
+    },
+    {
+      "current_verdict": "complete_circular_positive_source_certified_synthetic_memory_value",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Keep the original science and exact controls, but remove the unnecessary live-capture prerequisite from the synthetic cohort.",
+      "previous_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp7374-prospective-memory",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7403-synthetic-memory"
+    },
+    {
+      "current_verdict": "blocked_gate_check_failed",
+      "decision": "retire-unchanged-mechanism",
+      "manifest_receipt_present": true,
+      "mechanism_change": "The deterministic runner is independently available and safety-qualified; only this actual model-dependent cohort waits for new eligible proposals.",
+      "previous_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp7389-proof-learning",
+      "reason": "The complete verdict string repeated under an active retirement condition.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": true,
+      "task_id": "exp7404-live-memory"
+    },
+    {
+      "current_verdict": "blocked_live_cohort_unavailable_synthetic_circular_value_retained",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Replace the whole-study pre-gate with separate cohort accounting; audit current eligible synthetic rows even if fresh-model evidence is unavailable.",
+      "previous_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp7390-proof-audit",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7405-proof-audit"
+    },
+    {
+      "current_verdict": "blocked_live_cohort_unavailable_synthetic_circular_value_retained",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Use new current cohort evidence and preserve absent evidence as terminal blocked, not repeated partial.",
+      "previous_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp7375-memory-audit",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7405-proof-audit"
+    },
+    {
+      "current_verdict": "complete_disqualified_required_evidence",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Run only after Exp7398 qualifies the known durable-checkpoint and current-provenance repairs; preserve the original bounded panel and stop honestly at the first unresolved boundary.",
+      "previous_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp7391-arc-generalization",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7406-arc-generalization"
+    },
+    {
+      "current_verdict": "complete_disqualified_required_evidence",
+      "decision": "retire-unchanged-mechanism",
+      "manifest_receipt_present": true,
+      "mechanism_change": "Parent timeout lost completed episodes; durable per-episode recovery now precedes the bounded current panel, with raw current invocation evidence.",
+      "previous_verdict": "complete_disqualified_required_evidence",
+      "prior_experiment_id": "exp7376-arc-outcomes",
+      "reason": "The complete verdict string repeated under an active retirement condition.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": true,
+      "task_id": "exp7406-arc-generalization"
+    },
+    {
+      "current_verdict": "complete_positive_vectorized_full_service_benefit",
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Measure the missing complete CPU service boundary using the clean fixed checkpoint; keep the unchanged physical block as a compact board row instead of another bring-up or large launcher.",
+      "previous_verdict": "blocked_changed_physical_state: no operator-authored dated GateMate cable, port, board, power, JTAG, or DirtyJTAG change exists after Exp6559; three board dispositions are complete and incomplete stage costs create no speed claim",
+      "prior_experiment_id": "exp7393-hardware-placement",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7407-service-cost"
+    },
+    {
+      "current_verdict": null,
+      "decision": "continue-with-measured-cause",
+      "manifest_receipt_present": false,
+      "mechanism_change": "Synthetic science and static/online audits are no longer globally coupled to model capture; reconcile each branch without requiring promotion or relabeling unavailable work partial.",
+      "previous_verdict": "complete_disqualified_required_science_or_validation_failure: all fourteen V648 tasks are accounted for; the online producer failed required validation and safety, while its audit and proof-memory measurement plus audit were pre-gated",
+      "prior_experiment_id": "exp7394-capstone",
+      "reason": "The exact verdict did not repeat; absence and similar wording do not retire a mechanism.",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7408-capstone"
+    }
+  ],
+  "rows": [
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7395_v649_receipt_protocol.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7395_v649_receipt_protocol.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_receipt_protocol_and_assignment_reducer_qualified",
+      "missing_checks": [],
+      "numeric_experiment_id": 7395,
+      "order": 1,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "null"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:2887bcba5a3e0161d30919a862dbd02831bbf486d85fe782fa12f8e14c7a8638",
+      "status": "complete_null_receipt_protocol_and_assignment_reducer_qualified",
+      "task_id": "exp7395-receipt-protocol",
+      "title": "Qualify current-work receipts and the assignment reducer",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7396_v649_decision_diagnosis.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7396_v649_decision_diagnosis.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_static_audit_confirms_registered_no_value",
+      "missing_checks": [],
+      "numeric_experiment_id": 7396,
+      "order": 2,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "null"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:03c8ed4df34fdbbfaf86b8ad9bd9dcddd29348b60309561a32ac53499ffb55f4",
+      "status": "complete_decision_diagnosis_null",
+      "task_id": "exp7396-decision-diagnosis",
+      "title": "Independently explain the frozen calibrated-decision null",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": null,
+      "authenticated": true,
+      "available": false,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7397_v649_delayed_adapter.json",
+      "failed_checks": [
+        {
+          "check": "declared_artifact_bytes",
+          "expected": "readable_nonempty_bytes",
+          "field": "bytes",
+          "observed": null,
+          "passed": false,
+          "path": "results/experiment_7397_v649_delayed_adapter.json",
+          "upstream": "exp7397-delayed-adapter"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_missing_declared_artifact_after_conductor_completion",
+      "missing_checks": [
+        "declared_artifact_bytes"
+      ],
+      "numeric_experiment_id": 7397,
+      "order": 3,
+      "preserved_evidence": {
+        "conductor_record_count": 1,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "blocked"
+      },
+      "required_validation_passed": null,
+      "source_kind": "conductor_completion_without_artifact",
+      "source_sha256": "sha256:3e9cb0602e2a272ecf1088d0e457e0f507024827f59de021e75604b5047306ca",
+      "status": "blocked",
+      "task_id": "exp7397-delayed-adapter",
+      "title": "Prototype a bounded energy-offset learner with delayed feedback",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7398_v649_arc_checkpoint.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7398_v649_arc_checkpoint.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_arc_checkpoint_ready_no_live_efficacy_claim",
+      "missing_checks": [],
+      "numeric_experiment_id": 7398,
+      "order": 4,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "null"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:bf46c2b3cff33d1a81eb3ffb4907a0d52c2fb8644fee70162e58ae6735716ad7",
+      "status": "complete_null_arc_checkpoint_ready_no_live_efficacy_claim",
+      "task_id": "exp7398-arc-checkpoint",
+      "title": "Qualify durable ARC episodes across timeout and restart",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": null,
+      "authenticated": true,
+      "available": false,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7399_v649_online_trial.json",
+      "failed_checks": [
+        {
+          "check": "declared_artifact_bytes",
+          "expected": "readable_nonempty_bytes",
+          "field": "bytes",
+          "observed": null,
+          "passed": false,
+          "path": "results/experiment_7399_v649_online_trial.json",
+          "upstream": "exp7399-online-trial"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_missing_declared_artifact_after_conductor_completion",
+      "missing_checks": [
+        "declared_artifact_bytes"
+      ],
+      "numeric_experiment_id": 7399,
+      "order": 5,
+      "preserved_evidence": {
+        "conductor_record_count": 1,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "blocked"
+      },
+      "required_validation_passed": null,
+      "source_kind": "conductor_completion_without_artifact",
+      "source_sha256": "sha256:dc17ed8b859612eccfcc84050160115c472ef8ffc2c6e5d68956d4d2f6d68c9d",
+      "status": "blocked",
+      "task_id": "exp7399-online-trial",
+      "title": "Measure continuous affine calibration on later verified outcomes",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7400_v649_assignment_canary.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7400_v649_assignment_canary.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_circular_positive_assignment_transport_ready_4_of_4",
+      "missing_checks": [],
+      "numeric_experiment_id": 7400,
+      "order": 6,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "circular_positive"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:ab4604e692aaedfe1afed4764b61ad324fc81901bc5aafd6378b76b918460c62",
+      "status": "complete_assignment_transport_ready",
+      "task_id": "exp7400-assignment-canary",
+      "title": "Requalify bounded Qwen3.8 assignment transport",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7401_v649_online_audit.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7401_v649_online_audit.json",
+      "failed_checks": [
+        {
+          "artifact_field": "bytes",
+          "check": "source_bytes:results/experiment_7397_v649_delayed_adapter.json",
+          "expected": "readable_nonempty_bytes",
+          "observed": null,
+          "operator": "==",
+          "passed": false,
+          "upstream": "results/experiment_7397_v649_delayed_adapter.json"
+        },
+        {
+          "artifact_field": "bytes",
+          "check": "source_bytes:results/experiment_7399_v649_online_trial.json",
+          "expected": "readable_nonempty_bytes",
+          "observed": null,
+          "operator": "==",
+          "passed": false,
+          "upstream": "results/experiment_7399_v649_online_trial.json"
+        }
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_missing_unchanged_online_producer_inputs",
+      "missing_checks": [],
+      "numeric_experiment_id": 7401,
+      "order": 7,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": true,
+        "original_verdict_class": "blocked"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:5e33f67f3d1f75202f76a203b14c0d8fdbf2a2b70fec945914e7c65e98cae148",
+      "status": "terminal_blocked_missing_online_producer_inputs",
+      "task_id": "exp7401-online-audit",
+      "title": "Independently audit online learning and its failed controls",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7402_v649_proposal_capture.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7402_v649_proposal_capture.json",
+      "failed_checks": [
+        "one_owned_rtx3090_slot"
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_one_owned_rtx3090_slot",
+      "missing_checks": [],
+      "numeric_experiment_id": 7402,
+      "order": 8,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "blocked"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:02604a41e4dd2d07aecd1d2e2b73091f5cb577b5bf59143b2f89663435fe0209",
+      "status": "blocked_precondition_failed",
+      "task_id": "exp7402-proposal-capture",
+      "title": "Capture the sealed Qwen3.8 implication-query panel",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7403_v649_synthetic_memory.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7403_v649_synthetic_memory.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_circular_positive_source_certified_synthetic_memory_value",
+      "missing_checks": [],
+      "numeric_experiment_id": 7403,
+      "order": 9,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "circular_positive"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:7985849e93927d7fecaca23eac0cb185578b70e7b6f8a2d90777bc62eacd92b6",
+      "status": "complete_source_certified_synthetic_memory_value",
+      "task_id": "exp7403-synthetic-memory",
+      "title": "Measure certified memory independently on sealed synthetic streams",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": null,
+      "authenticated": true,
+      "available": false,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7404_v649_live_memory.json",
+      "failed_checks": [
+        {
+          "check": "structured_gate:exp7402-proposal-capture.candidate_capture_complete_score",
+          "expected": 1,
+          "field": "candidate_capture_complete_score",
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "path": "results/experiment_7402_v649_proposal_capture.json",
+          "upstream": "exp7402-proposal-capture"
+        },
+        {
+          "check": "structured_gate:exp7402-proposal-capture.verdict_class",
+          "expected": [
+            "positive",
+            "circular_positive",
+            "null"
+          ],
+          "field": "verdict_class",
+          "observed": "blocked",
+          "operator": "in",
+          "passed": false,
+          "path": "results/experiment_7402_v649_proposal_capture.json",
+          "upstream": "exp7402-proposal-capture"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "missing_checks": [
+        "declared_artifact_bytes"
+      ],
+      "numeric_experiment_id": 7404,
+      "order": 10,
+      "preserved_evidence": {
+        "conductor_record_count": 3,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "blocked"
+      },
+      "required_validation_passed": null,
+      "source_kind": "conductor_pre_gate_record",
+      "source_sha256": "sha256:e3fc47b46c735de8fa03a506d3b5ccf978bebbc1d001c524f771b1461f3cff9b",
+      "status": "blocked",
+      "task_id": "exp7404-live-memory",
+      "title": "Measure certified memory on fresh bounded model proposals",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7405_v649_proof_audit.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7405_v649_proof_audit.json",
+      "failed_checks": [
+        {
+          "category": "completion",
+          "check": "live_cohort_available",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "terminal_blocking": false
+        },
+        {
+          "category": "efficacy",
+          "check": "combined_live_plus_synthetic_value",
+          "expected": 1,
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "terminal_blocking": false
+        },
+        {
+          "check": "live_cohort_eligibility",
+          "expected": "eligible_complete_live_proof_rows",
+          "field": "honest_verdict",
+          "observed": "blocked_gate_check_failed",
+          "path": "results/experiment_7404_live_memory.json",
+          "upstream": "results/experiment_7404_live_memory.json"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_live_cohort_unavailable_synthetic_circular_value_retained",
+      "missing_checks": [],
+      "numeric_experiment_id": 7405,
+      "order": 11,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "blocked"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:b5eb09e4d133a51a418734558a3890e3691e6afb7f67e05383db9c00874875f8",
+      "status": "blocked_live_cohort_unavailable_synthetic_audit_retained",
+      "task_id": "exp7405-proof-audit",
+      "title": "Audit synthetic and live proof claims independently",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7406_v649_arc_generalization.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7406_v649_arc_generalization.json",
+      "failed_checks": [
+        {
+          "artifact_field": "arc_generalization_capture_complete_score",
+          "category": "completion",
+          "check": "durable_panel_accounting",
+          "expected": 1,
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "upstream": "results/raw/experiment_7406_v649_arc_generalization/independent_reduction_input.json"
+        },
+        {
+          "artifact_field": "independent/adversarial/strict",
+          "category": "safety",
+          "check": "terminal_readers",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "upstream": "validation_receipts"
+        }
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_disqualified_required_evidence",
+      "missing_checks": [],
+      "numeric_experiment_id": 7406,
+      "order": 12,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": true,
+        "original_verdict_class": "disqualified"
+      },
+      "required_validation_passed": false,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:0984ba31ec60ad6c1a1fd395e0bbe7d88a804a609f0eac1801220889222f2b42",
+      "status": "complete_disqualified_required_evidence",
+      "task_id": "exp7406-arc-generalization",
+      "title": "Measure adapter-withheld ARC with durable episode evidence",
+      "verdict_class": "disqualified"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7407_v649_service_cost.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7407_v649_service_cost.json",
+      "failed_checks": [
+        {
+          "category": "external_prerequisite",
+          "check": "gatemate_changed_physical_state_receipt",
+          "expected": {
+            "changed_field_any_of": [
+              "cable",
+              "port",
+              "power",
+              "board",
+              "jtag",
+              "dirtyjtag"
+            ],
+            "operator_authored": true,
+            "provenance": [
+              "ops/known-issues.md",
+              "research-hardware-wishlist.md",
+              "ops/hardware-bringup-prep.md",
+              "ops/operator-followup.md"
+            ],
+            "receipt_date": ">20260823"
+          },
+          "observed": {
+            "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+            "accepted_receipt_count": 0,
+            "selected_source_path": null
+          },
+          "operator": "==",
+          "passed": false
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_positive_vectorized_full_service_benefit",
+      "missing_checks": [],
+      "numeric_experiment_id": 7407,
+      "order": 13,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "positive"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:bed7441f73378035f7eac5f82194550f83d20f2f4cf000b8d3bddd5f12a68d1e",
+      "status": "complete",
+      "task_id": "exp7407-service-cost",
+      "title": "Measure selector service cost and preserve board prerequisites",
+      "verdict_class": "positive"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7408_v649_capstone.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7408_v649_capstone.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_disqualified_required_science: all fourteen V649 tasks are accounted for; current ARC evidence is disqualified, online and live evidence is unavailable, and the static null, synthetic proof, proof audit, and host cost retain independent scope",
+      "missing_checks": [],
+      "numeric_experiment_id": 7408,
+      "order": 14,
+      "preserved_evidence": {
+        "prior_terminal_result_manufactured": false,
+        "source": "actual current capstone checks"
+      },
+      "required_validation_passed": true,
+      "source_kind": "self_current_checks",
+      "source_sha256": null,
+      "status": "complete_disqualified_v649_capstone",
+      "task_id": "exp7408-capstone",
+      "title": "Reconcile fourteen dispositions and set evidence-based continuation",
+      "verdict_class": "disqualified"
+    }
+  ],
+  "run_date": "20260919",
+  "sample_size_budget": {
+    "disposition_units": {
+      "attempted": 14,
+      "censored": 0,
+      "completed": 14,
+      "planned": 14,
+      "unstarted": 0
+    },
+    "effective_independent_group_count": 7,
+    "limits": {
+      "contract_authorities": 2,
+      "current_board_operations": 0,
+      "current_llm_calls": 0
+    },
+    "predecessor_source_units": {
+      "artifact_present": 10,
+      "attempted": 13,
+      "conductor_only": 3,
+      "planned": 13,
+      "unaccounted": 0
+    },
+    "stop_rule": "Read each declared path once, authenticate exact conductor-only dispositions, reduce seven branches, and stop after fourteen honest rows."
+  },
+  "schema": "carnot.experiment_7408.v649_capstone.v1",
+  "scientific_value_score": 0,
+  "scope_reduction_compliance": {
+    "arc_floor": "Exp7398 qualified durable checkpoints; Exp7406 current science is disqualified",
+    "calibrated_decision_floor": "Exp7396 completed the static audit; online producer evidence is unavailable",
+    "continuous_self_learning_floor": "Exp7403 completed synthetic memory; live and online claims remain unavailable",
+    "deferred_mechanisms": [
+      "ORCA hidden-state meta-learning and theorem transfer",
+      "CORD multiclass repair construction",
+      "post-hoc selection by exact-solver effort",
+      "new projection, KAN, decoding, or physical-learning branches",
+      "board acceleration without measured local board service"
+    ],
+    "future_task_executed_early": false,
+    "generator_weights_changed": false,
+    "hardware_floor": "Exp7407 measured host service cost and preserved three independent board states",
+    "north_star_publication_gates_changed": false,
+    "overdue_priorities": "accounted by the active fourteen-task V649 roster",
+    "production_defaults_changed": false
+  },
+  "small_ebm_training": {
+    "counted_as_current_llm_work": false,
+    "historical_producer_tasks": [
+      "exp7396-decision-diagnosis",
+      "exp7397-delayed-adapter",
+      "exp7399-online-trial"
+    ],
+    "performed_by_current_capstone": false
+  },
+  "source_artifact_hashes": {
+    "active_roadmap": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:680dcaed02b0816ebb1d6c769e2127495f4f05e5b3eb744ce423eefe80a8e894",
+      "source_kind": "authority"
+    },
+    "authority:AGENTS.md": {
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "source_kind": "authority"
+    },
+    "authority:CLAUDE.md": {
+      "path": "CLAUDE.md",
+      "sha256": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b",
+      "source_kind": "authority"
+    },
+    "authority:CODEX.md": {
+      "path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_kind": "authority"
+    },
+    "authority:openspec/capabilities/research-reporting/spec.md": {
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:4cf4f1e0f4c7b1d03c30bf3db115bc51f6bc7733df6e91477258f26bd78c9b54",
+      "source_kind": "authority"
+    },
+    "authority:openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:7d09eeae8e4b5e74e48d22ed85427a570b134692857d7dbca041edcf1acd4e6b",
+      "source_kind": "authority"
+    },
+    "authority:ops/conductor-log.md": {
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:28b63e530354b59ccfb1ff73259c9b090d412e4774fa969c076dfe71836a32a8",
+      "source_kind": "authority"
+    },
+    "authority:ops/e2e-test-plan.md": {
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+      "source_kind": "authority"
+    },
+    "authority:ops/exclusion_manifest.yaml": {
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:fdab7b9ef47aa3f8be8902e30d96cd096f361d1abbe7c6de7624101383bf968e",
+      "source_kind": "authority"
+    },
+    "authority:ops/north-star.md": {
+      "path": "ops/north-star.md",
+      "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+      "source_kind": "authority"
+    },
+    "authority:ops/verifier_gaps.md": {
+      "path": "ops/verifier_gaps.md",
+      "sha256": "sha256:0fcc06f2e403cae76f23a57aa4920d18c280e61b127a917e1f174229c5005324",
+      "source_kind": "authority"
+    },
+    "authority:python/carnot/experiment_7358_v646_validation_contract.py": {
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+      "source_kind": "authority"
+    },
+    "authority:python/carnot/experiment_7408_v649_capstone.py": {
+      "path": "python/carnot/experiment_7408_v649_capstone.py",
+      "sha256": "sha256:f8d15742083672fc5fed095bbd95b869660680acbf2b639902c7230d7a161e1c",
+      "source_kind": "authority"
+    },
+    "authority:python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+      "source_kind": "authority"
+    },
+    "authority:research-complete.yaml": {
+      "path": "research-complete.yaml",
+      "sha256": "sha256:19b430b484a976a84bd79d0816fc813599579ee3a1516c7a20dae95b1e5b96ae",
+      "source_kind": "authority"
+    },
+    "authority:research-program.md": {
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "source_kind": "authority"
+    },
+    "authority:research-references.md": {
+      "path": "research-references.md",
+      "sha256": "sha256:e1abb68b8b759cf26667b05f945ad933234debaec20f1738e17747a840bf66c7",
+      "source_kind": "authority"
+    },
+    "authority:research-roadmap-next.yaml": {
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "source_kind": "expected_absent_staged_authority"
+    },
+    "authority:research-roadmap.yaml": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:680dcaed02b0816ebb1d6c769e2127495f4f05e5b3eb744ce423eefe80a8e894",
+      "source_kind": "authority"
+    },
+    "authority:research-studying.md": {
+      "path": "research-studying.md",
+      "sha256": "sha256:0c690584b11c7227d8b344f11c6d3024343a52b1509af36c2cf9600f61064564",
+      "source_kind": "authority"
+    },
+    "authority:results/experiment_7394_v648_capstone.json": {
+      "path": "results/experiment_7394_v648_capstone.json",
+      "sha256": "sha256:6b00d11323793dafff01de5c5db4fa0dbb07bc4efe1dfdea09d6e457d610fcd8",
+      "source_kind": "authority"
+    },
+    "authority:scripts/experiment_template.py": {
+      "path": "scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+      "source_kind": "authority"
+    },
+    "authority:scripts/experiments/experiment_7408_v649_capstone.py": {
+      "path": "scripts/experiments/experiment_7408_v649_capstone.py",
+      "sha256": "sha256:b47b0a480384cbecbdf6a54a56227261c158d209294f5535af5410614874582b",
+      "source_kind": "authority"
+    },
+    "authority:tests/python/test_experiment_7408_v649_capstone.py": {
+      "path": "tests/python/test_experiment_7408_v649_capstone.py",
+      "sha256": "sha256:523aa053e8f04d71a0262745e5c9f6bcfb94464990330c6d1b55c2e847847ae2",
+      "source_kind": "authority"
+    },
+    "exact_task_contract": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:7d09eeae8e4b5e74e48d22ed85427a570b134692857d7dbca041edcf1acd4e6b",
+      "source_kind": "authority"
+    },
+    "exp7395-receipt-protocol": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7395_v649_receipt_protocol.json",
+      "sha256": "sha256:2887bcba5a3e0161d30919a862dbd02831bbf486d85fe782fa12f8e14c7a8638",
+      "source_kind": "declared_artifact"
+    },
+    "exp7396-decision-diagnosis": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7396_v649_decision_diagnosis.json",
+      "sha256": "sha256:03c8ed4df34fdbbfaf86b8ad9bd9dcddd29348b60309561a32ac53499ffb55f4",
+      "source_kind": "declared_artifact"
+    },
+    "exp7397-delayed-adapter": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "blocked",
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:3e9cb0602e2a272ecf1088d0e457e0f507024827f59de021e75604b5047306ca",
+      "source_file_sha256": "sha256:28b63e530354b59ccfb1ff73259c9b090d412e4774fa969c076dfe71836a32a8",
+      "source_kind": "conductor_completion_without_artifact",
+      "source_records": [
+        "| 2026-09-18 18:51 UTC | Prototype a bounded energy-offset learner with del | OK | 96 passed, 1 warning in 9.45s |"
+      ]
+    },
+    "exp7398-arc-checkpoint": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "path": "results/experiment_7398_v649_arc_checkpoint.json",
+      "sha256": "sha256:bf46c2b3cff33d1a81eb3ffb4907a0d52c2fb8644fee70162e58ae6735716ad7",
+      "source_kind": "declared_artifact"
+    },
+    "exp7399-online-trial": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "blocked",
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:dc17ed8b859612eccfcc84050160115c472ef8ffc2c6e5d68956d4d2f6d68c9d",
+      "source_file_sha256": "sha256:28b63e530354b59ccfb1ff73259c9b090d412e4774fa969c076dfe71836a32a8",
+      "source_kind": "conductor_completion_without_artifact",
+      "source_records": [
+        "| 2026-09-18 19:45 UTC | Measure continuous affine calibration on later ver | OK | 90 passed, 1 warning in 7.93s |"
+      ]
+    },
+    "exp7400-assignment-canary": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "circular_positive",
+      "path": "results/experiment_7400_v649_assignment_canary.json",
+      "sha256": "sha256:ab4604e692aaedfe1afed4764b61ad324fc81901bc5aafd6378b76b918460c62",
+      "source_kind": "declared_artifact"
+    },
+    "exp7401-online-audit": {
+      "original_flagged_adversarial": true,
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7401_v649_online_audit.json",
+      "sha256": "sha256:5e33f67f3d1f75202f76a203b14c0d8fdbf2a2b70fec945914e7c65e98cae148",
+      "source_kind": "declared_artifact"
+    },
+    "exp7402-proposal-capture": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7402_v649_proposal_capture.json",
+      "sha256": "sha256:02604a41e4dd2d07aecd1d2e2b73091f5cb577b5bf59143b2f89663435fe0209",
+      "source_kind": "declared_artifact"
+    },
+    "exp7403-synthetic-memory": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "circular_positive",
+      "path": "results/experiment_7403_v649_synthetic_memory.json",
+      "sha256": "sha256:7985849e93927d7fecaca23eac0cb185578b70e7b6f8a2d90777bc62eacd92b6",
+      "source_kind": "declared_artifact"
+    },
+    "exp7404-live-memory": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "blocked",
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:e3fc47b46c735de8fa03a506d3b5ccf978bebbc1d001c524f771b1461f3cff9b",
+      "source_file_sha256": "sha256:28b63e530354b59ccfb1ff73259c9b090d412e4774fa969c076dfe71836a32a8",
+      "source_kind": "conductor_pre_gate_record",
+      "source_records": [
+        "| 2026-09-19 00:39 UTC | Measure certified memory on fresh bounded model pr | GATE_BLOCK | 2 of 6 gate(s) failed; first failure: exp7402-proposal-capture.candidate_capture_complete_score (actual=0 == expected=1) |",
+        "| 2026-09-19 00:41 UTC | Measure certified memory on fresh bounded model pr | GATE_BLOCK | 2 of 6 gate(s) failed; first failure: exp7402-proposal-capture.candidate_capture_complete_score (actual=0 == expected=1) |",
+        "| 2026-09-19 00:43 UTC | Measure certified memory on fresh bounded model pr | GATE_BLOCK | 2 of 6 gate(s) failed; first failure: exp7402-proposal-capture.candidate_capture_complete_score (actual=0 == expected=1) |"
+      ]
+    },
+    "exp7405-proof-audit": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7405_v649_proof_audit.json",
+      "sha256": "sha256:b5eb09e4d133a51a418734558a3890e3691e6afb7f67e05383db9c00874875f8",
+      "source_kind": "declared_artifact"
+    },
+    "exp7406-arc-generalization": {
+      "original_flagged_adversarial": true,
+      "original_verdict_class": "disqualified",
+      "path": "results/experiment_7406_v649_arc_generalization.json",
+      "sha256": "sha256:0984ba31ec60ad6c1a1fd395e0bbe7d88a804a609f0eac1801220889222f2b42",
+      "source_kind": "declared_artifact"
+    },
+    "exp7407-service-cost": {
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "positive",
+      "path": "results/experiment_7407_v649_service_cost.json",
+      "sha256": "sha256:bed7441f73378035f7eac5f82194550f83d20f2f4cf000b8d3bddd5f12a68d1e",
+      "source_kind": "declared_artifact"
+    }
+  },
+  "started_at_utc": "2026-09-19T04:08:56.730386+00:00",
+  "status": "complete_disqualified_v649_capstone",
+  "task_dispositions": [
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7395_v649_receipt_protocol.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7395_v649_receipt_protocol.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_receipt_protocol_and_assignment_reducer_qualified",
+      "missing_checks": [],
+      "numeric_experiment_id": 7395,
+      "order": 1,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "null"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:2887bcba5a3e0161d30919a862dbd02831bbf486d85fe782fa12f8e14c7a8638",
+      "status": "complete_null_receipt_protocol_and_assignment_reducer_qualified",
+      "task_id": "exp7395-receipt-protocol",
+      "title": "Qualify current-work receipts and the assignment reducer",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7396_v649_decision_diagnosis.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7396_v649_decision_diagnosis.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_static_audit_confirms_registered_no_value",
+      "missing_checks": [],
+      "numeric_experiment_id": 7396,
+      "order": 2,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "null"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:03c8ed4df34fdbbfaf86b8ad9bd9dcddd29348b60309561a32ac53499ffb55f4",
+      "status": "complete_decision_diagnosis_null",
+      "task_id": "exp7396-decision-diagnosis",
+      "title": "Independently explain the frozen calibrated-decision null",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": null,
+      "authenticated": true,
+      "available": false,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7397_v649_delayed_adapter.json",
+      "failed_checks": [
+        {
+          "check": "declared_artifact_bytes",
+          "expected": "readable_nonempty_bytes",
+          "field": "bytes",
+          "observed": null,
+          "passed": false,
+          "path": "results/experiment_7397_v649_delayed_adapter.json",
+          "upstream": "exp7397-delayed-adapter"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_missing_declared_artifact_after_conductor_completion",
+      "missing_checks": [
+        "declared_artifact_bytes"
+      ],
+      "numeric_experiment_id": 7397,
+      "order": 3,
+      "preserved_evidence": {
+        "conductor_record_count": 1,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "blocked"
+      },
+      "required_validation_passed": null,
+      "source_kind": "conductor_completion_without_artifact",
+      "source_sha256": "sha256:3e9cb0602e2a272ecf1088d0e457e0f507024827f59de021e75604b5047306ca",
+      "status": "blocked",
+      "task_id": "exp7397-delayed-adapter",
+      "title": "Prototype a bounded energy-offset learner with delayed feedback",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7398_v649_arc_checkpoint.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7398_v649_arc_checkpoint.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_arc_checkpoint_ready_no_live_efficacy_claim",
+      "missing_checks": [],
+      "numeric_experiment_id": 7398,
+      "order": 4,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "null"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:bf46c2b3cff33d1a81eb3ffb4907a0d52c2fb8644fee70162e58ae6735716ad7",
+      "status": "complete_null_arc_checkpoint_ready_no_live_efficacy_claim",
+      "task_id": "exp7398-arc-checkpoint",
+      "title": "Qualify durable ARC episodes across timeout and restart",
+      "verdict_class": "null"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": null,
+      "authenticated": true,
+      "available": false,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7399_v649_online_trial.json",
+      "failed_checks": [
+        {
+          "check": "declared_artifact_bytes",
+          "expected": "readable_nonempty_bytes",
+          "field": "bytes",
+          "observed": null,
+          "passed": false,
+          "path": "results/experiment_7399_v649_online_trial.json",
+          "upstream": "exp7399-online-trial"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_missing_declared_artifact_after_conductor_completion",
+      "missing_checks": [
+        "declared_artifact_bytes"
+      ],
+      "numeric_experiment_id": 7399,
+      "order": 5,
+      "preserved_evidence": {
+        "conductor_record_count": 1,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "blocked"
+      },
+      "required_validation_passed": null,
+      "source_kind": "conductor_completion_without_artifact",
+      "source_sha256": "sha256:dc17ed8b859612eccfcc84050160115c472ef8ffc2c6e5d68956d4d2f6d68c9d",
+      "status": "blocked",
+      "task_id": "exp7399-online-trial",
+      "title": "Measure continuous affine calibration on later verified outcomes",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7400_v649_assignment_canary.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7400_v649_assignment_canary.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_circular_positive_assignment_transport_ready_4_of_4",
+      "missing_checks": [],
+      "numeric_experiment_id": 7400,
+      "order": 6,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "circular_positive"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:ab4604e692aaedfe1afed4764b61ad324fc81901bc5aafd6378b76b918460c62",
+      "status": "complete_assignment_transport_ready",
+      "task_id": "exp7400-assignment-canary",
+      "title": "Requalify bounded Qwen3.8 assignment transport",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7401_v649_online_audit.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7401_v649_online_audit.json",
+      "failed_checks": [
+        {
+          "artifact_field": "bytes",
+          "check": "source_bytes:results/experiment_7397_v649_delayed_adapter.json",
+          "expected": "readable_nonempty_bytes",
+          "observed": null,
+          "operator": "==",
+          "passed": false,
+          "upstream": "results/experiment_7397_v649_delayed_adapter.json"
+        },
+        {
+          "artifact_field": "bytes",
+          "check": "source_bytes:results/experiment_7399_v649_online_trial.json",
+          "expected": "readable_nonempty_bytes",
+          "observed": null,
+          "operator": "==",
+          "passed": false,
+          "upstream": "results/experiment_7399_v649_online_trial.json"
+        }
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_missing_unchanged_online_producer_inputs",
+      "missing_checks": [],
+      "numeric_experiment_id": 7401,
+      "order": 7,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": true,
+        "original_verdict_class": "blocked"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:5e33f67f3d1f75202f76a203b14c0d8fdbf2a2b70fec945914e7c65e98cae148",
+      "status": "terminal_blocked_missing_online_producer_inputs",
+      "task_id": "exp7401-online-audit",
+      "title": "Independently audit online learning and its failed controls",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7402_v649_proposal_capture.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7402_v649_proposal_capture.json",
+      "failed_checks": [
+        "one_owned_rtx3090_slot"
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_one_owned_rtx3090_slot",
+      "missing_checks": [],
+      "numeric_experiment_id": 7402,
+      "order": 8,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "blocked"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:02604a41e4dd2d07aecd1d2e2b73091f5cb577b5bf59143b2f89663435fe0209",
+      "status": "blocked_precondition_failed",
+      "task_id": "exp7402-proposal-capture",
+      "title": "Capture the sealed Qwen3.8 implication-query panel",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7403_v649_synthetic_memory.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7403_v649_synthetic_memory.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_circular_positive_source_certified_synthetic_memory_value",
+      "missing_checks": [],
+      "numeric_experiment_id": 7403,
+      "order": 9,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "circular_positive"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:7985849e93927d7fecaca23eac0cb185578b70e7b6f8a2d90777bc62eacd92b6",
+      "status": "complete_source_certified_synthetic_memory_value",
+      "task_id": "exp7403-synthetic-memory",
+      "title": "Measure certified memory independently on sealed synthetic streams",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": null,
+      "authenticated": true,
+      "available": false,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7404_v649_live_memory.json",
+      "failed_checks": [
+        {
+          "check": "structured_gate:exp7402-proposal-capture.candidate_capture_complete_score",
+          "expected": 1,
+          "field": "candidate_capture_complete_score",
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "path": "results/experiment_7402_v649_proposal_capture.json",
+          "upstream": "exp7402-proposal-capture"
+        },
+        {
+          "check": "structured_gate:exp7402-proposal-capture.verdict_class",
+          "expected": [
+            "positive",
+            "circular_positive",
+            "null"
+          ],
+          "field": "verdict_class",
+          "observed": "blocked",
+          "operator": "in",
+          "passed": false,
+          "path": "results/experiment_7402_v649_proposal_capture.json",
+          "upstream": "exp7402-proposal-capture"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "missing_checks": [
+        "declared_artifact_bytes"
+      ],
+      "numeric_experiment_id": 7404,
+      "order": 10,
+      "preserved_evidence": {
+        "conductor_record_count": 3,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "blocked"
+      },
+      "required_validation_passed": null,
+      "source_kind": "conductor_pre_gate_record",
+      "source_sha256": "sha256:e3fc47b46c735de8fa03a506d3b5ccf978bebbc1d001c524f771b1461f3cff9b",
+      "status": "blocked",
+      "task_id": "exp7404-live-memory",
+      "title": "Measure certified memory on fresh bounded model proposals",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7405_v649_proof_audit.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7405_v649_proof_audit.json",
+      "failed_checks": [
+        {
+          "category": "completion",
+          "check": "live_cohort_available",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "terminal_blocking": false
+        },
+        {
+          "category": "efficacy",
+          "check": "combined_live_plus_synthetic_value",
+          "expected": 1,
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "terminal_blocking": false
+        },
+        {
+          "check": "live_cohort_eligibility",
+          "expected": "eligible_complete_live_proof_rows",
+          "field": "honest_verdict",
+          "observed": "blocked_gate_check_failed",
+          "path": "results/experiment_7404_live_memory.json",
+          "upstream": "results/experiment_7404_live_memory.json"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_live_cohort_unavailable_synthetic_circular_value_retained",
+      "missing_checks": [],
+      "numeric_experiment_id": 7405,
+      "order": 11,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "blocked"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:b5eb09e4d133a51a418734558a3890e3691e6afb7f67e05383db9c00874875f8",
+      "status": "blocked_live_cohort_unavailable_synthetic_audit_retained",
+      "task_id": "exp7405-proof-audit",
+      "title": "Audit synthetic and live proof claims independently",
+      "verdict_class": "blocked"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7406_v649_arc_generalization.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7406_v649_arc_generalization.json",
+      "failed_checks": [
+        {
+          "artifact_field": "arc_generalization_capture_complete_score",
+          "category": "completion",
+          "check": "durable_panel_accounting",
+          "expected": 1,
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "upstream": "results/raw/experiment_7406_v649_arc_generalization/independent_reduction_input.json"
+        },
+        {
+          "artifact_field": "independent/adversarial/strict",
+          "category": "safety",
+          "check": "terminal_readers",
+          "expected": true,
+          "observed": false,
+          "operator": "==",
+          "passed": false,
+          "upstream": "validation_receipts"
+        }
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_disqualified_required_evidence",
+      "missing_checks": [],
+      "numeric_experiment_id": 7406,
+      "order": 12,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": true,
+        "original_verdict_class": "disqualified"
+      },
+      "required_validation_passed": false,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:0984ba31ec60ad6c1a1fd395e0bbe7d88a804a609f0eac1801220889222f2b42",
+      "status": "complete_disqualified_required_evidence",
+      "task_id": "exp7406-arc-generalization",
+      "title": "Measure adapter-withheld ARC with durable episode evidence",
+      "verdict_class": "disqualified"
+    },
+    {
+      "accepted_for_science": true,
+      "actual_path": "results/experiment_7407_v649_service_cost.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7407_v649_service_cost.json",
+      "failed_checks": [
+        {
+          "category": "external_prerequisite",
+          "check": "gatemate_changed_physical_state_receipt",
+          "expected": {
+            "changed_field_any_of": [
+              "cable",
+              "port",
+              "power",
+              "board",
+              "jtag",
+              "dirtyjtag"
+            ],
+            "operator_authored": true,
+            "provenance": [
+              "ops/known-issues.md",
+              "research-hardware-wishlist.md",
+              "ops/hardware-bringup-prep.md",
+              "ops/operator-followup.md"
+            ],
+            "receipt_date": ">20260823"
+          },
+          "observed": {
+            "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+            "accepted_receipt_count": 0,
+            "selected_source_path": null
+          },
+          "operator": "==",
+          "passed": false
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_positive_vectorized_full_service_benefit",
+      "missing_checks": [],
+      "numeric_experiment_id": 7407,
+      "order": 13,
+      "preserved_evidence": {
+        "conductor_record_count": 0,
+        "original_flagged_adversarial": false,
+        "original_verdict_class": "positive"
+      },
+      "required_validation_passed": true,
+      "source_kind": "declared_artifact",
+      "source_sha256": "sha256:bed7441f73378035f7eac5f82194550f83d20f2f4cf000b8d3bddd5f12a68d1e",
+      "status": "complete",
+      "task_id": "exp7407-service-cost",
+      "title": "Measure selector service cost and preserve board prerequisites",
+      "verdict_class": "positive"
+    },
+    {
+      "accepted_for_science": false,
+      "actual_path": "results/experiment_7408_v649_capstone.json",
+      "authenticated": true,
+      "available": true,
+      "censored": false,
+      "cost": {
+        "current_capstone_llm_calls": 0
+      },
+      "declared_path": "results/experiment_7408_v649_capstone.json",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_disqualified_required_science: all fourteen V649 tasks are accounted for; current ARC evidence is disqualified, online and live evidence is unavailable, and the static null, synthetic proof, proof audit, and host cost retain independent scope",
+      "missing_checks": [],
+      "numeric_experiment_id": 7408,
+      "order": 14,
+      "preserved_evidence": {
+        "prior_terminal_result_manufactured": false,
+        "source": "actual current capstone checks"
+      },
+      "required_validation_passed": true,
+      "source_kind": "self_current_checks",
+      "source_sha256": null,
+      "status": "complete_disqualified_v649_capstone",
+      "task_id": "exp7408-capstone",
+      "title": "Reconcile fourteen dispositions and set evidence-based continuation",
+      "verdict_class": "disqualified"
+    }
+  ],
+  "terminal_validation_passed": true,
+  "title": "Reconcile fourteen dispositions and set evidence-based continuation",
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7408_v649_capstone",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7408_v649_capstone"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.516573770204559,
+      "ended_at_utc": "2026-09-19T04:08:57.419354+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7408_v649_capstone/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:c2df8745d8c4f02795c0de0b5dc7874b07d7bcca4c108811750f73cf590d8f25",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7408_v649_capstone\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7408_v649_capstone.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7408_v649_capstone": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7408_v649_capstone.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T04:08:56.902192+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7408-03atud7t/basetemp/focused tests/python/test_experiment_7408_v649_capstone.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7408-03atud7t/basetemp/focused",
+        "tests/python/test_experiment_7408_v649_capstone.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 7.786361795850098,
+      "ended_at_utc": "2026-09-19T04:09:05.206200+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7408_v649_capstone/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:b557e1ab2881d4f9f5806fbccf5d998c7d12901c1669cae5160a61795d5c55c9",
+      "name": "focused_pytest",
+      "output_tail": "..........                                                               [100%]\n10 passed in 5.99s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T04:08:57.419419+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7408-03atud7t/coverage/.coverage '--include=*/experiment_7408_v649_capstone.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7408-03atud7t/basetemp/coverage tests/python/test_experiment_7408_v649_capstone.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7408-03atud7t/coverage/.coverage",
+        "--include=*/experiment_7408_v649_capstone.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7408-03atud7t/basetemp/coverage",
+        "tests/python/test_experiment_7408_v649_capstone.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 13.333970091072842,
+      "ended_at_utc": "2026-09-19T04:09:18.540588+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7408_v649_capstone/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:c5ea28f57d515a4fe718e458d5852351489f84b578f14646b9a48cba6e495e00",
+      "name": "changed_module_coverage",
+      "output_tail": "..........                                                               [100%]\n10 passed in 10.54s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-19T04:09:05.206232+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7408_v649_capstone.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7408_v649_capstone.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7408-03atud7t/coverage/.coverage"
+      },
+      "duration_s": 0.07722268998622894,
+      "ended_at_utc": "2026-09-19T04:09:18.618223+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7408_v649_capstone/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:73a143cffacc124a1e2b305cf875eac9d0ac2461b6096a4024d7a2a3990a0ee9",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                             Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------\npython/carnot/experiment_7408_v649_capstone.py     368      0   100%\n------------------------------------------------------------------------------\nTOTAL                                              368      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T04:09:18.540624+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7408_v649_capstone.py scripts/experiments/experiment_7408_v649_capstone.py tests/python/test_experiment_7408_v649_capstone.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7408_v649_capstone.py",
+        "scripts/experiments/experiment_7408_v649_capstone.py",
+        "tests/python/test_experiment_7408_v649_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.012421156046912074,
+      "ended_at_utc": "2026-09-19T04:09:18.631177+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7408_v649_capstone/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T04:09:18.618278+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7408_v649_capstone.py scripts/experiments/experiment_7408_v649_capstone.py tests/python/test_experiment_7408_v649_capstone.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7408_v649_capstone.py",
+        "scripts/experiments/experiment_7408_v649_capstone.py",
+        "tests/python/test_experiment_7408_v649_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011111687170341611,
+      "ended_at_utc": "2026-09-19T04:09:18.642696+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7408_v649_capstone/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T04:09:18.631216+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7408_v649_capstone.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7408_v649_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.09309328417293727,
+      "ended_at_utc": "2026-09-19T04:09:18.736013+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7408_v649_capstone/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T04:09:18.642711+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7408_v649_capstone.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7408_v649_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.016022959956899285,
+      "ended_at_utc": "2026-09-19T04:09:18.752422+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7408_v649_capstone/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T04:09:18.736043+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7408_v649_capstone.py --date 20260919 --validate /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7408_v649_capstone/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7408_v649_capstone.py",
+        "--date",
+        "20260919",
+        "--validate",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7408_v649_capstone/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.7264607958495617,
+      "ended_at_utc": "2026-09-19T04:09:19.539975+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7408_v649_capstone/validation/terminal/00_declared_entrypoint_cold_replay/00_declared_entrypoint_cold_replay.log",
+      "log_sha256": "sha256:9139735ec7196628b6f2c72012fc9c9bda2fd6f2d49e14daa5f15081cb865aa5",
+      "name": "declared_entrypoint_cold_replay",
+      "output_tail": "[exp7408] phase=startup event=flushed\n[exp7408] phase=cold_replay event=before elapsed_s=0.000 path=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7408_v649_capstone/measured_terminal_candidate.json\n{\"errors\": []}\n[exp7408] phase=cold_replay event=after elapsed_s=0.000 passed=True\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_capability_e2e",
+      "started_at_utc": "2026-09-19T04:09:18.812934+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7408_v649_capstone import validate_artifact;p=pathlib.Path(sys.argv[1]);v=json.loads(p.read_text());e=validate_artifact(v);print(json.dumps({'\"'\"'errors'\"'\"':e},sort_keys=True),flush=True);raise SystemExit(bool(e))' /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7408_v649_capstone/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,pathlib,sys;from carnot.experiment_7408_v649_capstone import validate_artifact;p=pathlib.Path(sys.argv[1]);v=json.loads(p.read_text());e=validate_artifact(v);print(json.dumps({'errors':e},sort_keys=True),flush=True);raise SystemExit(bool(e))",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7408_v649_capstone/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.751580738928169,
+      "ended_at_utc": "2026-09-19T04:09:20.291968+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7408_v649_capstone/validation/terminal/01_independent_cold_recompute/00_independent_cold_recompute.log",
+      "log_sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+      "name": "independent_cold_recompute",
+      "output_tail": "{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_raw_reduction",
+      "started_at_utc": "2026-09-19T04:09:19.540040+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7408_v649_capstone/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7408_v649_capstone/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5721333269029856,
+      "ended_at_utc": "2026-09-19T04:09:20.864370+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7408_v649_capstone/validation/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_safety",
+      "started_at_utc": "2026-09-19T04:09:20.291997+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7408_v649_capstone/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7408_v649_capstone/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.02532072109170258,
+      "ended_at_utc": "2026-09-19T04:09:20.890075+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7408_v649_capstone/validation/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_row_consistency",
+      "started_at_utc": "2026-09-19T04:09:20.864399+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": true
+}

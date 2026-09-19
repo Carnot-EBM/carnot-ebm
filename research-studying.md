@@ -5915,3 +5915,25 @@ This mapping copies the dated V649 planning review from
   primary arXiv/OpenReview links, and vendor context. It did not establish a
   citation census, owned Z1 hardware, or a reproducible Kona implementation.
 <!-- EXP7395-V649-SOURCE-INGESTION-20260918-END -->
+
+<!-- EXP7408-V649-EVIDENCE-SCOPE-20260919-START -->
+## 2026-09-19 V649 capstone evidence scope
+
+This capstone adds no literature search and claims no paper reproduction. It
+maps the existing V649 review only to controls that have authenticated local
+evidence.
+
+| Source | Local control and current limit |
+|---|---|
+| ORCA, arXiv:2604.01170v2 | Exp7397 and Exp7399 implemented a bounded affine energy offset, delayed feedback, and simple online controls. Their declared terminal artifacts are absent. No eligible local ORCA result, hidden-state meta-learning result, or conformal theorem transfer is available. |
+| CORD, arXiv:2609.01072v2 | Exp7396 retained fixed answer identity and counted raw, calibrated, and typed decision changes. The eligible result is a static null on a binary risk head. It is not CORD's multiclass repair construction. |
+| Solver-Hard, arXiv:2607.17047 | Exp7402 kept source size, exact-solver effort, parse outcome, and semantic outcome separate. Its panel attempted zero calls. No model-hardness or relabeling conclusion is available. |
+| Memoir, arXiv:2607.20792 | Exp7403 and Exp7405 retained separate prediction and commit phases, restart checks, erasure witnesses, and an unavailable live cohort. The synthetic result is source-certified and circular-positive. It is not a live-model benefit or a reproduction of procedural recall. |
+| V649 hardware review | Exp7407 measured complete host CPU service cost, parity, and Amdahl bounds. KV260, GateMate, and PolarFire remain separate historical or blocked board rows. No local board acceleration ran. |
+
+The static audit used one reused archive. The synthetic proof verifier defines
+truth. The online producer bytes and live cohort are unavailable. The ARC
+producer is disqualified and flagged. Host cost is valid only for the measured
+CPU service. These limits prevent aggregation from creating a positive
+headline or changing the north-star publication gates.
+<!-- EXP7408-V649-EVIDENCE-SCOPE-20260919-END -->

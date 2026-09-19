@@ -73950,3 +73950,127 @@ consistency SHALL control atomic terminal publication.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7407 and SCENARIO-REPORT-7407-* | Planned: compact host service-cost module, thin entrypoint, measured sidecars, and terminal artifact | Planned: spec-linked RED tests, exact affected checks, 100 percent changed-module coverage, entrypoint E2E, fresh-process replay, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V649 fourteen-task capstone — 2026-09-19
+
+**Status:** Specified. This host aggregation performs no model inference,
+training, board operation, external publication, or production change.
+
+### REQ-REPORT-7408: Reconcile every V649 disposition without merging claim boundaries
+
+Exp7408 SHALL select the active YAML only when its milestone is exactly
+`2026.09.649`. It SHALL retain the fourteen ordered task IDs from Exp7395
+through Exp7408. It SHALL compare their IDs, titles, paths, phases, substrate
+classes, and structured gates with the one Exact Task Contract table. A stale
+Markdown table SHALL remain an explicit advisory mismatch. It SHALL not erase
+independent evidence or invent a prior result for Exp7408.
+
+Exp7408 SHALL authenticate each declared artifact by path and byte hash before
+reading metrics. It SHALL first read the producer verdict class, adversarial
+flag, gate summary, and required validation result. A present disqualified or
+flagged producer SHALL not supply positive evidence. A missing declared
+artifact SHALL remain unavailable even when a conductor completion line exists.
+An exact conductor pre-gate line MAY authenticate a blocked disposition, but
+it SHALL not become a producer artifact or scientific result.
+
+The capstone SHALL reduce static calibration, online learning, synthetic
+memory, live memory, proof audit, ARC, and host service cost as separate claim
+rows. A completed null SHALL count as completed science. Source-certified
+proof evidence SHALL remain `circular_positive`. Current ARC evidence, durable
+checkpoint readiness, reproduced live solves, historical proxy observations,
+and official score SHALL remain separate. Host CPU service benefit SHALL
+remain separate from KV260, GateMate, and PolarFire qualification.
+
+The literature map SHALL state the exact local controls used for ORCA, CORD,
+Solver-Hard, Memoir, and the hardware review. It SHALL retain local sample
+limits, deferred mechanisms, and paper assumptions that were not tested. The
+scope reduction SHALL account for the calibrated-decision, continuous-learning,
+ARC, hardware, and overdue-priority floors without changing the north-star
+publication gates.
+
+For every roadmap `prior_failures` row, Exp7408 SHALL compare the complete
+prior verdict string with the current honest verdict. It SHALL authorize
+retirement only when `retire_if_same_verdict=true` and the strings match
+exactly. A missing artifact, similar wording, nested board row, or unobserved
+counter SHALL not trigger retirement. Existing retired dependencies SHALL not
+be reopened. Each branch SHALL choose exactly one of
+`continue-with-measured-cause`, `retire-unchanged-mechanism`, or
+`wait-for-named-external-change`.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+LLM invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Its string `inference_substrate` SHALL describe actual
+CPU JSON, YAML, Markdown, and exact-reducer work. Device and software facts
+SHALL remain in `inference_substrate_details`. Historical model receipts SHALL
+remain hash-bound sidecars. Small Gibbs or affine training SHALL remain
+producer history and SHALL not count as current LLM work.
+
+`capstone_complete_score` SHALL equal one only when fourteen honest ordered
+dispositions exist and all current capstone completion, safety, and required
+validation checks pass. It SHALL remain independent of scientific value.
+`promotion_score` SHALL remain zero. Required invalid science SHALL make the
+capstone disqualified. Required unavailable science SHALL make it blocked only
+when no disqualifying required evidence exists. `partial` SHALL apply only to
+retryable unfinished work owned by Exp7408.
+
+The affected command plan SHALL come from Exp7358 and execute through Exp7303.
+It SHALL contain only worktree imports, focused pytest with `-n 0 -o addopts=
+--no-cov` and a private existing base-temp parent, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy, and
+exact-test specification coverage. It SHALL preserve command-local
+`COVERAGE_FILE` and SHALL not launch `full_python_suite` or an old entrypoint.
+
+No numbered end-to-end check applies. The declared entrypoint and a
+fresh-process cold replay are the capability end-to-end checks. The measured
+candidate SHALL pass independent row reduction, the unchanged adversarial
+verifier, and strict verdict-row consistency before atomic terminal
+publication. Every command receipt SHALL retain its exact argument vector,
+local environment, exit, duration, and hashed log.
+
+#### SCENARIO-REPORT-7408-DISPOSITIONS: Fourteen slots preserve artifact, pre-gate, and absence states
+
+**Given** the active V649 roadmap, declared paths, and conductor records
+**When** Exp7408 authenticates each task in order
+**Then** it emits exactly fourteen disposition rows including its current self-row
+**And** missing artifacts, exact pre-gates, producer flags, and failed checks remain distinct.
+
+#### SCENARIO-REPORT-7408-CLAIMS: Independent branches cannot promote each other
+
+**Given** a static null, unavailable online producers, certified synthetic proof rows, blocked live rows, flagged ARC evidence, and host timing
+**When** the capstone reduces the milestone
+**Then** each claim keeps its own completion, validity, value, oracle, and cost boundary
+**And** no blocked or disqualified branch becomes a positive headline through aggregation.
+
+#### SCENARIO-REPORT-7408-RETIREMENT: Only exact repeated verdicts retire a mechanism
+
+**Given** each task's prior verdict and retirement condition
+**When** the current honest verdict is compared byte-for-byte
+**Then** only exact repeated conditions receive retirement authority
+**And** absent science, changed verdicts, and nested board blocks do not trigger blanket retirement.
+
+#### SCENARIO-REPORT-7408-LITERATURE: Paper methods map only to executed local controls
+
+**Given** the V649 ORCA, CORD, Solver-Hard, Memoir, and hardware review map
+**When** local evidence is summarized
+**Then** executed controls and sample limits are named
+**And** deferred paper mechanisms and unmet assumptions remain explicit non-results.
+
+#### SCENARIO-REPORT-7408-TERMINAL: Completion stays separate from scientific validity
+
+**Given** fourteen honest dispositions and passing current capstone checks
+**When** required upstream science includes invalid and unavailable branches
+**Then** `capstone_complete_score=1`, `promotion_score=0`, and the capstone is disqualified
+**And** valid null and circular-positive branches remain available within their exact scopes.
+
+#### SCENARIO-REPORT-7408-ARTIFACT: Scoped checks and cold readers control atomic publication
+
+**Given** exact sources, raw disposition rows, branch reductions, and the frozen affected plan
+**When** fresh processes run the entrypoint, reducer, adversarial verifier, and strict row reader
+**Then** changed identity, hashes, order, class, flags, gates, scores, principles, or checksum fail
+**And** only a valid terminal JSON is written atomically.
+
+## Implementation Status (REQ-REPORT-7408)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7408 and SCENARIO-REPORT-7408-* | Implemented: V649 host capstone reducer, thin entrypoint, exact disposition evidence, branch matrix, and terminal artifact | Verified: focused spec-linked tests and 100 percent changed-module coverage pass; the declared entrypoint runs the exact affected checks, fresh-process replay, adversarial verification, strict row consistency, and exact-test spec coverage |
