@@ -74074,3 +74074,113 @@ local environment, exit, duration, and hashed log.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7408 and SCENARIO-REPORT-7408-* | Implemented: V649 host capstone reducer, thin entrypoint, exact disposition evidence, branch matrix, and terminal artifact | Verified: focused spec-linked tests and 100 percent changed-module coverage pass; the declared entrypoint runs the exact affected checks, fresh-process replay, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V650 evidence custody and exact task contract — 2026-09-19
+
+**Status:** Specified. This host aggregation performs no model inference,
+small-model training, board operation, or scientific requalification.
+
+### REQ-REPORT-7409: Bind durable evidence without making the contract a science gate
+
+Exp7409 SHALL parse the active YAML and the single Markdown Exact Task
+Contract with the shipped generic parsers. Both authorities SHALL declare
+milestone `2026.09.650` and exactly twelve ordered tasks from Exp7409 through
+Exp7420. The comparison SHALL cover task IDs, titles, deliverable paths,
+phases, substrate classes, producer field declarations, and structured gates.
+It SHALL reject removed, reordered, stale-milestone, wrong-field, and
+quarantined-input mutations. Contract readiness SHALL remain advisory to each
+independent scientific branch.
+
+Exp7409 SHALL inspect only the declared Exp7397 and Exp7399 producer paths,
+their tracked scripts, tracked history, and hash-bound raw or checkpoint
+evidence. Each producer row SHALL distinguish present bytes, absent bytes,
+tracked paths, untracked paths, stripped history, and facts that remain
+unknown. A conductor completion observation SHALL not replace artifact bytes.
+The reducer SHALL not attribute either absence to a history rewrite without
+matching evidence. It SHALL recover bytes only into a new diagnostic sidecar
+when their prior terminal identity is authenticated exactly. It SHALL not
+regenerate either experiment or change its prior scientific eligibility.
+
+Exp7409 SHALL prototype a task-local evidence bundle with the existing atomic
+JSON helper. The bundle SHALL publish raw unit rows and a numeric checkpoint
+before aggregation. Its manifest SHALL bind every raw file by path, byte size,
+and SHA-256 hash. A restart SHALL recover each complete unit exactly once.
+Fault controls SHALL cover a process exit before rename, a missing sidecar,
+changed sidecar bytes, a stale completion identity, and a payload above the
+20 MiB repository limit. No running or bootstrap object SHALL appear at the
+declared terminal path.
+
+The reducer SHALL record relevant file sizes before new writes. Every committed
+result SHALL stay below 20 MiB. Large raw rows SHALL require sharding and a hash
+manifest. Exp7409 SHALL record a reviewable deferred proposal for a commit-time
+size check outside the conductor. It SHALL not claim that the conductor already
+enforces this limit and SHALL not change the conductor source.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+LLM invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. `inference_substrate` SHALL be a string. Device and
+software facts SHALL remain in `inference_substrate_details`. Scripted and
+historical model receipts SHALL stay in hash-bound sidecars. The small-EBM
+receipt SHALL declare that no training occurred.
+
+`evidence_custody_ready_score` SHALL equal one only when the twelve-task
+comparison and all bundle fault controls pass with required validation. This
+score SHALL not gate unrelated science. Exp7397 and Exp7399 SHALL remain
+unavailable even when custody readiness is one. `promotion_score` SHALL remain
+zero. An unchanged external absence SHALL use a blocked producer disposition,
+not retryable partial work.
+
+The affected command plan SHALL come from Exp7358 and execute through Exp7303.
+It SHALL contain only worktree imports, focused pytest with `-n 0 -o addopts=
+--no-cov` and a private existing base-temp parent, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy, and
+exact-test specification coverage. It SHALL preserve command-local
+`COVERAGE_FILE` and SHALL not launch `full_python_suite` or an old entrypoint.
+
+No numbered end-to-end check applies. The declared entrypoint and a
+fresh-process cold replay are the capability end-to-end checks. Independent
+row reduction, the unchanged adversarial verifier, and strict verdict-row
+consistency SHALL pass on the measured candidate before atomic terminal
+publication. Exact argument vectors, scoped environment values, exits,
+durations, and hashed logs SHALL remain in validation receipts.
+
+#### SCENARIO-REPORT-7409-CONTRACT: Twelve independently parsed rows agree
+
+**Given** the active V650 YAML and one V650 Markdown contract table
+**When** both authorities are parsed without sharing derived row values
+**Then** exactly twelve ordered task rows agree across every declared field and gate
+**And** removed, reordered, stale-milestone, wrong-field, and quarantined mutations fail.
+
+#### SCENARIO-REPORT-7409-MISSING: Missing producers remain unavailable
+
+**Given** absent Exp7397 and Exp7399 terminal paths plus tracked supporting evidence
+**When** the custody reducer inspects named paths and history
+**Then** it records observed bytes, tracked state, recorded hashes, and bounded recovery separately
+**And** logs, checkpoints, or custody readiness do not restore either scientific claim.
+
+#### SCENARIO-REPORT-7409-BUNDLE: Atomic restart recovers units once
+
+**Given** raw unit rows, a numeric checkpoint, and a hash manifest
+**When** publication exits before rename or a sidecar is missing, changed, stale, or oversized
+**Then** each defect fails its named control without publishing a terminal object
+**And** restart accepts complete bound units exactly once.
+
+#### SCENARIO-REPORT-7409-SIZE: The repository limit stays explicit and deferred
+
+**Given** measured file sizes and a 20 MiB per-result limit
+**When** a payload exceeds the limit
+**Then** the bundle rejects it and requires sharded hash-bound rows
+**And** the artifact proposes an outer commit-time check without claiming conductor protection.
+
+#### SCENARIO-REPORT-7409-ARTIFACT: Scoped checks control atomic publication
+
+**Given** exact sources, contract rows, producer dispositions, bundle evidence, and the frozen affected plan
+**When** fresh processes run the entrypoint replay, independent reducer, adversarial verifier, and strict row reader
+**Then** identity, hash, order, recovery, score, principle, or checksum drift fails
+**And** only a valid terminal JSON is written atomically.
+
+## Implementation Status (REQ-REPORT-7409)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7409 and SCENARIO-REPORT-7409-* | Implemented: V650 host custody reducer, thin entrypoint, exact contract authority, bundle sidecars, and terminal artifact | Verified: focused spec-linked tests pass with 100 percent changed-module coverage; the declared entrypoint runs the scoped plan, fresh-process replay, adversarial verification, strict row consistency, and exact-test spec coverage |

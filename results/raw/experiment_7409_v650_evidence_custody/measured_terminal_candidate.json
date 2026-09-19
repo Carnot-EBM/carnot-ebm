@@ -1,0 +1,2766 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "completion",
+      "check": "twelve_task_contract",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "The advisory authorities and all five mutations must agree."
+    },
+    {
+      "category": "safety",
+      "check": "bundle_hash_replay",
+      "expected": [],
+      "observed": [],
+      "operator": "==",
+      "passed": true,
+      "principle": "Every raw unit and numeric checkpoint must retain exact bytes."
+    },
+    {
+      "category": "safety",
+      "check": "custody_fault_controls",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "All five interruption and corruption controls must reject their defect."
+    },
+    {
+      "category": "required_validation",
+      "check": "affected_validation",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "All eight scoped checks must pass once each."
+    },
+    {
+      "category": "required_validation",
+      "check": "terminal_validation",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Cold replay, independent reduction, and both strict readers must pass."
+    },
+    {
+      "category": "safety",
+      "check": "validation_log_hashes",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Every command receipt must bind the exact log bytes."
+    }
+  ],
+  "contract_mutation_rows": [
+    {
+      "expected": "rejected",
+      "mutation": "removed",
+      "observed_errors": [
+        "yaml_task_count_mismatch",
+        "yaml_order_mismatch",
+        "contract_row_mismatch"
+      ],
+      "passed": true,
+      "rejected": true
+    },
+    {
+      "expected": "rejected",
+      "mutation": "reordered",
+      "observed_errors": [
+        "yaml_order_mismatch",
+        "contract_row_mismatch"
+      ],
+      "passed": true,
+      "rejected": true
+    },
+    {
+      "expected": "rejected",
+      "mutation": "stale_milestone",
+      "observed_errors": [
+        "yaml_milestone_mismatch"
+      ],
+      "passed": true,
+      "rejected": true
+    },
+    {
+      "expected": "rejected",
+      "mutation": "wrong_field",
+      "observed_errors": [
+        "contract_row_mismatch"
+      ],
+      "passed": true,
+      "rejected": true
+    },
+    {
+      "expected": "rejected",
+      "mutation": "quarantined_input",
+      "observed_errors": [
+        "contract_row_mismatch",
+        "quarantined_input:exp7409-evidence-custody"
+      ],
+      "passed": true,
+      "rejected": true
+    }
+  ],
+  "contract_rows": [
+    {
+      "fields_match": true,
+      "markdown": {
+        "deliverable": "results/experiment_7409_v650_evidence_custody.json",
+        "gates": [],
+        "id": "exp7409-evidence-custody",
+        "order": 1,
+        "phase": 1,
+        "substrate": "aggregation",
+        "title": "Bind twelve tasks and diagnose missing terminal evidence"
+      },
+      "order": 1,
+      "passed": true,
+      "producer_field_rows": [],
+      "producer_fields_declared": true,
+      "quarantined_input": false,
+      "task_id": "exp7409-evidence-custody",
+      "title": "Bind twelve tasks and diagnose missing terminal evidence",
+      "yaml": {
+        "deliverable": "results/experiment_7409_v650_evidence_custody.json",
+        "gates": [],
+        "id": "exp7409-evidence-custody",
+        "order": 1,
+        "phase": 1,
+        "substrate": "aggregation",
+        "title": "Bind twelve tasks and diagnose missing terminal evidence"
+      }
+    },
+    {
+      "fields_match": true,
+      "markdown": {
+        "deliverable": "results/experiment_7410_v650_source_corpus.json",
+        "gates": [],
+        "id": "exp7410-source-corpus",
+        "order": 2,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Seal an attributed source-context calibration corpus"
+      },
+      "order": 2,
+      "passed": true,
+      "producer_field_rows": [],
+      "producer_fields_declared": true,
+      "quarantined_input": false,
+      "task_id": "exp7410-source-corpus",
+      "title": "Seal an attributed source-context calibration corpus",
+      "yaml": {
+        "deliverable": "results/experiment_7410_v650_source_corpus.json",
+        "gates": [],
+        "id": "exp7410-source-corpus",
+        "order": 2,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Seal an attributed source-context calibration corpus"
+      }
+    },
+    {
+      "fields_match": true,
+      "markdown": {
+        "deliverable": "results/experiment_7411_v650_arc_call_budget.json",
+        "gates": [],
+        "id": "exp7411-arc-call-budget",
+        "order": 3,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Enforce ARC request budgets at the live callback boundary"
+      },
+      "order": 3,
+      "passed": true,
+      "producer_field_rows": [],
+      "producer_fields_declared": true,
+      "quarantined_input": false,
+      "task_id": "exp7411-arc-call-budget",
+      "title": "Enforce ARC request budgets at the live callback boundary",
+      "yaml": {
+        "deliverable": "results/experiment_7411_v650_arc_call_budget.json",
+        "gates": [],
+        "id": "exp7411-arc-call-budget",
+        "order": 3,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Enforce ARC request budgets at the live callback boundary"
+      }
+    },
+    {
+      "fields_match": true,
+      "markdown": {
+        "deliverable": "results/experiment_7412_v650_source_features.json",
+        "gates": [
+          {
+            "artifact_field": "source_corpus_ready_score",
+            "op": "==",
+            "upstream": "exp7410-source-corpus",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7410-source-corpus",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7410-source-corpus",
+            "value": false
+          }
+        ],
+        "id": "exp7412-source-features",
+        "order": 4,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Prototype source-aware energy inputs and freeze decision tests"
+      },
+      "order": 4,
+      "passed": true,
+      "producer_field_rows": [
+        {
+          "artifact_field": "source_corpus_ready_score",
+          "declared": true,
+          "upstream": "exp7410-source-corpus"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared": true,
+          "upstream": "exp7410-source-corpus"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared": true,
+          "upstream": "exp7410-source-corpus"
+        }
+      ],
+      "producer_fields_declared": true,
+      "quarantined_input": false,
+      "task_id": "exp7412-source-features",
+      "title": "Prototype source-aware energy inputs and freeze decision tests",
+      "yaml": {
+        "deliverable": "results/experiment_7412_v650_source_features.json",
+        "gates": [
+          {
+            "artifact_field": "source_corpus_ready_score",
+            "op": "==",
+            "upstream": "exp7410-source-corpus",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7410-source-corpus",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7410-source-corpus",
+            "value": false
+          }
+        ],
+        "id": "exp7412-source-features",
+        "order": 4,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Prototype source-aware energy inputs and freeze decision tests"
+      }
+    },
+    {
+      "fields_match": true,
+      "markdown": {
+        "deliverable": "results/experiment_7413_v650_source_calibration.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7413-source-calibration",
+        "order": 5,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure source-grounded Gibbs calibration against simple controls"
+      },
+      "order": 5,
+      "passed": true,
+      "producer_field_rows": [
+        {
+          "artifact_field": "source_feature_protocol_ready_score",
+          "declared": true,
+          "upstream": "exp7412-source-features"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared": true,
+          "upstream": "exp7412-source-features"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared": true,
+          "upstream": "exp7412-source-features"
+        }
+      ],
+      "producer_fields_declared": true,
+      "quarantined_input": false,
+      "task_id": "exp7413-source-calibration",
+      "title": "Measure source-grounded Gibbs calibration against simple controls",
+      "yaml": {
+        "deliverable": "results/experiment_7413_v650_source_calibration.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7413-source-calibration",
+        "order": 5,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure source-grounded Gibbs calibration against simple controls"
+      }
+    },
+    {
+      "fields_match": true,
+      "markdown": {
+        "deliverable": "results/experiment_7414_v650_selected_feedback.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7414-selected-feedback",
+        "order": 6,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure continuous energy calibration under selected feedback"
+      },
+      "order": 6,
+      "passed": true,
+      "producer_field_rows": [
+        {
+          "artifact_field": "source_feature_protocol_ready_score",
+          "declared": true,
+          "upstream": "exp7412-source-features"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared": true,
+          "upstream": "exp7412-source-features"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared": true,
+          "upstream": "exp7412-source-features"
+        }
+      ],
+      "producer_fields_declared": true,
+      "quarantined_input": false,
+      "task_id": "exp7414-selected-feedback",
+      "title": "Measure continuous energy calibration under selected feedback",
+      "yaml": {
+        "deliverable": "results/experiment_7414_v650_selected_feedback.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7414-selected-feedback",
+        "order": 6,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure continuous energy calibration under selected feedback"
+      }
+    },
+    {
+      "fields_match": true,
+      "markdown": {
+        "deliverable": "results/experiment_7415_v650_decision_audit.json",
+        "gates": [],
+        "id": "exp7415-decision-audit",
+        "order": 7,
+        "phase": 2,
+        "substrate": "aggregation",
+        "title": "Independently audit calibrated decisions and feedback causality"
+      },
+      "order": 7,
+      "passed": true,
+      "producer_field_rows": [],
+      "producer_fields_declared": true,
+      "quarantined_input": false,
+      "task_id": "exp7415-decision-audit",
+      "title": "Independently audit calibrated decisions and feedback causality",
+      "yaml": {
+        "deliverable": "results/experiment_7415_v650_decision_audit.json",
+        "gates": [],
+        "id": "exp7415-decision-audit",
+        "order": 7,
+        "phase": 2,
+        "substrate": "aggregation",
+        "title": "Independently audit calibrated decisions and feedback causality"
+      }
+    },
+    {
+      "fields_match": true,
+      "markdown": {
+        "deliverable": "results/experiment_7416_v650_anchored_extraction.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7416-anchored-extraction",
+        "order": 8,
+        "phase": 3,
+        "substrate": "model_bounded_generation",
+        "title": "Compare bounded Qwen claim extraction with preserved source spans"
+      },
+      "order": 8,
+      "passed": true,
+      "producer_field_rows": [
+        {
+          "artifact_field": "source_feature_protocol_ready_score",
+          "declared": true,
+          "upstream": "exp7412-source-features"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared": true,
+          "upstream": "exp7412-source-features"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared": true,
+          "upstream": "exp7412-source-features"
+        }
+      ],
+      "producer_fields_declared": true,
+      "quarantined_input": false,
+      "task_id": "exp7416-anchored-extraction",
+      "title": "Compare bounded Qwen claim extraction with preserved source spans",
+      "yaml": {
+        "deliverable": "results/experiment_7416_v650_anchored_extraction.json",
+        "gates": [
+          {
+            "artifact_field": "source_feature_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7412-source-features",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7412-source-features",
+            "value": false
+          }
+        ],
+        "id": "exp7416-anchored-extraction",
+        "order": 8,
+        "phase": 3,
+        "substrate": "model_bounded_generation",
+        "title": "Compare bounded Qwen claim extraction with preserved source spans"
+      }
+    },
+    {
+      "fields_match": true,
+      "markdown": {
+        "deliverable": "results/experiment_7417_v650_extraction_audit.json",
+        "gates": [
+          {
+            "artifact_field": "extraction_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7416-anchored-extraction",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7416-anchored-extraction",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7416-anchored-extraction",
+            "value": false
+          }
+        ],
+        "id": "exp7417-extraction-audit",
+        "order": 9,
+        "phase": 3,
+        "substrate": "aggregation",
+        "title": "Audit extraction coverage and semantic preservation independently"
+      },
+      "order": 9,
+      "passed": true,
+      "producer_field_rows": [
+        {
+          "artifact_field": "extraction_capture_complete_score",
+          "declared": true,
+          "upstream": "exp7416-anchored-extraction"
+        },
+        {
+          "artifact_field": "verdict_class",
+          "declared": true,
+          "upstream": "exp7416-anchored-extraction"
+        },
+        {
+          "artifact_field": "flagged_adversarial",
+          "declared": true,
+          "upstream": "exp7416-anchored-extraction"
+        }
+      ],
+      "producer_fields_declared": true,
+      "quarantined_input": false,
+      "task_id": "exp7417-extraction-audit",
+      "title": "Audit extraction coverage and semantic preservation independently",
+      "yaml": {
+        "deliverable": "results/experiment_7417_v650_extraction_audit.json",
+        "gates": [
+          {
+            "artifact_field": "extraction_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7416-anchored-extraction",
+            "value": 1
+          },
+          {
+            "artifact_field": "verdict_class",
+            "op": "in",
+            "upstream": "exp7416-anchored-extraction",
+            "value": [
+              "positive",
+              "circular_positive",
+              "null"
+            ]
+          },
+          {
+            "artifact_field": "flagged_adversarial",
+            "op": "==",
+            "upstream": "exp7416-anchored-extraction",
+            "value": false
+          }
+        ],
+        "id": "exp7417-extraction-audit",
+        "order": 9,
+        "phase": 3,
+        "substrate": "aggregation",
+        "title": "Audit extraction coverage and semantic preservation independently"
+      }
+    },
+    {
+      "fields_match": true,
+      "markdown": {
+        "deliverable": "results/experiment_7418_v650_revision_memory.json",
+        "gates": [],
+        "id": "exp7418-revision-memory",
+        "order": 10,
+        "phase": 3,
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Measure certified memory under source revision and eviction"
+      },
+      "order": 10,
+      "passed": true,
+      "producer_field_rows": [],
+      "producer_fields_declared": true,
+      "quarantined_input": false,
+      "task_id": "exp7418-revision-memory",
+      "title": "Measure certified memory under source revision and eviction",
+      "yaml": {
+        "deliverable": "results/experiment_7418_v650_revision_memory.json",
+        "gates": [],
+        "id": "exp7418-revision-memory",
+        "order": 10,
+        "phase": 3,
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Measure certified memory under source revision and eviction"
+      }
+    },
+    {
+      "fields_match": true,
+      "markdown": {
+        "deliverable": "results/experiment_7419_v650_precision_placement.json",
+        "gates": [],
+        "id": "exp7419-precision-placement",
+        "order": 11,
+        "phase": 4,
+        "substrate": "no_model_load",
+        "title": "Measure decision stability at reduced precision and preserve board states"
+      },
+      "order": 11,
+      "passed": true,
+      "producer_field_rows": [],
+      "producer_fields_declared": true,
+      "quarantined_input": false,
+      "task_id": "exp7419-precision-placement",
+      "title": "Measure decision stability at reduced precision and preserve board states",
+      "yaml": {
+        "deliverable": "results/experiment_7419_v650_precision_placement.json",
+        "gates": [],
+        "id": "exp7419-precision-placement",
+        "order": 11,
+        "phase": 4,
+        "substrate": "no_model_load",
+        "title": "Measure decision stability at reduced precision and preserve board states"
+      }
+    },
+    {
+      "fields_match": true,
+      "markdown": {
+        "deliverable": "results/experiment_7420_v650_capstone.json",
+        "gates": [],
+        "id": "exp7420-capstone",
+        "order": 12,
+        "phase": 4,
+        "substrate": "aggregation",
+        "title": "Reconcile twelve dispositions and decide each research branch"
+      },
+      "order": 12,
+      "passed": true,
+      "producer_field_rows": [],
+      "producer_fields_declared": true,
+      "quarantined_input": false,
+      "task_id": "exp7420-capstone",
+      "title": "Reconcile twelve dispositions and decide each research branch",
+      "yaml": {
+        "deliverable": "results/experiment_7420_v650_capstone.json",
+        "gates": [],
+        "id": "exp7420-capstone",
+        "order": 12,
+        "phase": 4,
+        "substrate": "aggregation",
+        "title": "Reconcile twelve dispositions and decide each research branch"
+      }
+    }
+  ],
+  "current_invocation_events": [],
+  "current_owner_pid": 3759083,
+  "current_run_id": "exp7409-current-host-aggregation",
+  "custody_fault_rows": [
+    {
+      "expected": "nonzero_exit_no_terminal_and_one_recovered_unit",
+      "fault": "kill_before_rename",
+      "observed_exit_code": 91,
+      "passed": true,
+      "recovered_unit_count": 1,
+      "terminal_path_observed": false
+    },
+    {
+      "expected": "missing_sidecar",
+      "fault": "missing_sidecar",
+      "observed_errors": [
+        "missing_sidecar",
+        "completed_unit_count_mismatch"
+      ],
+      "passed": true
+    },
+    {
+      "expected": "corrupted_bytes",
+      "fault": "corrupted_bytes",
+      "observed_errors": [
+        "corrupted_bytes",
+        "completed_unit_count_mismatch"
+      ],
+      "passed": true
+    },
+    {
+      "expected": "stale_completion",
+      "fault": "stale_completion",
+      "observed_errors": [
+        "stale_completion",
+        "stale_completion_protocol",
+        "completed_unit_count_mismatch"
+      ],
+      "passed": true
+    },
+    {
+      "expected": "<=20971520",
+      "fault": "oversized_payload",
+      "observed_bytes": 20971521,
+      "passed": true
+    }
+  ],
+  "deferred_size_gate": {
+    "conductor_protected": false,
+    "implementation_target": "pre-commit or repository validation outside scripts/research_conductor.py",
+    "proposal": "Add a reviewed pre-commit check that rejects each new results JSON above 20 MiB unless a small hash manifest points to shards.",
+    "proposed_limit_bytes": 20971520,
+    "status": "deferred_outer_loop"
+  },
+  "duration_s": 65.154958958,
+  "ended_at_utc": "2026-09-19T07:23:46.169632+00:00",
+  "ended_monotonic_ns": 2094326404635268,
+  "event_count": 0,
+  "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "evidence_bundle": {
+    "manifest": {
+      "checkpoint": {
+        "path": "checkpoint.json",
+        "sha256": "sha256:9edac009f5bdcfef1d61eb658ccb77918083382445bce7df157e810fd13764f8",
+        "size_bytes": 838
+      },
+      "completed_unit_count": 3,
+      "numeric_state": {
+        "completed_unit_count": 3,
+        "value_sum": 12.0
+      },
+      "protocol_id": "carnot.exp7409.bundle.v1",
+      "raw_files": [
+        {
+          "path": "rows/contract.json",
+          "sha256": "sha256:9d6411be07a5a3c5e3270f092ce5b0084cebaacfadb217d06a23a374306d267a",
+          "size_bytes": 67,
+          "unit_id": "contract"
+        },
+        {
+          "path": "rows/exp7397-delayed-adapter.json",
+          "sha256": "sha256:efdd95875db0a4c8ee1dd50e761c8a199cf33ec5aa30d67c22870521ad78716e",
+          "size_bytes": 106,
+          "unit_id": "exp7397-delayed-adapter"
+        },
+        {
+          "path": "rows/exp7399-online-trial.json",
+          "sha256": "sha256:9ce04af68d46209bcc7fc25fd43c077c3709e3b87a617031e39d5c0a573dc507",
+          "size_bytes": 103,
+          "unit_id": "exp7399-online-trial"
+        }
+      ],
+      "schema": "carnot.evidence_bundle.manifest.v1"
+    },
+    "manifest_sha256": "sha256:4c9496bcda6f99e21ee910b7d0f721432efb65d60d0e10d647c2044cf8d8d314",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7409_v650_evidence_custody/bundle",
+    "verification_errors": []
+  },
+  "evidence_custody_ready_score": 1,
+  "execution_venue": "host",
+  "experiment_id": "exp7409-evidence-custody",
+  "field_principles": {
+    "MODEL_SPECS": "Current LLM calls require unsloth/Qwen3.8-27B-GGUF; this host aggregation uses none.",
+    "acceptance_gate_results": "Each check records category, operator, expected, observed, pass state, and principle.",
+    "contract_mutation_rows": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "contract_rows": "Twelve records are parsed independently from both authorities.",
+    "current_invocation_events": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "current_owner_pid": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "current_run_id": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "custody_fault_rows": "Each interruption or corruption fixture retains its expected recovery result.",
+    "deferred_size_gate": "A reviewable outer-loop change remains needed; conductor protection is not asserted.",
+    "duration_s": "Monotonic current duration is separate from historical and validation time.",
+    "ended_at_utc": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "ended_monotonic_ns": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "event_count": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "event_sha256": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "evidence_bundle": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "evidence_custody_ready_score": "One certifies only this bundle and the twelve-task comparison.",
+    "execution_venue": "The closed venue string is host; device details are separate.",
+    "experiment_id": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "field_principles": "Fields are explained separately; gate scalars stay ordinary values.",
+    "file_sizes_before_writing": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "flagged_adversarial": "Critical findings remain visible and cannot supply readiness.",
+    "gate_check_summary": "Blocked inputs name exact upstream paths, checks, fields, and expected and observed values.",
+    "honest_verdict": "Completed findings use complete_; unchanged external absence stays blocked in producer rows.",
+    "inference_substrate": "This is a truthful string; device and software details are separate.",
+    "inference_substrate_class": "The class describes current aggregation without duration padding.",
+    "inference_substrate_details": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "invocation_counts": "Owned current attempted, completed, failed, cancelled, and in-flight events determine counts.",
+    "milestone": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "missing_producer_rows": "Each prior path keeps observed bytes, recorded hashes, and bounded recovery disposition.",
+    "model_invoked": "Only an actual current attempted LLM call makes this true.",
+    "phase": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "phase_spans": "Real phase boundaries retain checkpoints and heartbeat counts.",
+    "preconditions_checked": "Exact paths, hashes, and resource checks precede dependent work.",
+    "promotion_score": "This remains zero; no rollout, external publication, or generator update follows.",
+    "random_seed": "Frozen fitting, sampling, and resampling seeds are explicit or null when inapplicable.",
+    "receipt_sidecars": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "repository_health": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "reproducibility_checksum": "The checksum binds code, protocol, input bytes, and raw rows.",
+    "result_size_limit_bytes": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "rows": "Every contract, producer, and fault-control unit keeps its disposition.",
+    "run_date": "The frozen date is 20260919, with actual UTC start and end timestamps.",
+    "sample_size_budget": "Planned, attempted, completed, failed, censored, and unstarted counts are separate.",
+    "schema": "Versioned ordinary top-level fields include experiment_id, milestone, and terminal status.",
+    "scientific_value_score": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "small_ebm_training": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "source_artifact_hashes": "Exact source paths and hashes retain original sidecar facts.",
+    "started_at_utc": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "started_monotonic_ns": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "status": "This ordinary top-level field retains measured identity, evidence, or reduction state.",
+    "validation_receipts": "Exact argv, scoped environment, exits, durations, required names, and hashed logs are retained.",
+    "verdict_class": "The closed class is positive, circular_positive, null, blocked, disqualified, or partial.",
+    "verifier_is_oracle": "Custody verification does not share authority with later scientific correctness."
+  },
+  "file_sizes_before_writing": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7409_v650_evidence_custody.json",
+      "size_bytes": null,
+      "state": "missing"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7409_v650_evidence_custody/measured_terminal_candidate.json",
+      "size_bytes": 109450,
+      "state": "present"
+    }
+  ],
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "all_required_checks_passed": true,
+    "blocked_external_inputs": [
+      {
+        "check": "declared_artifact_bytes",
+        "expected": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed": null,
+        "path": "results/experiment_7397_v649_delayed_adapter.json",
+        "producer_verdict": "blocked_missing_declared_artifact",
+        "upstream": "exp7397-delayed-adapter"
+      },
+      {
+        "check": "declared_artifact_bytes",
+        "expected": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed": null,
+        "path": "results/experiment_7399_v649_online_trial.json",
+        "producer_verdict": "blocked_missing_declared_artifact",
+        "upstream": "exp7399-online-trial"
+      }
+    ],
+    "failed_checks": [],
+    "first_failure": null
+  },
+  "honest_verdict": "complete_null_evidence_custody_ready_missing_v649_producers_unavailable",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "inference_substrate_details": {
+    "current_llm_operations": 0,
+    "python": "3.12.13",
+    "small_ebm_training_performed": false
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.650",
+  "missing_producer_rows": [
+    {
+      "absence_cause": "unknown",
+      "availability_verdict": "blocked_missing_declared_artifact",
+      "checkpoint_file_count": 30,
+      "checkpoint_manifest": [
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-primary_delay_1-seed7397001.json",
+          "sha256": "sha256:ac5fa5c177d65eece26a4249a3e43a13415710dcf6f98b081be2970666595b39",
+          "size_bytes": 2479547,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-primary_delay_1-seed7397002.json",
+          "sha256": "sha256:ad6552c20bb071b58540d0be36cd947656358cb625b5d17ed79c29d90c59678c",
+          "size_bytes": 2482424,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-primary_delay_1-seed7397003.json",
+          "sha256": "sha256:6a40b1fed520c737aab0bb9fcd67f838dcf2bd52b8f205ba346598485775db07",
+          "size_bytes": 2484444,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-primary_delay_1-seed7397004.json",
+          "sha256": "sha256:7252510cc918683db17c3562df5204a41a071598157f77fdaf1a319517a6d551",
+          "size_bytes": 2486073,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-primary_delay_1-seed7397005.json",
+          "sha256": "sha256:81d82eeafc27e73f7c91b1514dfd0aef9519fa712e4dfe7e8b185cde62a50d4d",
+          "size_bytes": 2484670,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-sensitivity_delay_32-seed7397001.json",
+          "sha256": "sha256:672e384d729c6cc20081fe78072bfff2e46860e4965212291f60119b09106ce1",
+          "size_bytes": 2455425,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-sensitivity_delay_32-seed7397002.json",
+          "sha256": "sha256:ad03890a0c6f4b6d230d22171568496c2e2308615bad2d5f73617f8b58deddc3",
+          "size_bytes": 2458354,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-sensitivity_delay_32-seed7397003.json",
+          "sha256": "sha256:d0ce60a1ab83b2b21e960ebc939c171d4bcd39240ee6f1e8c4635459b0f09fbc",
+          "size_bytes": 2460384,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-sensitivity_delay_32-seed7397004.json",
+          "sha256": "sha256:b04b5b925024e4051bcdbeb5d23c9ccbab61948d1d07d8a7e05e61aebee0b570",
+          "size_bytes": 2462031,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-sensitivity_delay_32-seed7397005.json",
+          "sha256": "sha256:563d00548681dba0e3f434c72d8554ed6f1bd5661e84ce4005ca0e7fb9bcf4d7",
+          "size_bytes": 2460610,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-sensitivity_missing_25-seed7397001.json",
+          "sha256": "sha256:694f81d61bfdfb07a47a749bce122dc9e9ae95503e8d60c500f7b5a40c4c8d91",
+          "size_bytes": 2286902,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-sensitivity_missing_25-seed7397002.json",
+          "sha256": "sha256:c8bd1c1426ec36802ebfb936ada8d2302f57b112862c4d3d9b35cde214fafcd9",
+          "size_bytes": 2289702,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-sensitivity_missing_25-seed7397003.json",
+          "sha256": "sha256:e8dc67412e5951478a5d590de5e80249a95aac658618773dbd5f465875c49153",
+          "size_bytes": 2291849,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-sensitivity_missing_25-seed7397004.json",
+          "sha256": "sha256:634a1ca9884c3a2e6f923b3fa2e2510b836154df36fab9cef745f947a4db13c5",
+          "size_bytes": 2293099,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/fixed_hash_order-sensitivity_missing_25-seed7397005.json",
+          "sha256": "sha256:db56a52168e30bce085020c4cab46cd0e3d2fee430c43b916c85105c961a1bd3",
+          "size_bytes": 2291905,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-primary_delay_1-seed7397001.json",
+          "sha256": "sha256:44c25ee33758b6d9293922b1ba7a3d751df264d186362043e19bbbebaaf79321",
+          "size_bytes": 2491988,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-primary_delay_1-seed7397002.json",
+          "sha256": "sha256:0a2fbebebbc2df79b8b7a7375a578ea4dea23a38332b8bdd7d6fb260cd8f1b7f",
+          "size_bytes": 2494858,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-primary_delay_1-seed7397003.json",
+          "sha256": "sha256:2e45065a6bceaad8e6ec30871de50c8c03b641f160bcfb1e36f3c73460a86c78",
+          "size_bytes": 2496845,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-primary_delay_1-seed7397004.json",
+          "sha256": "sha256:37ec0c6297ebc578a65e1721d71ba855858ebb676c4372d7ec3f0c9d15a593d8",
+          "size_bytes": 2498269,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-primary_delay_1-seed7397005.json",
+          "sha256": "sha256:e798733958f844805f37d57d7a647382d9f6369f17bd49076564f5b40f65284f",
+          "size_bytes": 2497149,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-sensitivity_delay_32-seed7397001.json",
+          "sha256": "sha256:a902286caec312e539f7f688e298e1d1aa68f239c400436e0f557768f8beb69e",
+          "size_bytes": 2467673,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-sensitivity_delay_32-seed7397002.json",
+          "sha256": "sha256:5bc9fdfa13cde0e63686c0856484dae7bc098c68203bc2036d51f0a687fb106f",
+          "size_bytes": 2470551,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-sensitivity_delay_32-seed7397003.json",
+          "sha256": "sha256:a8f5946b70c59bb9a394ca0e755112a549b9c919da85f13249200e2f3d28b13e",
+          "size_bytes": 2472580,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-sensitivity_delay_32-seed7397004.json",
+          "sha256": "sha256:807b5b90f3f66e8c3c377592e142413f7695f24a6670a3ac29b08d4f259d1b06",
+          "size_bytes": 2473956,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-sensitivity_delay_32-seed7397005.json",
+          "sha256": "sha256:d15522ac50393ab4cbfb3e76de119f6c7a3f289d8ebf6f2ca34c7eb840d4fd08",
+          "size_bytes": 2472854,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-sensitivity_missing_25-seed7397001.json",
+          "sha256": "sha256:1ee0f15a98267157cc37c7401dcc42f49345680acc10caa09412b53588304cd3",
+          "size_bytes": 2298168,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-sensitivity_missing_25-seed7397002.json",
+          "sha256": "sha256:d7b750f62e817aa30a3c41221343b30078cf6e43577cf7589f9a4380c7486155",
+          "size_bytes": 2300658,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-sensitivity_missing_25-seed7397003.json",
+          "sha256": "sha256:b0b7b280bf9da5de963bd491dbaefc7cef9691bd84cd7be6e4d9000ec1b45f75",
+          "size_bytes": 2302739,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-sensitivity_missing_25-seed7397004.json",
+          "sha256": "sha256:927436bb35104aa4258fe86fd4c08c0bdc534ebdd087c6527f50ab76bccd911b",
+          "size_bytes": 2304140,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7397_v649_delayed_adapter/reversed_block_order-sensitivity_missing_25-seed7397005.json",
+          "sha256": "sha256:19dd7ffad5cdbc3156fd7500aa4cd2341728b6602287ed0b788513d66bfec6ba",
+          "size_bytes": 2303089,
+          "tracked": true
+        }
+      ],
+      "checkpoint_manifest_sha256": "sha256:6b8733ce1ac90f98abf36455aa514cff4db6722f544c01a3b4aa926e35651115",
+      "declared_path": "results/experiment_7397_v649_delayed_adapter.json",
+      "exact_prior_identity_available": false,
+      "experiment_id": "exp7397-delayed-adapter",
+      "history_rewrite_cause_established": false,
+      "observed_bytes": null,
+      "observed_terminal_sha256": null,
+      "producer_entrypoint_history_commits": [
+        "92678f9a36b785c6e33f715a9496883fa3aba5a2"
+      ],
+      "producer_entrypoint_path": "scripts/experiments/experiment_7397_v649_delayed_adapter.py",
+      "producer_entrypoint_state": "present_tracked",
+      "producer_module_history_commits": [
+        "92678f9a36b785c6e33f715a9496883fa3aba5a2"
+      ],
+      "producer_module_path": "python/carnot/experiment_7397_v649_delayed_adapter.py",
+      "producer_module_state": "present_tracked",
+      "raw_evidence_file_count": 14,
+      "raw_evidence_manifest": [
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/historical_v648_context.json",
+          "sha256": "sha256:88cf4f86aad97a2ed2875a318ce0d1b8f3a2d53fe969d96ac4ae1c6745af007d",
+          "size_bytes": 497,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/affected/00_worktree_imports/00_worktree_imports.log",
+          "sha256": "sha256:174e5768a42a24f8d3531bfca6cb10954f3131b093c1bab9673b663f60245179",
+          "size_bytes": 317,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/affected/01_focused_pytest/00_focused_pytest.log",
+          "sha256": "sha256:e85d46d7c1edda889d0fee793ff5912c8ccacee7c96c802672fed07c3df004d6",
+          "size_bytes": 99,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+          "sha256": "sha256:8f01cbeae5e4e3c7a0435cda6d2751cdc10285866ad0c11a922bb0a98807a3ec",
+          "size_bytes": 99,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+          "sha256": "sha256:9ee425808001e7740ce5ebf8db4751335de21d38e69e0aaba0394cb5385d699e",
+          "size_bytes": 486,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/affected/04_ruff_check/00_ruff_check.log",
+          "sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+          "size_bytes": 19,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/affected/05_ruff_format/00_ruff_format.log",
+          "sha256": "sha256:f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1",
+          "size_bytes": 26,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+          "sha256": "sha256:e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce",
+          "size_bytes": 707,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+          "sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+          "size_bytes": 52,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/entrypoint/declared_entrypoint_e2e.log",
+          "sha256": "sha256:b36827716e504bbe2f0d5d4d403ba9fd9a95746163c46e298347fb24372c777f",
+          "size_bytes": 402,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/terminal/00_independent_reducer/00_independent_reducer.log",
+          "sha256": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "size_bytes": 3,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/terminal/01_adversarial_verify/00_adversarial_verify.log",
+          "sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+          "size_bytes": 35,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/terminal/02_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+          "sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+          "size_bytes": 156,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7397_v649_delayed_adapter/validation/terminal/03_independent_cold_replay/00_independent_cold_replay.log",
+          "sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+          "size_bytes": 15,
+          "tracked": true
+        }
+      ],
+      "raw_evidence_manifest_sha256": "sha256:76d868abebc8b2f6e49a40a47921e1be5cc00f94afb90cc85d6c8aec267feda7",
+      "recorded_flagged_adversarial": false,
+      "recorded_identity_sidecar": "results/raw/experiment_7399_v649_online_trial/upstream_exp7397_context.json",
+      "recorded_status": "complete_delayed_adapter_null",
+      "recorded_terminal_sha256": "sha256:c4e5139f7f3c600bd129e7e8425f362bac458796ae6a7db6052d6895140b2e3b",
+      "recorded_verdict_class": "null",
+      "recovery_disposition": "not_recovered_no_authenticated_prior_bytes",
+      "recovery_performed": false,
+      "science_eligible": false,
+      "terminal_history_commits": [],
+      "terminal_path_state": "missing",
+      "terminal_state": "missing",
+      "terminal_tracked": false
+    },
+    {
+      "absence_cause": "unknown",
+      "availability_verdict": "blocked_missing_declared_artifact",
+      "checkpoint_file_count": 65,
+      "checkpoint_manifest": [
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-primary_delay_1-seed7397001.json",
+          "sha256": "sha256:2861b1e4cf21d3e78047ae0252573efcb48d336856689403440a7a62cd791102",
+          "size_bytes": 2574,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-primary_delay_1-seed7397001.restart.json",
+          "sha256": "sha256:ac5fa5c177d65eece26a4249a3e43a13415710dcf6f98b081be2970666595b39",
+          "size_bytes": 2479547,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-primary_delay_1-seed7397002.json",
+          "sha256": "sha256:840e0dc1fcf3365e08840cd942747d774426ea34786a018fa2aa0c9b53497311",
+          "size_bytes": 2580,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-primary_delay_1-seed7397002.restart.json",
+          "sha256": "sha256:ad6552c20bb071b58540d0be36cd947656358cb625b5d17ed79c29d90c59678c",
+          "size_bytes": 2482424,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-primary_delay_1-seed7397003.json",
+          "sha256": "sha256:54fdd29ba4f04239199047db3a9934856f3e33bbf40f2addd8a5d0fcb34c9a20",
+          "size_bytes": 2584,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-primary_delay_1-seed7397003.restart.json",
+          "sha256": "sha256:6a40b1fed520c737aab0bb9fcd67f838dcf2bd52b8f205ba346598485775db07",
+          "size_bytes": 2484444,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-primary_delay_1-seed7397004.json",
+          "sha256": "sha256:c9def0a51ffddd236b3c859c19c2c8f001ac5d821a4a7b121dcecce61501b592",
+          "size_bytes": 2584,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-primary_delay_1-seed7397004.restart.json",
+          "sha256": "sha256:7252510cc918683db17c3562df5204a41a071598157f77fdaf1a319517a6d551",
+          "size_bytes": 2486073,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-primary_delay_1-seed7397005.json",
+          "sha256": "sha256:6d31a9f0b8d14cfb49d29ec70bd15e1ec09c6504fbeafac85ca9f84f33568c2f",
+          "size_bytes": 2582,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-primary_delay_1-seed7397005.restart.json",
+          "sha256": "sha256:81d82eeafc27e73f7c91b1514dfd0aef9519fa712e4dfe7e8b185cde62a50d4d",
+          "size_bytes": 2484670,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_delay_32-seed7397001.json",
+          "sha256": "sha256:6927870276077d7af8d0ba59df66cd71e2a693ec98baa9db4462a2f4ea120330",
+          "size_bytes": 2580,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_delay_32-seed7397001.restart.json",
+          "sha256": "sha256:672e384d729c6cc20081fe78072bfff2e46860e4965212291f60119b09106ce1",
+          "size_bytes": 2455425,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_delay_32-seed7397002.json",
+          "sha256": "sha256:4a819984d9f30df57e96d2cc583ebf64f74c3a93001fcb453f25b0253141701a",
+          "size_bytes": 2584,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_delay_32-seed7397002.restart.json",
+          "sha256": "sha256:ad03890a0c6f4b6d230d22171568496c2e2308615bad2d5f73617f8b58deddc3",
+          "size_bytes": 2458354,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_delay_32-seed7397003.json",
+          "sha256": "sha256:cdf66cae20aee8adda20dd58f836651d3750d9720144e548109573a79cb5a897",
+          "size_bytes": 2589,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_delay_32-seed7397003.restart.json",
+          "sha256": "sha256:d0ce60a1ab83b2b21e960ebc939c171d4bcd39240ee6f1e8c4635459b0f09fbc",
+          "size_bytes": 2460384,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_delay_32-seed7397004.json",
+          "sha256": "sha256:841e6016fd1074cdd63851c5b25ef6449c77232b3e36fa0746e2c89a56b46e0f",
+          "size_bytes": 2588,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_delay_32-seed7397004.restart.json",
+          "sha256": "sha256:b04b5b925024e4051bcdbeb5d23c9ccbab61948d1d07d8a7e05e61aebee0b570",
+          "size_bytes": 2462031,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_delay_32-seed7397005.json",
+          "sha256": "sha256:eca2b7b3b2dfe7dd7502899fa4839d181ebf19da461d2f33ad0754dd99397df4",
+          "size_bytes": 2588,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_delay_32-seed7397005.restart.json",
+          "sha256": "sha256:563d00548681dba0e3f434c72d8554ed6f1bd5661e84ce4005ca0e7fb9bcf4d7",
+          "size_bytes": 2460610,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_missing_25-seed7397001.json",
+          "sha256": "sha256:dfcf8505b0b40790251244299bc1409869b55058f4845e438ede508633755b61",
+          "size_bytes": 2580,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_missing_25-seed7397001.restart.json",
+          "sha256": "sha256:694f81d61bfdfb07a47a749bce122dc9e9ae95503e8d60c500f7b5a40c4c8d91",
+          "size_bytes": 2286902,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_missing_25-seed7397002.json",
+          "sha256": "sha256:b8dd48677a52282e548f6465750bc597cfee62b36804caca816efeb80d43d2b2",
+          "size_bytes": 2585,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_missing_25-seed7397002.restart.json",
+          "sha256": "sha256:c8bd1c1426ec36802ebfb936ada8d2302f57b112862c4d3d9b35cde214fafcd9",
+          "size_bytes": 2289702,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_missing_25-seed7397003.json",
+          "sha256": "sha256:796449c63ea0cef9d2c105a4bca9971e05df9fd24ff0039b217d2c6316b76372",
+          "size_bytes": 2588,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_missing_25-seed7397003.restart.json",
+          "sha256": "sha256:e8dc67412e5951478a5d590de5e80249a95aac658618773dbd5f465875c49153",
+          "size_bytes": 2291849,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_missing_25-seed7397004.json",
+          "sha256": "sha256:52adee49c3d6e7f19e8f721756430673136b66b8a60301901ffcf19590e9fd4a",
+          "size_bytes": 2589,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_missing_25-seed7397004.restart.json",
+          "sha256": "sha256:634a1ca9884c3a2e6f923b3fa2e2510b836154df36fab9cef745f947a4db13c5",
+          "size_bytes": 2293099,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_missing_25-seed7397005.json",
+          "sha256": "sha256:006ea121ba68609cd13baf9e8885de6d6490732188d91ee37ee38a9221056764",
+          "size_bytes": 2587,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/fixed_hash_order-sensitivity_missing_25-seed7397005.restart.json",
+          "sha256": "sha256:db56a52168e30bce085020c4cab46cd0e3d2fee430c43b916c85105c961a1bd3",
+          "size_bytes": 2291905,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/initial-seed7397001.json",
+          "sha256": "sha256:d15215cc22e004e69e09665d16d6872032422c49e5d74ca74fd5507b0134a867",
+          "size_bytes": 1149,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/initial-seed7397002.json",
+          "sha256": "sha256:c5a61b8978a4eb72b8a31cb5a5edc0263ff8ca35589fbcbea33db5e171094b77",
+          "size_bytes": 1154,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/initial-seed7397003.json",
+          "sha256": "sha256:25d33897a256354680f9a03f0843feee2e6dfd5ac7d12fd8016ae675131f6f8b",
+          "size_bytes": 1155,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/initial-seed7397004.json",
+          "sha256": "sha256:c0c423fa8a9d94e2e1016cd033c247b1874d281f87e5c8638242529cd3b4687f",
+          "size_bytes": 1157,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/initial-seed7397005.json",
+          "sha256": "sha256:445be0877a164ac33959575316b3945a56a67deac55886a33e175580ac1571c0",
+          "size_bytes": 1158,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-primary_delay_1-seed7397001.json",
+          "sha256": "sha256:c8cbca3496a0e68256531d61fce56108894ce3362bbd8f1ba158a05236cdd787",
+          "size_bytes": 2580,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-primary_delay_1-seed7397001.restart.json",
+          "sha256": "sha256:44c25ee33758b6d9293922b1ba7a3d751df264d186362043e19bbbebaaf79321",
+          "size_bytes": 2491988,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-primary_delay_1-seed7397002.json",
+          "sha256": "sha256:dcce34b2ce55c062833f6f4a82641108920d12360b60c4c500edc44aab42507d",
+          "size_bytes": 2585,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-primary_delay_1-seed7397002.restart.json",
+          "sha256": "sha256:0a2fbebebbc2df79b8b7a7375a578ea4dea23a38332b8bdd7d6fb260cd8f1b7f",
+          "size_bytes": 2494858,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-primary_delay_1-seed7397003.json",
+          "sha256": "sha256:0bf14da5645c46469c539bba055bc0b0f3c68a359a8ad7abe05339a25ce6b7d9",
+          "size_bytes": 2587,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-primary_delay_1-seed7397003.restart.json",
+          "sha256": "sha256:2e45065a6bceaad8e6ec30871de50c8c03b641f160bcfb1e36f3c73460a86c78",
+          "size_bytes": 2496845,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-primary_delay_1-seed7397004.json",
+          "sha256": "sha256:3291271c6ecebbf161d3694a9b7ee6c038912bf9ab3bdf448084899bbfc4913b",
+          "size_bytes": 2587,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-primary_delay_1-seed7397004.restart.json",
+          "sha256": "sha256:37ec0c6297ebc578a65e1721d71ba855858ebb676c4372d7ec3f0c9d15a593d8",
+          "size_bytes": 2498269,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-primary_delay_1-seed7397005.json",
+          "sha256": "sha256:b816ff9ef1cbe531f4a7393e492fb0cced1048f8b73c8777eebbe2de034812b9",
+          "size_bytes": 2588,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-primary_delay_1-seed7397005.restart.json",
+          "sha256": "sha256:e798733958f844805f37d57d7a647382d9f6369f17bd49076564f5b40f65284f",
+          "size_bytes": 2497149,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_delay_32-seed7397001.json",
+          "sha256": "sha256:aac6405614e50bf589ac43200c2fa77ee5c8393a96a7ca603af566fbbedd9868",
+          "size_bytes": 2585,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_delay_32-seed7397001.restart.json",
+          "sha256": "sha256:a902286caec312e539f7f688e298e1d1aa68f239c400436e0f557768f8beb69e",
+          "size_bytes": 2467673,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_delay_32-seed7397002.json",
+          "sha256": "sha256:f807b0bf838244a31c1072e2f860e1f6fa0502edbfda86269e648b7db06ad4bb",
+          "size_bytes": 2589,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_delay_32-seed7397002.restart.json",
+          "sha256": "sha256:5bc9fdfa13cde0e63686c0856484dae7bc098c68203bc2036d51f0a687fb106f",
+          "size_bytes": 2470551,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_delay_32-seed7397003.json",
+          "sha256": "sha256:bd789f831fd66cec12f45ff05410accb6183e7f98373ccd1f51350121e60e96f",
+          "size_bytes": 2592,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_delay_32-seed7397003.restart.json",
+          "sha256": "sha256:a8f5946b70c59bb9a394ca0e755112a549b9c919da85f13249200e2f3d28b13e",
+          "size_bytes": 2472580,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_delay_32-seed7397004.json",
+          "sha256": "sha256:9b53bd661dfda0f0463c9e992c63b5aa2b4748ffa1e1aeda1317245646b3deab",
+          "size_bytes": 2593,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_delay_32-seed7397004.restart.json",
+          "sha256": "sha256:807b5b90f3f66e8c3c377592e142413f7695f24a6670a3ac29b08d4f259d1b06",
+          "size_bytes": 2473956,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_delay_32-seed7397005.json",
+          "sha256": "sha256:4529a03dcca35432df83bacff9d63cb626155e69c1e929a6ed54b35d196c289b",
+          "size_bytes": 2593,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_delay_32-seed7397005.restart.json",
+          "sha256": "sha256:d15522ac50393ab4cbfb3e76de119f6c7a3f289d8ebf6f2ca34c7eb840d4fd08",
+          "size_bytes": 2472854,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_missing_25-seed7397001.json",
+          "sha256": "sha256:a386ec80bc2033231519635a3c7ccb99b6a68df24a9807157957a4c3744c221b",
+          "size_bytes": 2584,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_missing_25-seed7397001.restart.json",
+          "sha256": "sha256:1ee0f15a98267157cc37c7401dcc42f49345680acc10caa09412b53588304cd3",
+          "size_bytes": 2298168,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_missing_25-seed7397002.json",
+          "sha256": "sha256:ba10460abf396b066422053c8261bf72c2ad3beb4fd71cc347f15c69ab7bac0f",
+          "size_bytes": 2588,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_missing_25-seed7397002.restart.json",
+          "sha256": "sha256:d7b750f62e817aa30a3c41221343b30078cf6e43577cf7589f9a4380c7486155",
+          "size_bytes": 2300658,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_missing_25-seed7397003.json",
+          "sha256": "sha256:421eaf553bd7fb45d878fe622f8c245b5f0e532f079cafdfb7dc6b4d6d5660c6",
+          "size_bytes": 2591,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_missing_25-seed7397003.restart.json",
+          "sha256": "sha256:b0b7b280bf9da5de963bd491dbaefc7cef9691bd84cd7be6e4d9000ec1b45f75",
+          "size_bytes": 2302739,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_missing_25-seed7397004.json",
+          "sha256": "sha256:22e2b5cfa5d3f1e3790bafa6973d365cccd974828a4d1fd1a04ac767530e229c",
+          "size_bytes": 2591,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_missing_25-seed7397004.restart.json",
+          "sha256": "sha256:927436bb35104aa4258fe86fd4c08c0bdc534ebdd087c6527f50ab76bccd911b",
+          "size_bytes": 2304140,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_missing_25-seed7397005.json",
+          "sha256": "sha256:735ea798065705c14bddef9a87fdbfd2a0eae8f27b5a0b0a26700da8e6c3eacd",
+          "size_bytes": 2591,
+          "tracked": true
+        },
+        {
+          "path": "results/checkpoints/experiment_7399_v649_online_trial/reversed_block_order-sensitivity_missing_25-seed7397005.restart.json",
+          "sha256": "sha256:19dd7ffad5cdbc3156fd7500aa4cd2341728b6602287ed0b788513d66bfec6ba",
+          "size_bytes": 2303089,
+          "tracked": true
+        }
+      ],
+      "checkpoint_manifest_sha256": "sha256:e3586bcbb7ffa11ce073e01502e2b2f6a5961066237193fa777341e3a68ec320",
+      "declared_path": "results/experiment_7399_v649_online_trial.json",
+      "exact_prior_identity_available": false,
+      "experiment_id": "exp7399-online-trial",
+      "history_rewrite_cause_established": false,
+      "observed_bytes": null,
+      "observed_terminal_sha256": null,
+      "producer_entrypoint_history_commits": [
+        "8ad594a57fd9438f17b9c4d364b931c9482d3a1e"
+      ],
+      "producer_entrypoint_path": "scripts/experiments/experiment_7399_v649_online_trial.py",
+      "producer_entrypoint_state": "present_tracked",
+      "producer_module_history_commits": [
+        "8ad594a57fd9438f17b9c4d364b931c9482d3a1e"
+      ],
+      "producer_module_path": "python/carnot/experiment_7399_v649_online_trial.py",
+      "producer_module_state": "present_tracked",
+      "raw_evidence_file_count": 14,
+      "raw_evidence_manifest": [
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/upstream_exp7397_context.json",
+          "sha256": "sha256:1f67b3cceefef74240e4f346a15debd1cab887b004b57e7e8f2a8f7f23a4b6ea",
+          "size_bytes": 479,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/affected/00_worktree_imports/00_worktree_imports.log",
+          "sha256": "sha256:ffa561b519d7ca208277c5847c066f28c92ed1164b2622854e1003c87b88d59d",
+          "size_bytes": 165,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/affected/01_focused_pytest/00_focused_pytest.log",
+          "sha256": "sha256:78b378d9d23a5e09dc9da4402bd9eece7cba3ed5034597469c0f6c4d0ec1a84f",
+          "size_bytes": 98,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+          "sha256": "sha256:a449d0989f8989e35788e46b917b8b05d31c2b119cdfc1d6326bea5a732ba874",
+          "size_bytes": 98,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+          "sha256": "sha256:40052751a838b596a93dd0cfb8b36a1db20cbe2f1627ea7efd9c5f2fa2c9f741",
+          "size_bytes": 395,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/affected/04_ruff_check/00_ruff_check.log",
+          "sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+          "size_bytes": 19,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/affected/05_ruff_format/00_ruff_format.log",
+          "sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+          "size_bytes": 26,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+          "sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+          "size_bytes": 706,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+          "sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+          "size_bytes": 52,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/entrypoint/declared_entrypoint_e2e.log",
+          "sha256": "sha256:5e7d47f463c723d9aa0fc623205c674ee085603e135806744ebcfc146851025b",
+          "size_bytes": 398,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/terminal/00_independent_reducer/00_independent_reducer.log",
+          "sha256": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "size_bytes": 3,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/terminal/01_adversarial_verify/00_adversarial_verify.log",
+          "sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+          "size_bytes": 35,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/terminal/02_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+          "sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+          "size_bytes": 156,
+          "tracked": true
+        },
+        {
+          "path": "results/raw/experiment_7399_v649_online_trial/validation/terminal/03_independent_cold_replay/00_independent_cold_replay.log",
+          "sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+          "size_bytes": 15,
+          "tracked": true
+        }
+      ],
+      "raw_evidence_manifest_sha256": "sha256:34d31d4251f55f6d473c99c2c559777ca1e627b379e77053a87cb3e14820f32e",
+      "recorded_flagged_adversarial": null,
+      "recorded_identity_sidecar": null,
+      "recorded_status": null,
+      "recorded_terminal_sha256": null,
+      "recorded_verdict_class": null,
+      "recovery_disposition": "not_recovered_no_authenticated_prior_bytes",
+      "recovery_performed": false,
+      "science_eligible": false,
+      "terminal_history_commits": [],
+      "terminal_path_state": "missing",
+      "terminal_state": "missing",
+      "terminal_tracked": false
+    }
+  ],
+  "model_invoked": false,
+  "phase": 1,
+  "phase_spans": [
+    {
+      "checkpoint": "source_identities_authenticated",
+      "completed_units": 31,
+      "duration_s": 0.013822975102812052,
+      "end_s": 0.013890061061829329,
+      "heartbeat_count": 0,
+      "phase": "preconditions",
+      "start_s": 6.708595901727676e-05
+    },
+    {
+      "checkpoint": "no_current_llm_work",
+      "completed_units": 0,
+      "duration_s": 4.217028617858887e-06,
+      "end_s": 0.013914135983213782,
+      "heartbeat_count": 0,
+      "phase": "load",
+      "start_s": 0.013909918954595923
+    },
+    {
+      "checkpoint": "no_current_llm_work",
+      "completed_units": 0,
+      "duration_s": 2.334127202630043e-06,
+      "end_s": 0.013919426128268242,
+      "heartbeat_count": 0,
+      "phase": "generate",
+      "start_s": 0.013917092001065612
+    },
+    {
+      "checkpoint": "raw_units_and_fault_rows_durable",
+      "completed_units": 19,
+      "duration_s": 9.624724488006905,
+      "end_s": 9.638646219158545,
+      "heartbeat_count": 0,
+      "phase": "evaluate",
+      "start_s": 0.013921731151640415
+    },
+    {
+      "checkpoint": "affected_checks_complete",
+      "completed_units": 8,
+      "duration_s": 34.42708395398222,
+      "end_s": 44.066399230156094,
+      "heartbeat_count": 0,
+      "phase": "validate",
+      "start_s": 9.639315276173875
+    },
+    {
+      "checkpoint": "cold_replay_and_strict_readers_complete",
+      "completed_units": 4,
+      "duration_s": 21.083690711995587,
+      "end_s": 65.15489426697604,
+      "heartbeat_count": 0,
+      "phase": "terminal_validation",
+      "start_s": 44.07120355498046
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "source_bytes:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "source_bytes:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "source_bytes:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "source_bytes:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "source_bytes:research-references.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-references.md"
+    },
+    {
+      "check": "source_bytes:research-studying.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-studying.md"
+    },
+    {
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "source_bytes:ops/known-issues.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/known-issues.md"
+    },
+    {
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "source_bytes:openspec/change-proposals/research-roadmap-vNEXT.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "check": "source_bytes:research-roadmap.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "source_bytes:scripts/exclusion_manifest_lint.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/exclusion_manifest_lint.py"
+    },
+    {
+      "check": "source_bytes:scripts/conductor_gates.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/conductor_gates.py"
+    },
+    {
+      "check": "source_bytes:scripts/adversarial_verify.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/adversarial_verify.py"
+    },
+    {
+      "check": "source_bytes:scripts/verdict_row_consistency_lint.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/reporting/current_work_receipt.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7395_v649_receipt_protocol.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7395_v649_receipt_protocol.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7408_v649_capstone.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7408_v649_capstone.py"
+    },
+    {
+      "check": "source_bytes:results/experiment_7408_v649_capstone.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7408_v649_capstone.json"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7409_v650_evidence_custody.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7409_v650_evidence_custody.py"
+    },
+    {
+      "check": "source_bytes:scripts/experiments/experiment_7409_v650_evidence_custody.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/experiments/experiment_7409_v650_evidence_custody.py"
+    },
+    {
+      "check": "source_bytes:tests/python/test_experiment_7409_v650_evidence_custody.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7409_v650_evidence_custody.py"
+    },
+    {
+      "check": "driving_requirement",
+      "expected": "REQ-REPORT-7409",
+      "field": "REQ-*",
+      "observed": "REQ-REPORT-7409",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "current_task_not_quarantined",
+      "expected": false,
+      "field": "exp7409-evidence-custody",
+      "observed": false,
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "repository_write_capacity",
+      "expected": ">=20971520",
+      "field": "free_bytes",
+      "observed": 814506401792,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "blocking_current_custody_work": false,
+      "check": "external_producer_state:exp7397-delayed-adapter",
+      "expected": "missing_external_input_recorded",
+      "field": "bytes",
+      "observed": "missing_external_input_recorded",
+      "passed": true,
+      "upstream": "results/experiment_7397_v649_delayed_adapter.json"
+    },
+    {
+      "blocking_current_custody_work": false,
+      "check": "external_producer_state:exp7399-online-trial",
+      "expected": "missing_external_input_recorded",
+      "field": "bytes",
+      "observed": "missing_external_input_recorded",
+      "passed": true,
+      "upstream": "results/experiment_7399_v649_online_trial.json"
+    }
+  ],
+  "promotion_score": 0,
+  "random_seed": {
+    "bundle_units": 740965001,
+    "fault_controls": 740965002
+  },
+  "receipt_sidecars": [],
+  "repository_health": {
+    "affects_required_checks": false,
+    "as_of": "20260919",
+    "historical_failures": [],
+    "status": "not_used_as_current_gate"
+  },
+  "reproducibility_checksum": "sha256:7922011e64a9afcbce42d00fc4d106b3f8af132080f4d94670549e3cf850d280",
+  "result_size_limit_bytes": 20971520,
+  "rows": [
+    {
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "exp7409-evidence-custody"
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "exp7410-source-corpus"
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "exp7411-arc-call-budget"
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "exp7412-source-features"
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "exp7413-source-calibration"
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "exp7414-selected-feedback"
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "exp7415-decision-audit"
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "exp7416-anchored-extraction"
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "exp7417-extraction-audit"
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "exp7418-revision-memory"
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "exp7419-precision-placement"
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "exp7420-capstone"
+    },
+    {
+      "arm": "missing_producer_diagnosis",
+      "censored": false,
+      "failures": [
+        "declared_artifact_bytes"
+      ],
+      "passed": true,
+      "status": "blocked_missing_declared_artifact",
+      "unit_id": "exp7397-delayed-adapter"
+    },
+    {
+      "arm": "missing_producer_diagnosis",
+      "censored": false,
+      "failures": [
+        "declared_artifact_bytes"
+      ],
+      "passed": true,
+      "status": "blocked_missing_declared_artifact",
+      "unit_id": "exp7399-online-trial"
+    },
+    {
+      "arm": "custody_fault_control",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "kill_before_rename"
+    },
+    {
+      "arm": "custody_fault_control",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "missing_sidecar"
+    },
+    {
+      "arm": "custody_fault_control",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "corrupted_bytes"
+    },
+    {
+      "arm": "custody_fault_control",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "stale_completion"
+    },
+    {
+      "arm": "custody_fault_control",
+      "censored": false,
+      "failures": [],
+      "passed": true,
+      "status": "complete",
+      "unit_id": "oversized_payload"
+    }
+  ],
+  "run_date": "20260919",
+  "sample_size_budget": {
+    "attempted": 19,
+    "censored": 0,
+    "completed": 19,
+    "failed": 0,
+    "independent_groups": {
+      "contract_tasks": 12,
+      "fault_controls": 5,
+      "producer_paths": 2
+    },
+    "planned": 19,
+    "stop_rule": "Stop after twelve contract rows, two named producers, and five frozen fault controls.",
+    "unstarted": 0
+  },
+  "schema": "carnot.exp7409.v650.evidence_custody.v1",
+  "scientific_value_score": 0,
+  "small_ebm_training": {
+    "performed": false,
+    "receipts": []
+  },
+  "source_artifact_hashes": {
+    "AGENTS.md": {
+      "original_flagged_adversarial": null,
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "size_bytes": 1165
+    },
+    "CLAUDE.md": {
+      "original_flagged_adversarial": null,
+      "path": "CLAUDE.md",
+      "sha256": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b",
+      "size_bytes": 317781
+    },
+    "CODEX.md": {
+      "original_flagged_adversarial": null,
+      "path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "size_bytes": 2396
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "original_flagged_adversarial": null,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:1072eeac00ac761cf55a691cb241181d056ecfb964852bb157db0cddb5a6051d",
+      "size_bytes": 4350658
+    },
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "original_flagged_adversarial": null,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:fe34e919d36a63f5148a0a3e2b501fffe880183b51fef4583a36635993bdb278",
+      "size_bytes": 37206
+    },
+    "ops/e2e-test-plan.md": {
+      "original_flagged_adversarial": null,
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+      "size_bytes": 8502
+    },
+    "ops/exclusion_manifest.yaml": {
+      "original_flagged_adversarial": null,
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:fdab7b9ef47aa3f8be8902e30d96cd096f361d1abbe7c6de7624101383bf968e",
+      "size_bytes": 58837
+    },
+    "ops/known-issues.md": {
+      "original_flagged_adversarial": null,
+      "path": "ops/known-issues.md",
+      "sha256": "sha256:248336ca12c679c5e7e43d688f42c85db437df9d913e9cf53dbda3335b64a88f",
+      "size_bytes": 1826314
+    },
+    "python/carnot/experiment_7358_v646_validation_contract.py": {
+      "original_flagged_adversarial": null,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+      "size_bytes": 54324
+    },
+    "python/carnot/experiment_7395_v649_receipt_protocol.py": {
+      "original_flagged_adversarial": null,
+      "path": "python/carnot/experiment_7395_v649_receipt_protocol.py",
+      "sha256": "sha256:704cd7bde919bc23164b57eef239d958ec666c68ab27d79de745ea4a088acbad",
+      "size_bytes": 56195
+    },
+    "python/carnot/experiment_7408_v649_capstone.py": {
+      "original_flagged_adversarial": null,
+      "path": "python/carnot/experiment_7408_v649_capstone.py",
+      "sha256": "sha256:f8d15742083672fc5fed095bbd95b869660680acbf2b639902c7230d7a161e1c",
+      "size_bytes": 75151
+    },
+    "python/carnot/experiment_7409_v650_evidence_custody.py": {
+      "original_flagged_adversarial": null,
+      "path": "python/carnot/experiment_7409_v650_evidence_custody.py",
+      "sha256": "sha256:c67fb5dba560392d417174bc2b4d7b909558eefc707b2b1929b3d2043e4c92ff",
+      "size_bytes": 67286
+    },
+    "python/carnot/reporting/current_work_receipt.py": {
+      "original_flagged_adversarial": null,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+      "size_bytes": 12790
+    },
+    "python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "original_flagged_adversarial": null,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+      "size_bytes": 13393
+    },
+    "research-program.md": {
+      "original_flagged_adversarial": null,
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "size_bytes": 28560
+    },
+    "research-references.md": {
+      "original_flagged_adversarial": null,
+      "path": "research-references.md",
+      "sha256": "sha256:f68c25c5b58a67229d5e1f69326396b70862fd9227f19c0ee56c03c37bb1bd3d",
+      "size_bytes": 3525589
+    },
+    "research-roadmap.yaml": {
+      "original_flagged_adversarial": null,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:248c423ffa8045a0f6c75449d53b48f854ca03e344815a65da7a38482382fb27",
+      "size_bytes": 145891
+    },
+    "research-studying.md": {
+      "original_flagged_adversarial": null,
+      "path": "research-studying.md",
+      "sha256": "sha256:9785959368e3cc86b2ac3b27cfbf3834e5b9dbe4101ebc34c214f1162f2bc1bb",
+      "size_bytes": 418597
+    },
+    "results/experiment_7408_v649_capstone.json": {
+      "original_flagged_adversarial": null,
+      "path": "results/experiment_7408_v649_capstone.json",
+      "sha256": "sha256:8671debbffce90f7f7564f36df9ab4fd8af13369d11152161cc737d52d3f0f19",
+      "size_bytes": 182473
+    },
+    "scripts/adversarial_verify.py": {
+      "original_flagged_adversarial": null,
+      "path": "scripts/adversarial_verify.py",
+      "sha256": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+      "size_bytes": 328917
+    },
+    "scripts/conductor_gates.py": {
+      "original_flagged_adversarial": null,
+      "path": "scripts/conductor_gates.py",
+      "sha256": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
+      "size_bytes": 29979
+    },
+    "scripts/exclusion_manifest_lint.py": {
+      "original_flagged_adversarial": null,
+      "path": "scripts/exclusion_manifest_lint.py",
+      "sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+      "size_bytes": 29604
+    },
+    "scripts/experiment_template.py": {
+      "original_flagged_adversarial": null,
+      "path": "scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+      "size_bytes": 115811
+    },
+    "scripts/experiments/experiment_7409_v650_evidence_custody.py": {
+      "original_flagged_adversarial": null,
+      "path": "scripts/experiments/experiment_7409_v650_evidence_custody.py",
+      "sha256": "sha256:8c13560431c76426ee346812d092c29e7b1a84e19c7376b0b8fdbb869f3f5c0d",
+      "size_bytes": 217
+    },
+    "scripts/verdict_row_consistency_lint.py": {
+      "original_flagged_adversarial": null,
+      "path": "scripts/verdict_row_consistency_lint.py",
+      "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+      "size_bytes": 18650
+    },
+    "tests/python/test_experiment_7409_v650_evidence_custody.py": {
+      "original_flagged_adversarial": null,
+      "path": "tests/python/test_experiment_7409_v650_evidence_custody.py",
+      "sha256": "sha256:7e15081ec6738117c0f5f74138afcc72bf48cf5bf88fd641423f3bb9dd175fd3",
+      "size_bytes": 16942
+    }
+  },
+  "started_at_utc": "2026-09-19T07:22:41.014681+00:00",
+  "started_monotonic_ns": 2094261249676310,
+  "status": "complete_evidence_custody_ready",
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7409_v650_evidence_custody",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7409_v650_evidence_custody"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5190928059164435,
+      "ended_at_utc": "2026-09-19T07:22:51.173365+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7409_v650_evidence_custody/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:367f6b94e2a2623a019be12727762c63ec467669122e688ea390b91e4daacec9",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7409_v650_evidence_custody\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7409_v650_evidence_custody.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7409_v650_evidence_custody": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7409_v650_evidence_custody.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T07:22:50.654007+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7409-validation-rg3qy575/basetemp/focused tests/python/test_experiment_7409_v650_evidence_custody.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7409-validation-rg3qy575/basetemp/focused",
+        "tests/python/test_experiment_7409_v650_evidence_custody.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 15.031728213187307,
+      "ended_at_utc": "2026-09-19T07:23:06.205488+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7409_v650_evidence_custody/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:80c817bf009b509132cb637553bb6a0febe6e906947e0319ca72f6c873a46b35",
+      "name": "focused_pytest",
+      "output_tail": "..............                                                           [100%]\n14 passed in 13.27s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T07:22:51.173399+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7409-validation-rg3qy575/coverage/.coverage '--include=*/experiment_7409_v650_evidence_custody.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7409-validation-rg3qy575/basetemp/coverage tests/python/test_experiment_7409_v650_evidence_custody.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7409-validation-rg3qy575/coverage/.coverage",
+        "--include=*/experiment_7409_v650_evidence_custody.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7409-validation-rg3qy575/basetemp/coverage",
+        "tests/python/test_experiment_7409_v650_evidence_custody.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 18.575660169124603,
+      "ended_at_utc": "2026-09-19T07:23:24.781595+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7409_v650_evidence_custody/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:86fa4e29ba9240b18457e8f031af9602ce0a7f1d23d572fdc578011b35a01ea3",
+      "name": "changed_module_coverage",
+      "output_tail": "..............                                                           [100%]\n14 passed in 15.61s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-19T07:23:06.205519+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7409_v650_evidence_custody.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7409_v650_evidence_custody.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7409-validation-rg3qy575/coverage/.coverage"
+      },
+      "duration_s": 0.09248062409460545,
+      "ended_at_utc": "2026-09-19T07:23:24.874488+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7409_v650_evidence_custody/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:eac179696d1fa1b7f7c8854db897cde172e888d12710bd047561ba02a318d854",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                     Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------\npython/carnot/experiment_7409_v650_evidence_custody.py     524      0   100%\n--------------------------------------------------------------------------------------\nTOTAL                                                      524      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T07:23:24.781655+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7409_v650_evidence_custody.py scripts/experiments/experiment_7409_v650_evidence_custody.py tests/python/test_experiment_7409_v650_evidence_custody.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7409_v650_evidence_custody.py",
+        "scripts/experiments/experiment_7409_v650_evidence_custody.py",
+        "tests/python/test_experiment_7409_v650_evidence_custody.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.016620588954538107,
+      "ended_at_utc": "2026-09-19T07:23:24.891349+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7409_v650_evidence_custody/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T07:23:24.874517+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7409_v650_evidence_custody.py scripts/experiments/experiment_7409_v650_evidence_custody.py tests/python/test_experiment_7409_v650_evidence_custody.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7409_v650_evidence_custody.py",
+        "scripts/experiments/experiment_7409_v650_evidence_custody.py",
+        "tests/python/test_experiment_7409_v650_evidence_custody.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.016295710112899542,
+      "ended_at_utc": "2026-09-19T07:23:24.907955+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7409_v650_evidence_custody/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T07:23:24.891374+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7409_v650_evidence_custody.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7409_v650_evidence_custody.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.15594251896254718,
+      "ended_at_utc": "2026-09-19T07:23:25.064375+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7409_v650_evidence_custody/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T07:23:24.907999+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7409_v650_evidence_custody.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7409_v650_evidence_custody.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.016330264043062925,
+      "ended_at_utc": "2026-09-19T07:23:25.080960+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7409_v650_evidence_custody/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T07:23:25.064419+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7409_v650_evidence_custody.py --date 20260919 --validate /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7409_v650_evidence_custody/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7409_v650_evidence_custody.py",
+        "--date",
+        "20260919",
+        "--validate",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7409_v650_evidence_custody/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 10.191282924963161,
+      "ended_at_utc": "2026-09-19T07:23:35.277514+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7409_v650_evidence_custody/validation/terminal/00_declared_entrypoint_cold_replay/00_declared_entrypoint_cold_replay.log",
+      "log_sha256": "sha256:26b4d908c4b137ac79ed9a18376d84e33f6a3f093f981e9d5f954d26a4cb7c9e",
+      "name": "declared_entrypoint_cold_replay",
+      "output_tail": "[exp7409] phase=startup event=flushed\n{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_capability_e2e",
+      "started_at_utc": "2026-09-19T07:23:25.085885+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7409_v650_evidence_custody import validate_artifact;p=pathlib.Path(sys.argv[1]);v=json.loads(p.read_text());e=validate_artifact(v,require_terminal=False);print(json.dumps({'\"'\"'errors'\"'\"':e},sort_keys=True),flush=True);raise SystemExit(bool(e))' /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7409_v650_evidence_custody/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,pathlib,sys;from carnot.experiment_7409_v650_evidence_custody import validate_artifact;p=pathlib.Path(sys.argv[1]);v=json.loads(p.read_text());e=validate_artifact(v,require_terminal=False);print(json.dumps({'errors':e},sort_keys=True),flush=True);raise SystemExit(bool(e))",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7409_v650_evidence_custody/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 10.282677014125511,
+      "ended_at_utc": "2026-09-19T07:23:45.560690+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7409_v650_evidence_custody/validation/terminal/01_independent_cold_reducer/00_independent_cold_reducer.log",
+      "log_sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+      "name": "independent_cold_reducer",
+      "output_tail": "{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_raw_reduction",
+      "started_at_utc": "2026-09-19T07:23:35.277572+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7409_v650_evidence_custody/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7409_v650_evidence_custody/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.582265913952142,
+      "ended_at_utc": "2026-09-19T07:23:46.143330+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7409_v650_evidence_custody/validation/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_safety",
+      "started_at_utc": "2026-09-19T07:23:45.560733+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7409_v650_evidence_custody/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7409_v650_evidence_custody/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.025681249098852277,
+      "ended_at_utc": "2026-09-19T07:23:46.169525+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7409_v650_evidence_custody/validation/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_row_consistency",
+      "started_at_utc": "2026-09-19T07:23:46.143385+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}

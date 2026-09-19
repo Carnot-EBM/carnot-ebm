@@ -1,4 +1,130 @@
-# Research Roadmap V648 — Calibrated Decisions and Prospective Learning
+# Research Roadmap V650 — Source-Grounded Decisions and Bounded Live Execution
+
+**Milestone:** `2026.09.650`
+**Title:** Source-grounded energy decisions, causal feedback learning, and bounded live-agent execution
+**Status:** Active contract; phase 1 starts with evidence custody
+**Planning date:** 2026-09-19
+**Predecessor:** `2026.09.649` (exp7395–exp7408 terminal, with missing Exp7397 and Exp7399 producer artifacts)
+**Execution authority:** `research-roadmap.yaml` with this exact milestone
+
+## Research Objective
+
+Build a source-context decision corpus and test whether source-aware energy
+features improve calibration. Measure selected-feedback learning separately.
+Compare bounded source-anchored extraction with independent semantic review.
+Keep certified memory revision, ARC request budgeting, and precision placement
+as independent branches. Missing V649 producer bytes remain unavailable.
+
+This milestone does not use a contract score to promote science. Each gated
+branch authenticates its own producer. Valid null results can reach later
+audits. Missing or flagged inputs cannot supply a positive claim.
+
+## Evidence Boundary from V649
+
+- Exp7408 accounted for the full V649 queue. It found Exp7397 and Exp7399
+  terminal artifacts absent. Their scripts, checkpoints, and validation logs
+  do not replace the declared final JSON files.
+- Exp7401 is blocked and flagged because both online producer artifacts are
+  absent. V650 does not rerun that audit or requalify those claims.
+- Exp7396 supplies a valid static null on the reused FoVer archive. The archive
+  lacks genuine source-context questions and contains conflicting feature
+  cells. V650 creates a separate attributed source corpus.
+- Synthetic implication memory remains source-certified and circular-positive.
+  Live memory and current ARC generalization remain unavailable or invalid.
+- Exp7407 supplies host CPU service measurements only. It does not establish
+  attached-board acceleration.
+
+## Selected Research Directions
+
+The dated source review is in `research-references.md` under
+`2026-09-19 — V650 planning source review`. V650 adapts these methods without
+claiming paper reproduction.
+
+| Source | Adopted control or bounded disposition |
+|---|---|
+| Enoki, arXiv:2609.00581v2 | Use attributed context and span-preserving relation extraction. Keep machine annotation scores and gold triples outside predictor inputs. |
+| MARGIN, arXiv:2605.22949v3 | Compare adaptive energy with same-information logistic and recent-frequency controls. Treat selected-only feedback as a separate arm. |
+| Online Conformal Prediction with Corrupted Feedback, arXiv:2605.20515 | Test revoked labels and feedback replay. Do not transfer prediction-set guarantees to selective actions. |
+| Memoir, arXiv:2607.20792 | Separate memory reads from committed writes. Test source revision and eviction after synthetic proof qualification. |
+
+The EnokiQA revision is
+`06638fd6fa5c599f3249e27d1cb489b9bd584411`. Its labels are machine
+annotations with limited human validation, not exact truth. The release stays
+in an external private cache. No new model stack is installed.
+
+## Exact Task Contract
+
+There are **12 tasks**, **exp7409 through exp7420**, in exactly this conductor
+order. Every row specifies its JSON deliverable and executable prompt. Titles,
+paths, phases, substrate classes, producer fields, and structured gates match
+the active YAML. The Exp7409 contract result is advisory. It does not gate
+unrelated science.
+
+| Order | Task ID | Exact title | Deliverable | Phase | Substrate class | Structured gate |
+|---|---|---|---|---|---|---|
+| 1 | exp7409-evidence-custody | Bind twelve tasks and diagnose missing terminal evidence | results/experiment_7409_v650_evidence_custody.json | 1 | aggregation | None |
+| 2 | exp7410-source-corpus | Seal an attributed source-context calibration corpus | results/experiment_7410_v650_source_corpus.json | 1 | no_model_load | None |
+| 3 | exp7411-arc-call-budget | Enforce ARC request budgets at the live callback boundary | results/experiment_7411_v650_arc_call_budget.json | 1 | no_model_load | None |
+| 4 | exp7412-source-features | Prototype source-aware energy inputs and freeze decision tests | results/experiment_7412_v650_source_features.json | 1 | no_model_load | exp7410-source-corpus.source_corpus_ready_score == 1; exp7410-source-corpus.verdict_class in ["positive", "circular_positive", "null"]; exp7410-source-corpus.flagged_adversarial == false |
+| 5 | exp7413-source-calibration | Measure source-grounded Gibbs calibration against simple controls | results/experiment_7413_v650_source_calibration.json | 2 | no_model_load | exp7412-source-features.source_feature_protocol_ready_score == 1; exp7412-source-features.verdict_class in ["positive", "circular_positive", "null"]; exp7412-source-features.flagged_adversarial == false |
+| 6 | exp7414-selected-feedback | Measure continuous energy calibration under selected feedback | results/experiment_7414_v650_selected_feedback.json | 2 | no_model_load | exp7412-source-features.source_feature_protocol_ready_score == 1; exp7412-source-features.verdict_class in ["positive", "circular_positive", "null"]; exp7412-source-features.flagged_adversarial == false |
+| 7 | exp7415-decision-audit | Independently audit calibrated decisions and feedback causality | results/experiment_7415_v650_decision_audit.json | 2 | aggregation | None |
+| 8 | exp7416-anchored-extraction | Compare bounded Qwen claim extraction with preserved source spans | results/experiment_7416_v650_anchored_extraction.json | 3 | model_bounded_generation | exp7412-source-features.source_feature_protocol_ready_score == 1; exp7412-source-features.verdict_class in ["positive", "circular_positive", "null"]; exp7412-source-features.flagged_adversarial == false |
+| 9 | exp7417-extraction-audit | Audit extraction coverage and semantic preservation independently | results/experiment_7417_v650_extraction_audit.json | 3 | aggregation | exp7416-anchored-extraction.extraction_capture_complete_score == 1; exp7416-anchored-extraction.verdict_class in ["positive", "circular_positive", "null"]; exp7416-anchored-extraction.flagged_adversarial == false |
+| 10 | exp7418-revision-memory | Measure certified memory under source revision and eviction | results/experiment_7418_v650_revision_memory.json | 3 | cpu_exact_solver_or_simulator | None |
+| 11 | exp7419-precision-placement | Measure decision stability at reduced precision and preserve board states | results/experiment_7419_v650_precision_placement.json | 4 | no_model_load | None |
+| 12 | exp7420-capstone | Reconcile twelve dispositions and decide each research branch | results/experiment_7420_v650_capstone.json | 4 | aggregation | None |
+
+## Phase Boundaries
+
+Phase 1 binds evidence custody, seals the attributed corpus, enforces the ARC
+callback budget, and freezes source features. Phase 2 measures static and
+selected-feedback calibration before an independent audit. Phase 3 captures
+bounded source-anchored extraction, audits semantic preservation, and measures
+certified memory under revision. Phase 4 measures precision stability and
+reconciles all twelve dispositions.
+
+No task depends on Exp7409's advisory score. Exp7412, Exp7413, Exp7414,
+Exp7416, and Exp7417 use only the structured producer gates shown above.
+Every gated producer declares its scalar, terminal class, and adversarial flag
+in its prompt. Missing paths, absent fields, null values, and observed zeroes
+remain separate diagnostics.
+
+## Runtime and Validation Boundaries
+
+- Host CPU handles custody, corpus processing, small Gibbs training, exact
+  solving, and aggregation. Small Gibbs work uses training receipts and never
+  increments current LLM counters.
+- Exp7416 is the only bounded generation task. It uses the frozen
+  `unsloth/Qwen3.8-27B-GGUF` model through the owned runtime. No other task can
+  inherit those invocation counts.
+- Every current execution venue is the closed string `host`. Device details
+  belong in substrate details. Models, datasets, and caches remain outside the
+  repository.
+- Each result stays below 20 MiB. Large unit evidence uses hash-bound shards.
+  Commit-time enforcement is deferred outer-loop work until a reviewed guard
+  lands outside the conductor.
+- Each task uses the Exp7358 scoped plan and Exp7303 runner. No task launches a
+  full Python suite from its experiment validation plan. No numbered E2E
+  applies unless shared training, sampling, serialization, or PyO3 behavior
+  changes.
+- Terminal artifacts publish atomically after fresh-process replay,
+  independent reduction, adversarial verification, and strict row checks.
+
+## Exit Criteria
+
+The milestone can complete with positive, circular-positive, null, blocked,
+and disqualified branch outcomes. Completion requires honest evidence custody
+and exact per-task dispositions. It does not require a positive science score.
+No result changes production defaults, publishes externally, updates generator
+weights, or activates another roadmap.
+
+## Historical V648 Plan
+
+The V648 text below remains for traceability. Its byte-for-byte preserved copy
+is `research-roadmap-v648-preserved-20260918.md`. It is not an active authority.
+
+### Research Roadmap V648 — Calibrated Decisions and Prospective Learning
 
 **Milestone:** `2026.09.648`
 **Title:** Calibrated energy decisions, prospective proof memory, and reachable live feedback
@@ -141,7 +267,7 @@ representative per group. Online replay is empirical and does not inherit an
 IID certificate under constructed shift. The proof branch's public exact
 source defines truth: a positive formal result is `circular_positive`.
 
-## Exact Task Contract
+### Historical V648 Exact Task Contract
 
 There are **14 tasks**, **exp7381 through exp7394**, in exactly this conductor
 order. Every row specifies a JSON deliverable and its prompt specifies an

@@ -5937,3 +5937,30 @@ producer is disqualified and flagged. Host cost is valid only for the measured
 CPU service. These limits prevent aggregation from creating a positive
 headline or changing the north-star publication gates.
 <!-- EXP7408-V649-EVIDENCE-SCOPE-20260919-END -->
+
+<!-- EXP7409-V650-SOURCE-INGESTION-20260919-START -->
+## 2026-09-19 V650 source-to-method ingestion — INGESTED
+
+This mapping copies the dated V650 planning decisions from
+`research-references.md`. It adds no literature search or local reproduction
+claim.
+
+| Primary source | Adopted control or bounded disposition |
+|---|---|
+| [Enoki, arXiv:2609.00581v2](https://arxiv.org/html/2609.00581v2) | Use attributed source context and span-preserving relation extraction. Keep machine annotation scores and gold triples outside predictor inputs. This does not replicate Enoki's model stack. |
+| [MARGIN, arXiv:2605.22949v3](https://arxiv.org/html/2605.22949v3) | Compare adaptive energy with same-information recent-frequency and logistic controls. Treat selected-only feedback as a separate arm, not random missingness. |
+| [Online Conformal Prediction with Corrupted Feedback, arXiv:2605.20515](https://arxiv.org/abs/2605.20515) | Test revoked labels and feedback replay. Prediction-set guarantees do not certify Carnot's selective actions or learned probabilities. |
+| [Memoir, arXiv:2607.20792](https://arxiv.org/abs/2607.20792) | Keep memory reads separate from committed writes. Test source revision and eviction after the existing synthetic implication result. Procedural recall is not formal constraint learning. |
+
+- Dataset boundary: EnokiQA revision
+  `06638fd6fa5c599f3249e27d1cb489b9bd584411` has machine annotations with
+  limited human validation and CC BY-SA 4.0 licensing. It is not exact truth.
+- Storage boundary: use an attributed private cache. Do not commit the full
+  release or install Enoki's neural models.
+- Method boundary: defer a KAN sweep until source information improves the
+  simple baseline. Keep learning, faithful sampling, satisfiability, and
+  hardware placement as separate claims.
+- Access boundary: the planning review records partial citation and secondary
+  source checks. It does not claim a citation census, owned Z1 hardware, or a
+  reproducible Kona implementation.
+<!-- EXP7409-V650-SOURCE-INGESTION-20260919-END -->
