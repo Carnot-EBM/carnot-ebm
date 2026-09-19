@@ -20140,3 +20140,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-19: Bind twelve tasks and diagnose missing terminal evidence (⚠️ Research Finding) — honest_verdict=complete_null_evidence_custody_ready_missing_v649_producers_unavailable; results/experiment_7409_v650_evidence_custody.json
 - 2026-09-19: Seal an attributed source-context calibration corpus (⚠️ Research Finding) — honest_verdict=complete_null_source_corpus_ready_machine_annotations_not_truth; results/experiment_7410_v650_source_corpus.json
 - 2026-09-19: Enforce ARC request budgets at the live callback boundary (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_evidence; results/experiment_7411_v650_arc_call_budget.json
+- 2026-09-19: Prototype source-aware energy inputs and freeze decision tests (⚠️ Research Finding) — honest_verdict=complete_null_source_feature_protocol_ready_real_efficacy_unmeasured; results/experiment_7412_v650_source_features.json
