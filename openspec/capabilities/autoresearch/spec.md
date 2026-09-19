@@ -1285,6 +1285,165 @@ protocol, input bytes, detailed row shards, checkpoints, and validation scope.
 **then** changed probabilities, metrics, hashes, counters, or gates fail
 **and** terminal JSON publishes atomically only after all required readers pass.
 
+### REQ-AUTO-7427: Measure randomized delayed-feedback source adaptation
+
+Exp7427 SHALL authenticate the exact Exp7426 static-decision artifact before
+dependent work. It SHALL require `decision_capture_complete_score=1`, an
+allowed `verdict_class`, and `flagged_adversarial=false`. A failed prerequisite
+SHALL produce a terminal blocked artifact. The artifact SHALL name the upstream,
+path, check, field, expected value, and observed value.
+
+The experiment SHALL initialize only from the Exp7426 full-source numeric
+checkpoints, affine calibrators, and frozen policies. It SHALL use one
+label-blind representative from each independent Exp7423 prospective-stream
+source group. Hash order and a domain-blocked shift order SHALL use only source
+and task metadata. No stream label may change an initial checkpoint, order,
+block, reveal schedule, or current prediction. The replay is prospective use of
+archived human annotations. It is not new live user feedback.
+
+Within each block of 32 requests, frozen initial Gibbs risk SHALL define three
+shared reveal schedules. `top_risk_eight` SHALL reveal the eight highest risks.
+`uniform_eight` SHALL sample eight groups without replacement.
+`hybrid_four_plus_four` SHALL reveal the highest-risk four plus four uniformly
+sampled groups from the remaining 28. An incomplete block SHALL reveal
+`floor(block_size/4)` groups. Its hybrid schedule SHALL split this total
+deterministically between top-risk and uniform selections. The schedule SHALL
+be drawn without labels and shared across model arms. Full-block marginal
+propensities SHALL be one for deterministic selections, `8/32` for uniform
+selection, and `4/28` for the hybrid random remainder. Zero-probability
+omissions under top-risk selection SHALL remain explicit. They SHALL not enter
+inverse-probability-weighted claims.
+
+The compared arms SHALL be frozen spline, online sparse spline, online Gibbs,
+online raw logistic, and a no-feedback spline copy. All online learners SHALL
+use the same frozen gradient-norm clipping rule and the same learning rate.
+Each revealed label SHALL update only its bounded numeric coefficients. It
+SHALL be used once after delay zero or eight groups. Every action and prediction
+SHALL be committed before the reveal is enqueued. Every prediction, reveal,
+propensity, arrival, coefficient change, failed request, and censored request
+SHALL remain in the journal. A numeric checkpoint SHALL bind parent, event, and
+new-state hashes after each admitted update.
+
+Independent development fixtures SHALL test revoked feedback, removal and
+trusted-journal replay, restart equality, duplicate rejection, early-access
+rejection, and rollback after corrupted state. These fixtures SHALL not enter
+the scientific replay. Fixed budgets, identical feedback delays, and equal
+persistence work SHALL apply to all compared arms.
+
+Inferential claims SHALL require at least 400 independent online groups and at
+least 40 examples of each primary label. Lower support SHALL produce
+`complete_null_insufficient_online_support` after a complete valid capture.
+Proper-score reduction SHALL use inverse-probability weighting only where the
+recorded marginal reveal probability is positive. Top-risk-only estimates
+SHALL be marked biased. The primary comparison SHALL be hybrid-audit online
+spline against frozen spline and online raw logistic. Seeds SHALL average
+within each source group before 10,000 moving-block resamples. Primary block
+length SHALL be 32 and frozen sensitivity length SHALL be 64. One simultaneous
+correction SHALL cover two contrasts, two delays, and two orders. Each schedule,
+delay, and order SHALL retain its own result.
+
+`online_value_score` SHALL equal one only when every registered primary
+condition has an upper Brier delta below zero against both controls, no worse
+log loss, no higher empirical action risk, no coverage loss, and reveal cost at
+most 25 percent of independent groups. The no-feedback arm SHALL show no
+learning benefit. A development-only shuffled-label control SHALL not improve.
+Failure of any benefit clause SHALL yield a valid terminal null when validity
+and completion remain intact. Delay and shift evidence SHALL be described as
+empirical replay. It SHALL not inherit an IID, conformal, or FDR guarantee.
+
+The experiment SHALL measure prediction, update, journal, and full-service p50
+and p95 latency. It SHALL record peak memory and touched coefficients. It SHALL
+report whether CPU update cost is below one microsecond and whether memory
+lookup cost is below one millisecond. A kernel-only measurement SHALL not be
+presented as end-to-end cost. Complete journals and terminal rows SHALL be
+stored in hash-bound shards below 20 MiB each.
+
+`online_capture_complete_score` SHALL equal one when temporal rows, controls,
+lineage, affected validation, declared entrypoint, cold replay, independent
+reduction, adversarial verification, and strict row consistency all pass. A
+support-limited or no-gain result MAY receive this score. `promotion_score`
+SHALL remain zero. `continuous_self_learning_task` SHALL be true. The authority
+SHALL be `human_annotation_source_support`. It is fallible annotation evidence,
+not exact proof. `verifier_is_oracle` SHALL be false.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM counts, `inference_substrate=no_model_load`,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`. Numeric
+coefficient updates SHALL appear only in `small_ebm_training`. Archived or
+scripted model events SHALL remain typed hash-bound sidecars. They SHALL not
+enter current invocation counts.
+
+The workflow SHALL freeze an Exp7358 affected-file manifest. It SHALL use the
+Exp7303 runner with command-local coverage data. It SHALL run worktree imports,
+affected tests, 100-percent changed-module coverage, scoped Ruff, changed-module
+mypy, exact-test spec coverage, the declared entrypoint, fresh-process replay,
+independent reduction, adversarial verification, and strict row consistency.
+No numbered E2E scenario applies because this experiment changes no shared
+training, sampling, serialization, PyO3, or ARC behavior.
+
+The terminal artifact SHALL contain the ordinary required experiment fields.
+It SHALL also contain `online_capture_complete_score`, `online_value_score`,
+`continuous_self_learning_task`, `feedback_event_rows`, `checkpoint_lineage`,
+`condition_reports`, `paired_moving_block_intervals`, `hardware_path`, and
+`small_ebm_training`. The checksum SHALL bind code, protocol, input bytes, raw
+rows, checkpoints, and validation scope.
+
+#### SCENARIO-AUTO-7427-01: Static state and label-blind orders are sealed
+
+**Given** authenticated Exp7426 full-source checkpoints and the prospective view,
+**when** initial states and both stream orders load,
+**then** no prospective label enters initial state or ordering
+**and** every order contains one identical set of independent source groups.
+
+#### SCENARIO-AUTO-7427-02: Shared reveal schedules preserve their propensities
+
+**Given** a 32-request block and frozen initial Gibbs risks,
+**when** the three reveal schedules are drawn,
+**then** all arms receive identical reveal decisions with exact marginal probabilities
+**and** changing labels cannot change a selected group or its propensity.
+
+#### SCENARIO-AUTO-7427-03: Prediction and action precede one delayed update
+
+**Given** a selected event and delay zero or eight,
+**when** its human annotation becomes available,
+**then** the durable prediction and action precede the reveal and update
+**and** the label changes numeric state at most once with a clipped gradient.
+
+#### SCENARIO-AUTO-7427-04: Journal controls restore trusted numeric state
+
+**Given** committed development-fixture feedback and persisted checkpoints,
+**when** feedback is revoked, state is restarted, or corrupted state is loaded,
+**then** trusted active events replay to the same hash
+**and** corrupted descendants roll back to the last authenticated parent.
+
+#### SCENARIO-AUTO-7427-05: Weighted scores fail closed on support and propensity
+
+**Given** retained labels and registered reveal probabilities,
+**when** proper scores and support are reduced,
+**then** inverse-probability weights use positive propensities only
+**and** low support or zero-probability omissions cannot produce a value claim.
+
+#### SCENARIO-AUTO-7427-06: Moving-block benefit keeps every condition
+
+**Given** both orders, both delays, three schedules, and five seeds,
+**when** group-averaged paired deltas enter 10,000 moving-block draws,
+**then** one simultaneous correction covers both controls, delays, and orders
+**and** no failed condition is pooled away.
+
+#### SCENARIO-AUTO-7427-07: No-feedback and shuffled labels reject false learning
+
+**Given** the frozen no-feedback arm and the development-only label shuffle,
+**when** the same replay budget completes,
+**then** no-feedback remains prediction-identical to frozen spline
+**and** a learning claim fails unless the registered benefit disappears there.
+
+#### SCENARIO-AUTO-7427-08: Cold readers bind complete replay evidence
+
+**Given** a terminal candidate with journal, terminal rows, lineage, and costs,
+**when** fresh processes replay and independently reduce it,
+**then** changed schedules, probabilities, arrivals, hashes, metrics, gates, or receipts fail
+**and** terminal JSON publishes atomically only after all required readers pass.
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the
