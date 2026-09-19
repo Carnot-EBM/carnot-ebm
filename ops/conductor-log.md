@@ -18203,3 +18203,4 @@ code |
 | 2026-09-19 02:45 UTC | Measure adapter-withheld ARC with durable episode  | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: econdition", + |
 | 2026-09-19 03:25 UTC | Measure adapter-withheld ARC with durable episode  | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 115 passed, 1 warning in 7.66s |
 | 2026-09-19 03:48 UTC | Measure selector service cost and preserve board p | OK | 95 passed, 1 warning in 8.73s |
+| 2026-09-19 04:12 UTC | Reconcile fourteen dispositions and set evidence-b | OK | 91 passed, 1 warning in 15.90s |
