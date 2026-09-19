@@ -13,6 +13,125 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+## V649 bounded adapter-withheld ARC generalization panel — 2026-09-19
+
+**Status:** Specified. This panel measures the live self-discovery method on
+three public proxy games. It does not measure hidden-game performance.
+
+### REQ-ARC-WMTE-7406: Run the checkpoint-qualified bounded generalization panel
+
+Experiment 7406 SHALL authenticate the exact Experiment 7398 artifact before
+dependent work. The gate SHALL require `arc_checkpoint_ready_score=1`, a
+verdict class in `positive | circular_positive | null`, and
+`flagged_adversarial=false`. It SHALL also recompute the hashes of the Exp7398
+module, entrypoint, and tests against the hashes recorded by Exp7398. A missing
+or changed input SHALL produce a terminal `blocked_*` artifact with a complete
+`gate_check_summary` before model load.
+
+Before model load, the experiment SHALL freeze the existing label-blind
+`bp35`, `cn04`, `dc22` rotation with two fixed seeds per game. The parent MAY
+read the solve registry only for duplicate-credit checks. The policy SHALL not
+receive registry solution data, per-game adapters, game source, saved engines,
+checkpoints, hand solvers, replay routes, or offline ground-truth search.
+
+The live panel SHALL use the real `make_carnot_agent` factory and
+`E3AgentPolicy` with frozen `unsloth/Qwen3.8-27B-GGUF` Q4_K_M bytes. It SHALL
+use the model's embedded tokenizer and chat template through the owned native
+CUDA llama.cpp runtime. Each episode SHALL have at most 128 environment
+actions, two generation requests, 256 requested output tokens per request, and
+240 seconds of episode work. Total episode work SHALL stop at 1800 seconds.
+The context window SHALL remain independent of the output-token limit.
+
+The first scheduled episode SHALL be the sentinel. Before later episodes can
+start, its durable journal SHALL contain a scored-policy entry, a generation
+request attempt, and a first non-reset environment action. If this condition
+fails, the sentinel SHALL remain censored and every later episode SHALL remain
+unstarted. If it passes, every attempted episode SHALL atomically checkpoint
+its policy entry, request attempts, environment actions, generation results,
+and terminal disposition. Recovery SHALL retain complete rows when the final
+child summary is missing.
+
+Each row SHALL expose raw-generation receipts, tool dispatch and result rows,
+resumed policy actions, token limits, measured CPU/GPU and wall costs, actions,
+levels, supervisor redirect firings, and terminal outcome. The reducer SHALL
+recompute all sample-size equalities from durable events. Historical and
+current induction attempts SHALL be counted separately. Only authenticated
+current attempts SHALL extend the cumulative induction ledger. A missing
+redirect or tool firing SHALL be reported as unobserved demand, not evidence
+that demand is absent.
+
+Each game and seed SHALL report right-censored elapsed time and actions to
+progress. The matching hand-tuned historical result SHALL appear only as a
+labeled noncausal comparator. Redirect/progress association SHALL remain
+descriptive and SHALL not change supervisor arm order. A complete panel with
+no progress SHALL be a terminal `null`, not evidence of hidden-game incapacity
+or absent tool demand.
+
+Any level credit SHALL use `solve_provenance=live_agent_self_discovery`. It
+SHALL pass a pre-attempt registry duplicate check and reproduce the live
+agent's own action sequence on a fresh environment. Levels already present in
+the registry SHALL remain generalization observations and SHALL receive no new
+solve credit. `official_score` and `promotion_score` SHALL remain null and zero
+respectively. Production flags, supervisor order, generator weights, the solve
+registry, the active roadmap, and the research conductor SHALL remain
+unchanged.
+
+The affected command plan SHALL come from Experiment 7358 and execute through
+Experiment 7303 before live model work. It SHALL include worktree imports,
+focused pytest without repository addopts or coverage, private basetemp paths,
+100 percent changed-module coverage with a command-local coverage file, scoped
+Ruff check and format, changed-module mypy, and exact-test spec coverage. The
+workflow SHALL then run E2E-009, E2E-010, and the private LLM-off environment
+smoke before the sealed live panel. It SHALL cold-reload and independently
+reduce the measured candidate. It SHALL run the unchanged adversarial verifier
+and strict verdict-row consistency reader on that exact candidate before the
+atomic terminal publication. A failed affected or terminal check SHALL
+disqualify the result.
+
+`arc_generalization_capture_complete_score` SHALL equal one only when every
+sealed episode has one exact complete, censored, or unstarted disposition, all
+durable-event equalities hold, the owned runtime receipt is authentic, and all
+required validation passes. This is an accounting score. It is not an efficacy
+or promotion score.
+
+#### SCENARIO-ARC-WMTE-7406-DEPENDENCY
+
+- GIVEN an Exp7398 artifact and its recorded source hashes
+- WHEN the dependency gate is reduced before model load
+- THEN the readiness, verdict, adversarial flag, and three code hashes match
+- AND any missing or changed value yields a terminal blocked artifact.
+
+#### SCENARIO-ARC-WMTE-7406-SENTINEL
+
+- GIVEN the first sealed scored-policy episode
+- WHEN its durable events lack policy entry, request attempt, or first action
+- THEN that episode is censored and the remaining five episodes are unstarted
+- AND no later policy or environment begins.
+
+#### SCENARIO-ARC-WMTE-7406-DURABLE-PANEL
+
+- GIVEN a sentinel that acts and six sealed game-seed identities
+- WHEN the child completes, times out, or loses its final summary
+- THEN completed episode journals are recovered exactly once
+- AND all six units retain complete, censored, or unstarted dispositions.
+
+#### SCENARIO-ARC-WMTE-7406-REDUCTION
+
+- GIVEN durable policy, request, generation, action, induction, and redirect events
+- WHEN the panel is reduced independently
+- THEN raw event counts equal each row and the declared sample-size budget
+- AND no firing remains unknown demand rather than an invented negative attempt.
+
+#### SCENARIO-ARC-WMTE-7406-PROVENANCE
+
+- GIVEN a level observation from an adapter-withheld live episode
+- WHEN the registry precheck shows that level was already reproduced
+- THEN the row is a generalization observation with no new solve credit
+- AND any proposed new credit requires replay of the agent's own action sequence.
+
+Implementation status: specified 2026-09-19. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V649 durable scored-path episode checkpoint — 2026-09-18
 
 **Status:** Specified. This qualification uses host CPU work and scripted
