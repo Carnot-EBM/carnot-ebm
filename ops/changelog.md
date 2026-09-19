@@ -20134,3 +20134,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-19: Measure certified memory independently on sealed synthetic streams (⚠️ Research Finding) — honest_verdict=complete_circular_positive_source_certified_synthetic_memory_value; results/experiment_7403_v649_synthetic_memory.json
 - 2026-09-19: Audit synthetic and live proof claims independently (⚠️ Blocked) — honest_verdict=blocked_live_cohort_unavailable_synthetic_circular_value_retained; results/experiment_7405_v649_proof_audit.json
 - 2026-09-19: Measure adapter-withheld ARC with durable episode evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_evidence; results/experiment_7406_v649_arc_generalization.json
+- 2026-09-19: Measure selector service cost and preserve board prerequisites (✅ Complete) — honest_verdict=complete_positive_vectorized_full_service_benefit; results/experiment_7407_v649_service_cost.json
