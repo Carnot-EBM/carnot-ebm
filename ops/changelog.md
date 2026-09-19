@@ -20146,3 +20146,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-19: Independently audit calibrated decisions and feedback causality (⚠️ Research Finding) — honest_verdict=complete_null_independent_decision_audits_no_joint_registered_value; results/experiment_7415_v650_decision_audit.json
 - 2026-09-19: Compare bounded Qwen claim extraction with preserved source spans (⚠️ Blocked) — honest_verdict=blocked_one_owned_rtx3090_slot; results/experiment_7416_v650_anchored_extraction.json
 - 2026-09-19: Measure certified memory under source revision and eviction (⚠️ Research Finding) — honest_verdict=complete_memory_revision_capture_no_full_cost_value; results/experiment_7418_v650_revision_memory.json
+- 2026-09-19: Measure decision stability at reduced precision and preserve board states (⚠️ Research Finding) — honest_verdict=complete_null_int8_no_registered_full_service_benefit; results/experiment_7419_v650_precision_placement.json
