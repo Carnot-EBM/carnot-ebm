@@ -18233,3 +18233,4 @@ code |
 | 2026-09-19 18:12 UTC | Independently test source-label leakage and learni | OK | 89 passed, 1 warning in 8.28s |
 | 2026-09-19 18:34 UTC | Capture the sealed Qwen span comparison after leas | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, DURATION_TOO_SHORT, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 95 passed, 1 warning in 8.60s |
 | 2026-09-19 18:36 UTC | Audit Qwen claim coverage and qualifier preservati | GATE_BLOCK | gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp7429-anchored-capture.extraction_capture_complete_score (actual=0 == expected=1) |
+| 2026-09-19 19:26 UTC | Measure owned callback reachability in two adapter | OK | 97 passed, 1 warning in 7.61s |
