@@ -45539,3 +45539,92 @@ This supplies genuine source text where the current FoVer feature study lacks it
 - **Logical Intelligence:** opened [Kona](https://logicalintelligence.com/kona-ebms-energy-based-models).
   Its public language/energy separation remains architectural context.
   No reproducible local implementation or new hardware access was established.
+
+## 2026-09-19 — V652 planning source review
+
+Recorded before designing the successor to completed milestone `2026.09.651`.
+This pass checked primary papers and current project artifacts. Rechecked papers
+are not new discoveries. External results are not Carnot measurements.
+
+### Promising methods and their limits
+
+| Primary source | Finding | Bounded use for Carnot |
+|---|---|---|
+| [A Joint Finite-Sample Certificate for Adaptive Selective Conformal Risk Control, 2606.08517v1](https://arxiv.org/html/2606.08517v1), June 7, 2026 | Separates selected risk, acceptance probability, and utility. The policy and candidate grid must be independent of certification data. Gains depend on the operating regime. | Diagnose V651's empty selected sets. Compare tuning followed by independent certification with the existing fixed extreme thresholds. Retain exact binomial bounds for binary harm; the paper does not prove Bernstein bounds beat these. |
+| [Adaptive Bayesian Online Learning via Expert Aggregation, 2607.20239v1](https://arxiv.org/html/2607.20239v1), July 22, 2026 | Aggregates update rules using sequential losses. Mean loss and annealed loss have different regret guarantees. | Test a small probability mixture of frozen and adaptive energy heads. Commit updates only after feedback arrives. This is an adaptation of expert aggregation, not a replication of Bayesian inference or a delayed-feedback theorem. |
+| [Conformal Selective Prediction with General Risk Control, 2603.24704v1](https://arxiv.org/html/2603.24704v1), March 25, 2026, rechecked | Distinguishes marginal deployment risk from risk within the selected set. Its e-value constructions require stated sampling assumptions. | Require separate accept harm, reject harm, coverage, and utility fields. An all-escalate policy has no measured selected risk. Do not substitute an FDR guarantee for conditional error control. |
+| [CRANE: Reasoning with constrained LLM generation, 2502.09061](https://arxiv.org/abs/2502.09061), 2025, rechecked | Grammar compliance and reasoning quality are separate objectives. Strict output constraints can harm reasoning. | Separate compact span representation, completed output, and semantic fidelity. A complete JSON object is not a semantic certificate. Do not reopen retired finite-choice answer transport. |
+| [Catastrophic Forgetting in Kolmogorov-Arnold Networks, 2511.12828](https://arxiv.org/abs/2511.12828), November 2025, rechecked | Local spline support does not prevent forgetting in every domain. Support overlap and data dimension matter. | Retain a frozen expert and measure loss after domain changes. Sparse update parity does not establish learning benefit. |
+| [Ultrafast On-Chip Online Learning via Spline Locality in Kolmogorov-Arnold Networks, 2602.02056](https://arxiv.org/abs/2602.02056), February 2026, rechecked | Exploits local spline updates and fixed precision for FPGA online learning. | Preserve the hardware route, but bind it to Carnot's complete service cost. V651's persistence overhead is outside a spline arithmetic kernel. |
+
+The first two methods address different V651 observations. Exp7426 passed its
+registered probability-score comparisons but failed certified coverage. Exp7427
+found no registered online value and some shifted-stream log-loss harm. Neither
+observation supports another unchanged architecture or threshold sweep.
+
+### Required topic sweep
+
+- **Energy-based verification and reasoning:** reopened
+  [EBT, 2507.02092](https://arxiv.org/abs/2507.02092) and
+  [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605), revised May 25, 2026.
+  Compatibility learning and function-space equivalence do not establish
+  semantic correctness. Generator training remains outside this milestone.
+- **Neural constraint satisfaction:** reopened
+  [AS2, 2603.18436](https://arxiv.org/abs/2603.18436). Its differentiable
+  symbolic interface motivates separate representation and constraint checks.
+  It does not justify replacing Carnot's exact verifier with a soft score.
+- **Ising applications in ML:** reopened
+  [Thermodynamic learning, 2609.04732](https://arxiv.org/abs/2609.04732).
+  Parameter learning and faithful sampling remain separate claims. No unchanged
+  Ising-law sweep is selected after the completed nulls and validation failures.
+- **Hallucination detection:** opened
+  [When the Wrong Key Wins, 2609.15106](https://arxiv.org/abs/2609.15106),
+  September 2026, and [SURE-RAG, 2605.03534](https://arxiv.org/abs/2605.03534).
+  Perturbation sensitivity and evidence sufficiency are useful alternatives.
+  Defer new model probes until the current source-preserving extraction works.
+- **KANs and continual learning:** checked the locality and forgetting papers
+  above. A probability mixture is the next controlled adaptation to test.
+- **Energy-guided generation:** reopened
+  [ETS, 2601.21484](https://arxiv.org/abs/2601.21484) and CRANE.
+  Account for sampling cost and syntax-induced distribution changes. Neither
+  source supplies an exact semantic guarantee for the mandated GGUF.
+- **Hardware sampling:** reopened
+  [FPGA–ASIC co-design, 2602.15985](https://arxiv.org/abs/2602.15985).
+  Include host orchestration and persistence in any acceleration envelope.
+  Host software measurements do not establish board or TSU speed.
+- **Online constraint systems:** checked the aggregation paper and rechecked
+  [Memoir, 2607.20792](https://arxiv.org/abs/2607.20792). Keep predictions,
+  revealed labels, and committed state distinct. Replay is not deployed learning.
+
+### Secondary sources and access receipts
+
+- **OpenReview:** searched ICLR, ICML, and NeurIPS EBM and verification work.
+  The [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg), its PDF, and
+  [VerifierQ](https://openreview.net/forum?id=qhOT0MisId) returned browser
+  challenges. Indexed records were available. No full submission review or
+  newly inferred acceptance is claimed. Method claims use primary papers.
+- **Semantic Scholar:** direct Graph API requests returned HTTP 200 for
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=20)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=20).
+  EBT returned 20 records and a next-page pointer; ARM–EBM returned eight.
+  Reopened Memoir and [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047)
+  from this partial citation walk. Solver effort does not measure model
+  difficulty. No complete citation census is claimed.
+- **Hugging Face Papers:** checked verification search and opened
+  [SURE-RAG](https://huggingface.co/papers/2605.03534), then its arXiv source.
+  The SCoRE discovery page was inaccessible. Generated summaries are not
+  scientific authority.
+- **GitHub trending:** opened [weekly Python](https://github.com/trending/python?since=weekly)
+  and [monthly Rust](https://github.com/trending/rust?since=monthly).
+  No verified EBM, constraint, or KAN dependency was selected from those lists.
+- **Extropic:** opened [writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t), dated September 4, 2026.
+  Z1T describes probabilistic hardware and digital co-design. Vendor results
+  establish neither owned access nor Carnot performance.
+- **Logical Intelligence:** reopened
+  [Kona](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  Its public separation of language and energy reasoning remains architecture
+  context. This pass found no reproducible local training recipe or checkpoint.
+
+No hardware purchase, vendor contact, model download, or external publication
+is part of this planning pass.

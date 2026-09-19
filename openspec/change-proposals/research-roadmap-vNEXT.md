@@ -1,515 +1,330 @@
-# Research Roadmap V650 — Source-Grounded Decisions and Bounded Live Execution
+# Carnot Research Roadmap V652: Useful Decisions and Defensive Learning
 
-**Milestone:** `2026.09.650`
-**Title:** Source-grounded energy decisions, causal feedback learning, and bounded live-agent execution
-**Status:** Active contract; phase 1 starts with evidence custody
-**Planning date:** 2026-09-19
-**Predecessor:** `2026.09.649` (exp7395–exp7408 terminal, with missing Exp7397 and Exp7399 producer artifacts)
-**Execution authority:** `research-roadmap.yaml` with this exact milestone
+**Created:** 2026-09-19
+**Milestone:** `2026.09.652`
+**Title:** Useful risk-controlled decisions, defensive online learning, and complete source extraction
+**Status:** Planned; no experiment in this document has run.
+**Supersedes:** completed milestone `2026.09.651`, exp7421–exp7433.
+**Execution file:** `research-roadmap-next.yaml`
 
-## Research Objective
+This milestone tests whether useful probability scores can support safe actions,
+and whether online learning can avoid harm by retaining frozen experts.
+It also tests a smaller extraction representation after a measured output failure.
+The live generator remains `unsloth/Qwen3.8-27B-GGUF` with frozen weights.
 
-Build a source-context decision corpus and test whether source-aware energy
-features improve calibration. Measure selected-feedback learning separately.
-Compare bounded source-anchored extraction with independent semantic review.
-Keep certified memory revision, ARC request budgeting, and precision placement
-as independent branches. Missing V649 producer bytes remain unavailable.
+## What V651 Proved
 
-This milestone does not use a contract score to promote science. Each gated
-branch authenticates its own producer. Valid null results can reach later
-audits. Missing or flagged inputs cannot supply a positive claim.
+Completion means terminal disposition, not a positive result. The archive still
+ended at V650 when planning began. V651 evidence comes from its active task file,
+terminal artifacts, capstone and conductor log. Twelve declared files exist;
+the extraction audit has a conductor pre-gate disposition instead.
 
-## Evidence Boundary from V649
+| Evidence | Finding | Consequence |
+|---|---|---|
+| Exp7421 and Exp7433 | The markdown authority still named V650. Contract and capstone were disqualified. | Replace the entire document and independently compare the new authorities before activation. |
+| Exp7422 | GPU capacity predicates and one owned lease lifecycle passed; readiness is not a reservation. | Reuse this mechanism and acquire a fresh lease for new inference. |
+| Exp7423 | RAGTruth human source-support labels and disjoint roles were sealed: 17,617 eligible responses across 2,964 groups. | Preserve annotation authority and group splits. Human support labels are fallible, not formal truth. |
+| Exp7425 | Sparse/dense spline parity passed on analytic fixtures. | Keep the fixed-basis logistic equivalence explicit; this is circular numeric evidence. |
+| Exp7426 | Registered Brier/log-loss checks passed; the 25 percent certified-coverage gate failed. | Diagnose score support and independent policy certification rather than retraining another unchanged head. |
+| Exp7427 and Exp7428 | The online trial and independent audit found no registered benefit on 753 groups. Shifted cases included log-loss harm. | Test a mechanism that can retain a frozen expert. Do not claim that sparse locality ensures useful adaptation. |
+| Exp7429 and Exp7430 | Four CUDA development replies all ended at 64 tokens with invalid JSON. The producer also lacked an adversarial_verify receipt; its audit was pre-gated. | Change verbose extraction representation and qualify the terminal reader sequence before inference. |
+| Exp7431 | The scored policy reached bp35 and cn04 with adapters disabled. Each took 62 actions, banked zero levels and had zero supervisor firings in shadow mode. | Interpret exposure before another intervention. Reachability is complete; efficacy remains unmeasured. |
+| Exp7432 | Fixed-point actions matched, but full-service speed did not improve. Persistence occupied 0.37696053267914603 of measured service. | Bound the complete service. Arithmetic-only acceleration cannot provide 100x. |
 
-- Exp7408 accounted for the full V649 queue. It found Exp7397 and Exp7399
-  terminal artifacts absent. Their scripts, checkpoints, and validation logs
-  do not replace the declared final JSON files.
-- Exp7401 is blocked and flagged because both online producer artifacts are
-  absent. V650 does not rerun that audit or requalify those claims.
-- Exp7396 supplies a valid static null on the reused FoVer archive. The archive
-  lacks genuine source-context questions and contains conflicting feature
-  cells. V650 creates a separate attributed source corpus.
-- Synthetic implication memory remains source-certified and circular-positive.
-  Live memory and current ARC generalization remain unavailable or invalid.
-- Exp7407 supplies host CPU service measurements only. It does not establish
-  attached-board acceleration.
-
-## Selected Research Directions
-
-The dated source review is in `research-references.md` under
-`2026-09-19 — V650 planning source review`. V650 adapts these methods without
-claiming paper reproduction.
-
-| Source | Adopted control or bounded disposition |
-|---|---|
-| Enoki, arXiv:2609.00581v2 | Use attributed context and span-preserving relation extraction. Keep machine annotation scores and gold triples outside predictor inputs. |
-| MARGIN, arXiv:2605.22949v3 | Compare adaptive energy with same-information logistic and recent-frequency controls. Treat selected-only feedback as a separate arm. |
-| Online Conformal Prediction with Corrupted Feedback, arXiv:2605.20515 | Test revoked labels and feedback replay. Do not transfer prediction-set guarantees to selective actions. |
-| Memoir, arXiv:2607.20792 | Separate memory reads from committed writes. Test source revision and eviction after synthetic proof qualification. |
-
-The EnokiQA revision is
-`06638fd6fa5c599f3249e27d1cb489b9bd584411`. Its labels are machine
-annotations with limited human validation, not exact truth. The release stays
-in an external private cache. No new model stack is installed.
-
-## Exact Task Contract
-
-There are **12 tasks**, **exp7409 through exp7420**, in exactly this conductor
-order. Every row specifies its JSON deliverable and executable prompt. Titles,
-paths, phases, substrate classes, producer fields, and structured gates match
-the active YAML. The Exp7409 contract result is advisory. It does not gate
-unrelated science.
-
-| Order | Task ID | Exact title | Deliverable | Phase | Substrate class | Structured gate |
-|---|---|---|---|---|---|---|
-| 1 | exp7409-evidence-custody | Bind twelve tasks and diagnose missing terminal evidence | results/experiment_7409_v650_evidence_custody.json | 1 | aggregation | None |
-| 2 | exp7410-source-corpus | Seal an attributed source-context calibration corpus | results/experiment_7410_v650_source_corpus.json | 1 | no_model_load | None |
-| 3 | exp7411-arc-call-budget | Enforce ARC request budgets at the live callback boundary | results/experiment_7411_v650_arc_call_budget.json | 1 | no_model_load | None |
-| 4 | exp7412-source-features | Prototype source-aware energy inputs and freeze decision tests | results/experiment_7412_v650_source_features.json | 1 | no_model_load | exp7410-source-corpus.source_corpus_ready_score == 1; exp7410-source-corpus.verdict_class in ["positive", "circular_positive", "null"]; exp7410-source-corpus.flagged_adversarial == false |
-| 5 | exp7413-source-calibration | Measure source-grounded Gibbs calibration against simple controls | results/experiment_7413_v650_source_calibration.json | 2 | no_model_load | exp7412-source-features.source_feature_protocol_ready_score == 1; exp7412-source-features.verdict_class in ["positive", "circular_positive", "null"]; exp7412-source-features.flagged_adversarial == false |
-| 6 | exp7414-selected-feedback | Measure continuous energy calibration under selected feedback | results/experiment_7414_v650_selected_feedback.json | 2 | no_model_load | exp7412-source-features.source_feature_protocol_ready_score == 1; exp7412-source-features.verdict_class in ["positive", "circular_positive", "null"]; exp7412-source-features.flagged_adversarial == false |
-| 7 | exp7415-decision-audit | Independently audit calibrated decisions and feedback causality | results/experiment_7415_v650_decision_audit.json | 2 | aggregation | None |
-| 8 | exp7416-anchored-extraction | Compare bounded Qwen claim extraction with preserved source spans | results/experiment_7416_v650_anchored_extraction.json | 3 | model_bounded_generation | exp7412-source-features.source_feature_protocol_ready_score == 1; exp7412-source-features.verdict_class in ["positive", "circular_positive", "null"]; exp7412-source-features.flagged_adversarial == false |
-| 9 | exp7417-extraction-audit | Audit extraction coverage and semantic preservation independently | results/experiment_7417_v650_extraction_audit.json | 3 | aggregation | exp7416-anchored-extraction.extraction_capture_complete_score == 1; exp7416-anchored-extraction.verdict_class in ["positive", "circular_positive", "null"]; exp7416-anchored-extraction.flagged_adversarial == false |
-| 10 | exp7418-revision-memory | Measure certified memory under source revision and eviction | results/experiment_7418_v650_revision_memory.json | 3 | cpu_exact_solver_or_simulator | None |
-| 11 | exp7419-precision-placement | Measure decision stability at reduced precision and preserve board states | results/experiment_7419_v650_precision_placement.json | 4 | no_model_load | None |
-| 12 | exp7420-capstone | Reconcile twelve dispositions and decide each research branch | results/experiment_7420_v650_capstone.json | 4 | aggregation | None |
-
-## Phase Boundaries
-
-Phase 1 binds evidence custody, seals the attributed corpus, enforces the ARC
-callback budget, and freezes source features. Phase 2 measures static and
-selected-feedback calibration before an independent audit. Phase 3 captures
-bounded source-anchored extraction, audits semantic preservation, and measures
-certified memory under revision. Phase 4 measures precision stability and
-reconciles all twelve dispositions.
-
-No task depends on Exp7409's advisory score. Exp7412, Exp7413, Exp7414,
-Exp7416, and Exp7417 use only the structured producer gates shown above.
-Every gated producer declares its scalar, terminal class, and adversarial flag
-in its prompt. Missing paths, absent fields, null values, and observed zeroes
-remain separate diagnostics.
-
-## Runtime and Validation Boundaries
-
-- Host CPU handles custody, corpus processing, small Gibbs training, exact
-  solving, and aggregation. Small Gibbs work uses training receipts and never
-  increments current LLM counters.
-- Exp7416 is the only bounded generation task. It uses the frozen
-  `unsloth/Qwen3.8-27B-GGUF` model through the owned runtime. No other task can
-  inherit those invocation counts.
-- Every current execution venue is the closed string `host`. Device details
-  belong in substrate details. Models, datasets, and caches remain outside the
-  repository.
-- Each result stays below 20 MiB. Large unit evidence uses hash-bound shards.
-  Commit-time enforcement is deferred outer-loop work until a reviewed guard
-  lands outside the conductor.
-- Each task uses the Exp7358 scoped plan and Exp7303 runner. No task launches a
-  full Python suite from its experiment validation plan. No numbered E2E
-  applies unless shared training, sampling, serialization, or PyO3 behavior
-  changes.
-- Terminal artifacts publish atomically after fresh-process replay,
-  independent reduction, adversarial verification, and strict row checks.
-
-## Exit Criteria
-
-The milestone can complete with positive, circular-positive, null, blocked,
-and disqualified branch outcomes. Completion requires honest evidence custody
-and exact per-task dispositions. It does not require a positive science score.
-No result changes production defaults, publishes externally, updates generator
-weights, or activates another roadmap.
-
-## Historical V648 Plan
-
-The V648 text below remains for traceability. Its byte-for-byte preserved copy
-is `research-roadmap-v648-preserved-20260918.md`. It is not an active authority.
-
-### Research Roadmap V648 — Calibrated Decisions and Prospective Learning
-
-**Milestone:** `2026.09.648`
-**Title:** Calibrated energy decisions, prospective proof memory, and reachable live feedback
-**Status:** Proposed; staged, not activated or executed
-**Planning date:** 2026-09-18
-**Predecessor:** `2026.09.647` (exp7369–exp7380, all terminal)
-**Execution authority:** `research-roadmap-next.yaml` until activation; then only the active YAML with this exact milestone
-
-## Research Objective
-
-Train and independently measure a small energy-based accept/reject/escalate
-policy, test whether verified feedback improves later decisions, and finish the
-prospective proof-memory measurement that V647 never reached. An independent
-ARC branch must diagnose its missing first action before another live run.
-Archived Ising traces and current cost rows support bounded placement analysis.
-No foundation-model training, production promotion or hardware bring-up is
-implied by a successful prototype.
-
-This follows the calibrated-decision training floor added to CLAUDE.md on
-2026-09-18, the ARC generalization floor, and research-program.md priorities.
-The existing 17-parameter Gibbs head supplies the trainable mechanism. The
-mandated `unsloth/Qwen3.8-27B-GGUF` generator remains frozen. A typed policy is
-judged on proper scores and the risk/coverage of its complete behavior, not
-AUROC alone or the presence of a confidence number.
-
-## What V647 Proved and What It Did Not
-
-- Exp7369 bound a matching twelve-task plan. Exp7370 and Exp7371 produced a
-  versioned implication-proof fixture and attacked its source boundary. Their
-  readiness did not establish learning value.
-- Exp7372 made four usable real Qwen calls, but its receipt was disqualified:
-  `4 == 3` was used instead of `4 >= 3`, promotion was required despite being
-  prohibited, the execution venue was a dictionary, and oracle-defined work
-  was called positive. The independent validator also found readiness
-  disagreement. Keep its original artifact and quarantine intact.
-- Exp7373 was blocked; Exp7374 and Exp7375 were pre-gated before producing
-  their scheduled JSON files. No prospective proof-memory gain or audit ran.
-  Absence of those files is evidence of missing measurement, not a scientific
-  null and not permission to invent a producer.
-- Exp7376 recorded one load and zero generation calls or environment actions.
-  Six rows were censored at the 1800-second aggregate budget. The cause before
-  first action remains undiagnosed; the coverage subprocess also reported no
-  data. Its disqualified outcome cannot train a supervisor.
-- Exp7377 established exact finite source-law fixtures. Exp7378 preserved
-  sample evidence but failed venue validation (`host_cpu` is not the closed
-  `host` value) and had eighteen empty-support cells. Original all-cell gates
-  remain failed. A source law with no zero-energy assignment is not, by that
-  fact, an empty finite-temperature distribution.
-- Exp7379 retained dated KV260 fabric and PolarFire CPU-dispatch evidence;
-  GateMate still lacked an operator-authored changed physical state after
-  Exp6559. Exp7380 accounted for all twelve tasks but remained disqualified
-  because required producer validation and science were missing.
-
-The planning snapshot's research-complete.yaml ends at V646. V647 terminal
-artifacts and conductor pre-gate records therefore supply the latest evidence;
-ledger lag does not reopen completed experiments. The old design is preserved
-byte-for-byte at `research-roadmap-v647-preserved-20260918.md` in this directory.
+Primary evidence is in `results/experiment_7421_v651_contract_ingestion.json`
+through the named V651 files, especially `results/experiment_7433_v651_capstone.json`.
+No source result is relabeled or rewritten by this plan.
 
 ## Three Biggest Gaps to the PRD
 
-1. **Verifier signals do not yet establish calibrated decisions (FR-12).**
-   The new REQ-AUTO-018 benchmark uses PCIB features and NCE, with AUROC-based
-   admission and Brier reporting. No measured typed selection policy has yet
-   beaten prevalence and logistic controls. Its 6,548-row archive has only
-   114 incorrect labels; comparing with probability 0.5 would be misleading.
-   V648 freezes disjoint calibration roles, corrects NCE's changed class prior,
-   and measures the whole accept/reject/escalate policy.
-2. **Persistent state does not yet show causal future benefit (FR-11).**
-   V646 lacked an individual structural witness, and V647's proof experiment
-   never ran. V648 measures both delayed-label Gibbs updates and later-query
-   source-checkable proof reuse. Prediction precedes feedback; erasure,
-   frozen/no-feedback controls and strong persistent baselines test causality.
-3. **Mechanisms lack reachable live utility and complete-cost evidence
-   (FR-07, FR-12, NFR-01).** V647's ARC path never acted, finite-law evidence
-   mixed undefined support and sampler quality, and hardware remains constrained
-   by physical prerequisites. V648 diagnoses the live invocation boundary,
-   then measures adapter-withheld behavior; it separately audits frozen laws
-   and estimates placement from authentic complete-service costs.
+1. **Verifiable reasoning does not yet become useful safe decisions.**
+   FR-12 needs valid semantics and usable coverage. Better probability scores,
+   valid JSON and low constraint energy address different parts of this gap.
+   Exp7436/7439/7441 test independent risk certification. Exp7437/7442/7443 test
+   completed whole-proposition extraction without declaring syntax to be truth.
+2. **Continuous self-learning has no current registered later-query advantage.**
+   FR-11 needs beneficial updates and operational continuity. Exp7435 fixes the
+   documented research-round lock. Exp7438/7440 test causal online competition
+   between frozen and adaptive energy heads, with equal-information controls.
+3. **The deployment path lacks a measured general reasoning or service-speed gain.**
+   FR-05/07/08 and NFR-01 need full-service and live-path evidence. Exp7444
+   preserves the ARC generalization floor through supervisor outcome analysis.
+   Exp7445 tests the hardware feasibility bound against actual service stages.
+   Board reachability, numeric parity and archived attempts are separate claims.
 
-## Research Inputs and Selection
+The PRD's foundation-model vision remains long-term context. The newer
+`ops/north-star.md` frames current work as verification around a commodity
+generator and runtime hidden-game discovery. This milestone follows that scope.
 
-The source review was appended to research-references.md before experiment
-design, under `2026-09-18 — V648 planning source review`. These are adaptations
-for Carnot, not claims that the cited papers proved this specific system.
+## Research Basis
 
-| Primary source | Adopted idea or bounded disposition | Tasks |
+The [V652 source review](../../research-references.md#2026-09-19--v652-planning-source-review)
+was written before this experiment roster. It covers all eight requested topics
+and all six secondary sources, including a partial Semantic Scholar citation walk.
+
+| Source | Decision in this milestone | Limit |
 |---|---|---|
-| [SHIP, 2608.21748](https://arxiv.org/abs/2608.21748) | Calibrate the deployed policy, freeze a finite policy grid and simultaneous bounds; zero selected groups give no certificate. Its image setting is not our evaluated scope. | Exp7382, Exp7385, Exp7387 |
-| [CalArena, 2605.30188](https://arxiv.org/abs/2605.30188) | Proper scoring rules and strong simple calibration controls. | Exp7382, Exp7385, Exp7387 |
-| [CalVerT, 2606.21777](https://arxiv.org/abs/2606.21777) | Distinguish confidence, evidence grounding and action selection. | Exp7382, Exp7391 |
-| [IM-OCP, 2503.10345](https://arxiv.org/abs/2503.10345) and [online calibration, 2504.09096](https://arxiv.org/abs/2504.09096) | Delayed/intermittent verified feedback and a recent-frequency control. Prediction-set coverage is not a theorem for our selective risk under drift. | Exp7386, Exp7387 |
-| [Thermodynamic learning, 2609.04732](https://arxiv.org/abs/2609.04732) | Separate learned couplings from the invariant source target and charge all update costs. New hardware/coupling training deferred. | Exp7392, Exp7393 |
-| [EBT, 2507.02092](https://arxiv.org/abs/2507.02092), [ARM-EBM, 2512.15605](https://arxiv.org/abs/2512.15605), KAN-CL and constrained-decoding references in the ledger | Useful architectural context; no generator retraining, new text ranker, KAN architecture search or token-mask decoder without a diagnosed advantage. | Deferral recorded by Exp7381 |
+| [Joint selective certificate, 2606.08517](https://arxiv.org/html/2606.08517v1) | Separate policy tuning, selected risk and coverage certification. | Retain exact binary bounds; no claim that a different inequality creates signal. |
+| [Expert aggregation, 2607.20239](https://arxiv.org/html/2607.20239v1) | Retain frozen experts and learn mixture weights from earlier feedback. | Delayed fixed-share replay inherits no automatic calibration or no-share regret guarantee. |
+| [SCoRE, 2603.24704](https://arxiv.org/html/2603.24704v1) | Distinguish deployment risk, selected risk and abstention. | Empty selected sets have undefined risk. |
+| [CRANE, 2502.09061](https://arxiv.org/abs/2502.09061) | Separate output representation from semantic quality. | No grammar mask or finite-choice answer-transport rerun. |
+| [KAN locality, 2602.02056](https://arxiv.org/abs/2602.02056), [forgetting, 2511.12828](https://arxiv.org/abs/2511.12828) | Preserve a bounded numeric update route and test shift harm. | Kernel speed and local support do not establish service speed or useful learning. |
 
-Requested secondary sources were also checked: OpenReview (including EBT's
-ICLR 2026 paper), Extropic writing/Z1T, Semantic Scholar, Hugging Face papers,
-GitHub monthly Python/Rust trends, and Logical Intelligence Kona. Semantic
-Scholar browser access failed, while direct Graph API citation requests returned
-HTTP 200: the EBT response contained twenty entries with a next-page pointer,
-and ARM-EBM eight. This was a partial citation check, not a census. Vendor pages
-are architecture context, not evidence of available local hardware. No new
-repository dependency was justified. The reference ledger records URLs,
-versions, access boundaries, and the other requested topic searches.
+EBT, ARM–EBM, AS2, ETS, Ising learning, Extropic Z1T and Kona were rechecked.
+None supplies a reason to reopen the unchanged failed generator, text-ranker,
+proof-memory or hardware-access chains. New perturbation-based hallucination
+work stays queued until current extraction has usable outputs.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    F[Hashed FoVer groups and frozen raw PCIB features] --> T[Training partition]
-    F --> C[Separate probability and policy calibration]
-    T --> G[Small Gibbs head and prevalence/logistic controls]
-    G --> C
-    C --> P[Typed accept / reject / escalate policy]
-    P --> E[Sealed final-test evaluator and independent audit]
-    T --> O[Separate prequential replay: predict then reveal delayed feedback]
-    O --> U[Bounded Gibbs update and versioned checkpoint]
-    U --> O
-    O --> E
-    Q[Frozen Qwen3.8 bounded generation] --> R[Corrected receipt reducer and sealed proposal bytes]
-    R --> M[Prior committed implication memory]
-    S[Immutable original clauses] --> X[Persistent exact solver and source-proof checker]
-    M --> X
-    X --> W[Verified consequence committed after feedback]
+    R[Human-annotated source groups] --> F[Fit compact Gibbs and spline heads]
+    F --> P[Calibrate probabilities]
+    P --> T[Tune one policy per head]
+    T --> C[Independent risk and coverage certificate]
+    C --> D[Accept / reject / escalate plus confidence]
+    F --> M[Frozen and adaptive expert bank]
+    M --> Q[Predict and commit before feedback]
+    Q --> L[Delayed verified feedback]
+    L --> W[Update expert weights and adaptive heads]
     W --> M
-    M --> A[Independent erasure and full-cost audit]
-    B[Reproduced live invocation repair] --> L[Real E3 policy with adapters withheld]
-    Q --> L
-    L --> V[Current request / tool / action / progress ledger]
-    I[Archived Ising traces and exact source laws] --> J[Support-aware independent reduction]
-    E --> H[Measured host placement bound and board prerequisites]
-    A --> H
-    J --> H
-    V --> Z[Fourteen-disposition capstone]
+    Q --> A[Independent causal and risk audit]
+    C --> A
+    G[Owned Qwen3.8 GGUF] --> X[Compact whole-proposition spans]
+    X --> S[Literal reconstruction and scoped semantic audit]
+    ARC[Archived live scored ARC attempts] --> O[Supervisor exposure and outcome analysis]
+    W --> H[CPU service cost and future FPGA interface]
+    A --> Z[Thirteen-branch capstone]
+    S --> Z
+    O --> Z
     H --> Z
 ```
 
-Training, probability calibration, policy selection and final evaluation are
-separate reader boundaries. Static policy certificates use one label-blind
-representative per group. Online replay is empirical and does not inherit an
-IID certificate under constructed shift. The proof branch's public exact
-source defines truth: a positive formal result is `circular_positive`.
+RAGTruth labels indicate support by supplied text. They do not establish truth
+outside that text. The online branch is ordered replay of archived annotations.
+The extraction branch invokes a real current local model. These scopes stay distinct.
 
-### Historical V648 Exact Task Contract
+## Exact Task Contract
 
-There are **14 tasks**, **exp7381 through exp7394**, in exactly this conductor
-order. Every row specifies a JSON deliverable and its prompt specifies an
-executable entrypoint. The table and YAML are the same contract, including
-all field spellings and terminal-class/adversarial gates. No task depends on
-the advisory contract score or a scientific-benefit score. Valid null
-measurements can therefore reach their auditors.
+**13 tasks, exp7434 through exp7446, in the order below.**
+This table is the complete conductor contract. It is not an aspirational list.
+`None` means no whole-task structured gate. Historical files can be authenticated
+inputs; all structured gates name producers inside this roadmap.
 
-| Order | Task ID | Exact title | Deliverable | Phase | Substrate class | Structured gate |
+| Order | Task ID | Exact title | Phase | Deliverable | Substrate class | Structured gate |
 |---|---|---|---|---|---|---|
-| 1 | exp7381-contract | Bind V648 sources and the exact fourteen-task contract | results/experiment_7381_v648_contract.json | 1 | aggregation | None |
-| 2 | exp7382-decision-protocol | Prototype typed energy decisions and seal calibration partitions | results/experiment_7382_v648_decision_protocol.json | 1 | no_model_load | None |
-| 3 | exp7383-canary-reducer | Repair assignment receipt reduction without repeating inference | results/experiment_7383_v648_canary_reducer.json | 1 | aggregation | None |
-| 4 | exp7384-arc-invocation-boundary | Harden the live ARC child invocation and first-action boundary | results/experiment_7384_v648_arc_invocation_boundary.json | 1 | no_model_load | None |
-| 5 | exp7385-decision-training | Train and measure calibrated Gibbs decisions against simple controls | results/experiment_7385_v648_decision_training.json | 2 | no_model_load | exp7382-decision-protocol.decision_protocol_ready_score == 1; exp7382-decision-protocol.verdict_class in ["positive", "circular_positive", "null"]; exp7382-decision-protocol.flagged_adversarial == false |
-| 6 | exp7386-online-decisions | Measure continuous decision learning with delayed verified feedback | results/experiment_7386_v648_online_decisions.json | 2 | no_model_load | exp7382-decision-protocol.decision_protocol_ready_score == 1; exp7382-decision-protocol.verdict_class in ["positive", "circular_positive", "null"]; exp7382-decision-protocol.flagged_adversarial == false |
-| 7 | exp7387-decision-audit | Audit policy calibration leakage and continuous-learning causality | results/experiment_7387_v648_decision_audit.json | 2 | aggregation | exp7385-decision-training.decision_capture_complete_score == 1; exp7385-decision-training.verdict_class in ["positive", "circular_positive", "null"]; exp7385-decision-training.flagged_adversarial == false; exp7386-online-decisions.online_capture_complete_score == 1; exp7386-online-decisions.verdict_class in ["positive", "circular_positive", "null"]; exp7386-online-decisions.flagged_adversarial == false |
-| 8 | exp7388-proposal-capture | Capture bounded Qwen3.8 proposals through the corrected receipt path | results/experiment_7388_v648_proposal_capture.json | 3 | model_bounded_generation | exp7383-canary-reducer.assignment_reducer_ready_score == 1; exp7383-canary-reducer.verdict_class in ["positive", "circular_positive", "null"]; exp7383-canary-reducer.flagged_adversarial == false; exp7383-canary-reducer.proof_boundary_replay_ready_score == 1; exp7383-canary-reducer.verdict_class in ["positive", "circular_positive", "null"]; exp7383-canary-reducer.flagged_adversarial == false |
-| 9 | exp7389-proof-learning | Measure prospective implication-memory value on sealed later requests | results/experiment_7389_v648_proof_learning.json | 3 | cpu_exact_solver_or_simulator | exp7388-proposal-capture.candidate_capture_complete_score == 1; exp7388-proposal-capture.verdict_class in ["positive", "circular_positive", "null"]; exp7388-proposal-capture.flagged_adversarial == false; exp7383-canary-reducer.proof_boundary_replay_ready_score == 1; exp7383-canary-reducer.verdict_class in ["positive", "circular_positive", "null"]; exp7383-canary-reducer.flagged_adversarial == false |
-| 10 | exp7390-proof-audit | Independently audit proof-memory causality and complete cost | results/experiment_7390_v648_proof_audit.json | 3 | aggregation | exp7389-proof-learning.proof_learning_capture_complete_score == 1; exp7389-proof-learning.verdict_class in ["positive", "circular_positive", "null"]; exp7389-proof-learning.flagged_adversarial == false |
-| 11 | exp7391-arc-generalization | Measure adapter-withheld live ARC after first-action repair | results/experiment_7391_v648_arc_generalization.json | 3 | model_bounded_generation | exp7384-arc-invocation-boundary.arc_invocation_ready_score == 1; exp7384-arc-invocation-boundary.verdict_class in ["positive", "circular_positive", "null"]; exp7384-arc-invocation-boundary.flagged_adversarial == false |
-| 12 | exp7392-ising-reduction | Recompute frozen Ising evidence with explicit support accounting | results/experiment_7392_v648_ising_reduction.json | 3 | cpu_exact_solver_or_simulator | None |
-| 13 | exp7393-hardware-placement | Bound decision-head placement and preserve attached-board prerequisites | results/experiment_7393_v648_hardware_placement.json | 4 | aggregation | None |
-| 14 | exp7394-capstone | Reconcile fourteen outcomes and decide calibrated-learning continuation | results/experiment_7394_v648_capstone.json | 4 | aggregation | None |
+| 1 | exp7434-contract-methods | Bind the thirteen-task contract and ingest methods against V651 evidence | 1 | results/experiment_7434_v652_contract_methods.json | aggregation | None |
+| 2 | exp7435-round-breaker | Prevent historical rejection streaks from locking future research rounds | 1 | results/experiment_7435_v652_round_breaker.json | no_model_load | None |
+| 3 | exp7436-selection-protocol | Diagnose empty decision sets and seal an independent selection protocol | 1 | results/experiment_7436_v652_selection_protocol.json | aggregation | None |
+| 4 | exp7437-span-protocol | Prototype compact claim spans and seal the extraction comparison | 1 | results/experiment_7437_v652_span_protocol.json | no_model_load | None |
+| 5 | exp7438-mixture-prototype | Prototype delayed expert weighting over frozen and adaptive energy heads | 2 | results/experiment_7438_v652_mixture_prototype.json | no_model_load | None |
+| 6 | exp7439-certified-decisions | Train calibrated energy policies and measure independent risk certification | 2 | results/experiment_7439_v652_certified_decisions.json | no_model_load | exp7436-selection-protocol.selection_protocol_ready_score == 1; exp7436-selection-protocol.verdict_class in ["null", "positive"]; exp7436-selection-protocol.flagged_adversarial == false |
+| 7 | exp7440-mixture-learning | Measure continuous expert weighting on delayed source-support outcomes | 2 | results/experiment_7440_v652_mixture_learning.json | no_model_load | exp7438-mixture-prototype.mixture_prototype_ready_score == 1; exp7438-mixture-prototype.verdict_class in ["circular_positive", "null", "positive"]; exp7438-mixture-prototype.flagged_adversarial == false; exp7439-certified-decisions.decision_capture_complete_score == 1; exp7439-certified-decisions.verdict_class in ["null", "positive"]; exp7439-certified-decisions.flagged_adversarial == false |
+| 8 | exp7441-decision-audit | Independently audit policy risk and delayed learning without benefit gates | 3 | results/experiment_7441_v652_decision_audit.json | aggregation | None |
+| 9 | exp7442-span-capture | Measure compact Qwen claim extraction after the representation repair | 3 | results/experiment_7442_v652_span_capture.json | model_bounded_generation | exp7437-span-protocol.span_protocol_ready_score == 1; exp7437-span-protocol.verdict_class in ["null", "positive", "circular_positive"]; exp7437-span-protocol.flagged_adversarial == false |
+| 10 | exp7443-span-audit | Audit raw extraction outcomes including a failed development canary | 3 | results/experiment_7443_v652_span_audit.json | aggregation | None |
+| 11 | exp7444-arc-supervisor-evidence | Interpret adapter-withheld ARC supervisor outcomes before another intervention | 3 | results/experiment_7444_v652_arc_supervisor_evidence.json | aggregation | None |
+| 12 | exp7445-hardware-envelope | Bound complete learning-service acceleration and preserve board prerequisites | 4 | results/experiment_7445_v652_hardware_envelope.json | aggregation | None |
+| 13 | exp7446-capstone | Reconcile thirteen outcomes and decide each research branch from evidence | 4 | results/experiment_7446_v652_capstone.json | aggregation | None |
 
-## Phase 1 — Freeze Decisions and Repair Proven Boundaries
+## Phase 1: Establish the Questions and Recover Research Execution
 
-**Exp7381–Exp7384.** The contract check is advisory, with private mutations for
-count, order, milestone, title, path, phase, substrate, producer fields and
-retirement metadata. Exp7382 prototypes a typed decision reader and freezes the
-protocol before fitting. Exp7383 diagnoses and corrects the receipt reduction
-using preserved bytes; it neither reruns old inference nor makes the old
-artifact eligible. Exp7384 reproduces the actual pre-first-action failure,
-then hardens that boundary with scoped coverage and truthful invocation states.
-An unresolved cause yields readiness zero and prevents the new live run.
+Exp7434 independently binds both authorities and ingests the selected methods.
+It is advisory and cannot cascade-block independent science. Contract mutations
+must reject stale milestone, count, order, title, substrate, path and field changes.
 
-The protocol groups question IDs and normalized duplicate text into connected
-components, hashes them with a fixed salt into 40/20/20/20 training/probability-
-calibration/policy-calibration/final-test partitions, and requires at least ten
-incorrect examples per partition. No score-dependent resplitting is allowed.
-The reused archive is not a new independent external test. Five frozen seeds,
-500 optimizer steps, a 17-parameter head and five threshold pairs cap capacity
-and search. Numeric checkpoint readers reject executable or malformed payloads.
+Exp7435 takes the new dated mandatory priority. It limits the breaker to attempts
+inside the current invocation while preserving the local stop threshold and all
+history. A private real round must reach evaluation after historical rejections.
+Ten new consecutive rejected attempts must still stop that invocation. Tests
+cover every affected caller and use no synthesis LLM.
 
-## Phase 2 — Static Calibration and Continuous Decision Learning
+Exp7436 diagnoses why the selected set was empty. It seals three deployed heads,
+five-seed probability averaging, separate calibration/tuning halves, and one
+candidate pair per head. Certification gets nine simultaneous checks at
+delta=0.05/9. Accept/reject harm budgets remain 0.05/0.10; coverage stays >=0.25.
+No test label or prospective-stream label can choose the policy.
 
-**Exp7385–Exp7387.** Train five arms: training prevalence, L2 logistic,
-raw balanced-NCE Gibbs, prior-corrected NCE Gibbs, and Gibbs trained with
-Bernoulli log loss at natural class prevalence. For NCE, class-balanced loss
-changes the prior; explicitly test the training-prior log-odds correction and
-separate affine calibration. This is small EBM training, with no LLM calls.
+Exp7437 prototypes compact spans over bounded immutable paragraphs. Its parser
+must reject truncation, ambiguity and invalid offsets without filling missing
+content. It seals four development paragraphs and 48 evaluation units, with
+two arms at 256 tokens per call. The units are 24 real paragraphs and 24 members
+of twelve constructed qualifier pairs. The development set is disjoint.
 
-Primary outcomes are grouped Brier and log loss, plus the complete policy's
-risk, coverage and utility. Select only from the five frozen accept/reject
-threshold pairs. Use one-sided exact binomial bounds with simultaneous
-correction across arms, seeds, threshold pairs and actions; risk budgets are
-5% incorrect accepts and 10% correct rejects. With no selected groups there is
-no certificate; disable that action. A useful static result requires Brier
-CI95 upper delta below zero versus BOTH prevalence and logistic, non-worse log
-loss, coverage at least 25%, and no coverage loss versus logistic at certified
-risk. Report all arms/seeds; all-escalate is not useful. Resample groups with
-10,000 fixed-seed paired bootstrap draws. Sparse errors may yield a valid null.
+Phase exit requires runnable prototypes, preserved failure evidence and private
+adversarial mutations. A ready protocol does not claim predictive benefit.
 
-The separate online replay splits only training groups into initialization and
-later stream groups. Test feedback delays of zero and eight groups, with every
-fourth label withheld by a label-blind schedule. Compare frozen Gibbs, updated
-Gibbs, online logistic, recent frequency and no-feedback controls; one update
-per feedback event and a 128-item buffer bound learning. A second fixed feature-
-quantile ordering is a constructed shift stress test, not historical chronology
-or an independent sample. Predict before reveal, retain checkpoint lineage,
-and test cold restart, erasure, revoked labels and corruption rollback on
-separate development fixtures. Later loss benefit must beat frozen Gibbs AND
-online logistic and disappear under the appropriate feedback ablation. Use
-10,000 paired moving-block resamples of 32 consecutive groups (64 as a frozen
-sensitivity check), average seeds within blocks, and report each ordering and
-delay separately. These intervals describe fixed-replay uncertainty, not an IID
-population guarantee. This
-satisfies the continuous-self-learning requirement even if the proof branch
-is externally blocked. A null still completes the experiment.
+## Phase 2: Measure Safe Decisions and Continuous Learning
 
-Exp7387 independently reconstructs both studies from raw rows, attacks split
-leakage and temporal leakage, recomputes certificates and intervals, and keeps
-capture completion separate from value. Single-archive results can advance,
-but cannot close, the general oracle-distinct verifier gap.
+Exp7438 implements a four-expert probability mixture: frozen and adaptive Gibbs,
+plus frozen and adaptive spline. It commits predictions before revealed labels.
+Weights use stored prediction-time log loss, eta=1 and fixed share 0.01.
+Analytic no-share identity, duplicate feedback, revocation and restart controls
+test implementation. The delayed fixed-share trial remains an empirical question.
 
-## Phase 3 — Prospective Proof Value and Live Reachability
+Exp7439 trains the existing compact heads and compares tuned policies with old
+fixed thresholds on identical probabilities. One frozen pair per head receives
+independent certification. Failed certification disables the policy; no fallback
+threshold is tried on certification labels. The test preserves Brier/log loss,
+utility, two harm rates, coverage, per-unit rows and source-group intervals.
+A claimed energy advantage must beat tuned logistic, not just its own old policy.
+An action disabled during tuning has an inapplicable risk check with unspent alpha.
+All enabled actions and coverage must pass together or the entire policy escalates.
+Because certification labels were used in earlier milestones, these are nominal
+feasibility bounds on reused data. `deployment_certificate_valid=false` and
+`certificate_scope=exploratory_reused_corpus` forbid a fresh deployment guarantee.
+Valid nulls set `decision_capture_complete_score=1` and `decision_value_score=0`.
 
-**Exp7388–Exp7392.** Exp7388 uses a new four-call, 128-token bounded canary,
-requiring at least three usable outputs. Only then capture two 256-token
-proposals for each of the original 32 requests in eight streams. Account for
-all failures and original bytes; do not tune decoding or swap the cohort.
-The new corrected reducer and replayed proof boundary are both prerequisites.
-Budget 2,400 seconds for capture and 900 for validation inside the hard cap.
+Exp7440 is the required continuous self-learning experiment. It tests all 753
+sealed stream groups in two orderings and delays zero/eight. Uniform random
+feedback reveals eight per block of 32 to every arm. Learned weights compete
+with frozen spline, adaptive spline and the same experts with equal weights.
+No-feedback and shuffled-label controls detect false learning claims.
+Adaptive actions are shadow-only; a static certificate cannot travel with
+changing probabilities. Benefit requires simultaneous later-loss improvement,
+Brier non-inferiority, no higher empirical harm, and unchanged label cost.
 
-Exp7389 preserves V647's question and controls: 32 synthetic streams of 24
-requests, eight live streams of four requests, reset exact solving, persistent
-incremental solving, persistent graph reachability, proof memory, and matched
-non-applicable memory. Bound memory to 128 paths/64 KiB, eight additions per
-feedback event and 2n original edges per proof. Prediction reads only the
-previous committed state. Original-clause certificates can reject a
-contradiction; satisfying candidates still require original-source checking.
+All data reuse is disclosed. Re-splitting or re-scoring the public benchmark
+does not create pristine confirmation data. These experiments can justify a
+new independent trial; they cannot establish a new general verifier headline.
 
-Value requires zero unsafe decisions, no coverage/utility loss, eight erasure
-witnesses across four streams, paid-query-ratio CI95 upper bound below 0.90,
-and complete-service-cost-ratio upper bound at most 1.0 versus BOTH persistent
-controls. Keep synthetic and live cohorts separate, with 10,000 fixed-seed
-stream-block bootstrap draws. Four live requests per stream make that cohort
-exploratory. Charge discovery, checking, update, persistence and equally
-allocated generation; raw kernel savings alone cannot pass. Exp7390 audits
-these claims and attacks forged/stale proofs and omitted cost phases.
+## Phase 3: Challenge the Claims and Finish the Bounded Live Probe
 
-Exp7391 is independently gated on the reproduced invocation repair. Select
-three games via existing label-blind registry rotation, two seeds each, with
-per-game adapters/engines/solver lookups withheld. Use the real E3 policy,
-two 256-token calls and 128 actions per episode, 240 seconds per episode and
-1,800 seconds total work. The first scheduled episode is a sentinel: require
-policy entry, actual generation attempt and first action, else stop and mark
-remaining episodes unstarted. Observe complete tool-to-later-action chains.
-Current outcomes do not authorize supervisor fitting. Registry-precheck any
-new level and credit only `live_agent_self_discovery` after reproduction.
-Public adapter-withheld evaluation remains a proxy for hidden-game performance.
+Exp7441 independently recomputes available static and online evidence. It has
+no positive-benefit gate. It catches policy leakage, wrong independent units,
+false zero risks, future labels, duplicate commits and unsupported guarantees.
+Missing producer science yields a terminal blocked branch, not repeated partials.
 
-Exp7392 reanalyzes immutable Ising traces without new chains. Separate
-contradictory clamps (undefined conditional law) from a nonempty law lacking
-zero-energy states. Preserve all formulas, temperatures, arms and original
-failed gates. Recompute exact energy residual <=1e-12, exact TV <=1e-10,
-empirical observable error <=0.05 and ESS >=1,000 where defined. A post hoc
-nonempty-support result is labeled as such and cannot repair the original
-all-cell outcome. No sampler or hardware claim follows from changing a venue
-string.
+Exp7442 reacquires one real RTX 3090 lease and invokes the mandated GGUF.
+Eight development calls precede the 96-call evaluation. Both arms need at least
+three complete, nonempty, reconstructable development outputs of four.
+A failed canary is a measured null, with all evaluation units marked unstarted.
+The aggregate live budget is 1500 seconds, including a 45-second per-call ceiling.
+The 256-token task is `model_bounded_generation` with a 10-second duration floor.
+Actual timing determines authenticity; there is no artificial waiting.
 
-## Phase 4 — Placement and Fourteen Honest Dispositions
+Exp7443 audits even a failed canary. It independently parses raw replies and
+checks token ceilings, literal spans, paired costs and modifier retention.
+Constructed exact semantics and real-paragraph unknowns stay separate.
 
-**Exp7393–Exp7394.** The placement task preserves all three board records and
-uses eligible new head/proof cost rows where present. Estimate checkpoint bytes
-from actual weights. For a 100x complete-service target, unaccelerated work
-must be <=1%; distinguish this Amdahl bound from a measured device speedup.
-No physical change means GateMate remains terminal blocked, with exact
-prerequisite recorded, while board accounting can complete. This branch does
-not gate science or the capstone.
+Exp7444 satisfies the ARC generalization floor through the outcome-ledger
+amendment in CLAUDE.md. Zero firings in the two adapter-withheld episodes do not
+support arm promotion, retirement or generation of a new arm. The task inspects
+whether exposure reached the existing trigger, with unknowns preserved. It
+does not run another known public solve or grow a budget to manufacture one.
+No current model calls or solve credit are claimed.
 
-The capstone is ungated and accounts for all fourteen tasks, including itself.
-Required science comprises static and online decision measurements, their
-audit, proof-memory measurement and its audit. Valid no-benefit results count
-as completed science. Missing unchanged external inputs are `blocked`, not
-retryable `partial`; failed required safety/validation is `disqualified`.
-An expected board block or valid ARC no-progress finding does not invalidate
-unrelated completed science. Preserve publication G1–G4 and their existing
-FoVer scope; the old publication gate does not certify V648. Decide continue,
-retire or defer per mechanism from measured evidence, without automatic rollout.
+## Phase 4: Bound Deployment and Reconcile Every Outcome
 
-## Dependency Graph
+Exp7445 reduces actual service-stage costs and retains three board dispositions.
+The V651 persistence fraction implies an arithmetic-only ceiling near 2.65x,
+even with infinitely fast arithmetic. The 100x goal requires an unaccelerated
+fraction below 0.01. Any future redesign must preserve durable acknowledgement
+and crash semantics. Missing stage data remain unknown.
+
+Exp7446 enumerates all thirteen dispositions, including itself. It preserves
+valid nulls, external blocks and disqualified science as distinct outcomes.
+It audits each structured field contract and makes branch-specific continuation
+decisions. Only a changed measured cause permits another failed-scope attempt.
+It computes the existing G1–G4 publication gate without changing its definition
+or publishing anything.
+
+## Dependency Graph and Execution Order
+
+The YAML order is authoritative. These are the only scheduling gates:
 
 ```mermaid
 flowchart LR
-    E7381[7381 advisory contract]
-    E7382[7382 decision protocol] --> E7385[7385 static training]
-    E7382 --> E7386[7386 online decisions]
-    E7385 --> E7387[7387 independent audit]
-    E7386 --> E7387
-    E7383[7383 receipt and proof boundary] --> E7388[7388 new Qwen capture]
-    E7383 --> E7389[7389 prospective proof learning]
-    E7388 --> E7389
-    E7389 --> E7390[7390 independent proof audit]
-    E7384[7384 reproduced live repair] --> E7391[7391 live ARC]
-    E7392[7392 archived Ising reduction]
-    E7393[7393 placement and board records]
-    E7387 -. dispositions .-> E7394[7394 ungated capstone]
-    E7390 -. dispositions .-> E7394
-    E7391 -. dispositions .-> E7394
-    E7392 -. dispositions .-> E7394
-    E7393 -. dispositions .-> E7394
-    E7381 -. dispositions .-> E7394
+    P[7436 selection protocol] --> S[7439 certified decisions]
+    M[7438 mixture prototype] --> L[7440 mixture learning]
+    S --> L
+    X[7437 span protocol] --> C[7442 span capture]
+    S -. available evidence .-> A[7441 decision audit]
+    L -. available evidence .-> A
+    C -. canary or panel .-> B[7443 span audit]
+    L -. available cost rows .-> H[7445 hardware envelope]
+    A -.-> Z[7446 capstone]
+    B -.-> Z
+    H -.-> Z
+    R[7444 ARC evidence] -.-> Z
 ```
 
-Solid edges are structured gates; dotted edges are ungated reads. Each gated
-score requires an eligible `positive`, `circular_positive` or `null` class and
-`flagged_adversarial == false`. Every producer names the exact gated scalar in
-its REQUIRED ARTIFACT FIELDS. Missing path, missing field and observed zero are
-distinct diagnostics. No retired upstream ID appears in a dependency.
+Each gated input requires its readiness/capture score, an allowed closed
+`verdict_class`, and `flagged_adversarial=false`. All checks are conjunctive.
+There are four producer-consumer dependencies and twelve scalar gate checks.
+No `requires` chain names a retired experiment. Audits, the ARC task, hardware
+dispositions and capstone run without whole-task gates. Missing branches remain
+explicit, including the conductor's alternate pre-gate artifact path.
 
-## Hardware, Runtime and Execution Requirements
+## Hardware Requirements and Runtime Budgets
 
-- Host CPU/JAX handles the tiny Gibbs head, trusted numeric evaluation,
-  source proofs and finite enumeration (n<=12). No additional hardware or
-  dependency installation is required. This training is `no_model_load` with
-  zero LLM calls and explicit small-EBM training receipts.
-- Exp7388 and Exp7391 require the existing cached Qwen3.8-27B GGUF and owned
-  native llama.cpp CUDA runtime on a leased RTX 3090. Verify the actual cached
-  quantization, context and VRAM fit; block with measurements if unavailable.
-  Do not infer model concurrency from the host's dual-GPU inventory. The two
-  tasks run sequentially in conductor order.
-- Both LLM tasks are `model_bounded_generation` (10-second floor) because of
-  fixed small token budgets. No task declares full generation; a future real
-  full-generative run requires its 60-second class. Load-only/embedding work
-  would require `model_load_no_generation` (2 seconds), but none is scheduled.
-  Never pad runtime. Legacy small models are optional CPU smoke checks only.
-- Every current execution venue is the closed string `host`; CPU/CUDA detail
-  belongs in inference_substrate. Historical KV260/PolarFire/GateMate records
-  retain their actual dated venues. No SSH, flashing, download, board probe,
-  purchase or vendor contact is authorized by this plan. Future KV260 access
-  remains SSH-only with k_max<=5. Extropic Z1T is not a local resource.
-- Each numbered prompt mandates immediate flushed output, every phase boundary,
-  before/after any lengthy call, and 60-second loop/pending-call heartbeats.
-  Keep gaps below 600 seconds throughout authoring and validation. Silent work
-  can die at 1,200 seconds; sustained output permits the 4,800-second hard cap.
-  Checkpoint and cancel only owned processes on timeout; never fake progress.
-- Nominal estimates sum to 420 minutes, not measured runtime or a
-  reservation. Each task stays below the 80-minute hard cap. Opus/100 turns is
-  reserved for the contract, receipt reduction and invocation-boundary work;
-  the formulaic protocol helper uses Codex gpt-5.6-sol. Routine measurements
-  retain default synthesis routing. No planner subprocess launches these tasks.
+| Work | Required resource | Budget and claim boundary |
+|---|---|---|
+| Compact-head fitting and online mixture | Host CPU, JAX/NumPy, external corpus cache | Existing small heads and four-expert state. Record compile, fit, update and persistence separately. |
+| Span capture | One owned RTX 3090, cached Qwen3.8-27B Q4_K_M, native CUDA llama.cpp | At most 104 calls and 26,624 generated tokens. One 120-second lease wait; 1500-second live ceiling. |
+| Contract, policy and provenance audits | Host CPU and hash-bound shards | No current LLM calls; no fresh hardware execution. |
+| KV260 | Existing terminal evidence | Graduation preserved. Any future board access uses SSH, not host storage probes. |
+| GateMate | Dated operator physical-change evidence | Documentation-only task while the post-Exp6559 physical prerequisite is unchanged. |
+| PolarFire | Existing hash-verified CPU dispatch receipt | Graduation preserved. CPU dispatch is not FPGA sampling. |
+| Extropic TSU, photonic, D-Wave, NPU, larger FPGA | Future access and complete cost justification | No procurement or performance claim follows from external papers. |
 
-## Failure Discipline, Validation and Exit Criteria
+The host has two RTX 3090s, but only one concurrent model is required. Inventory
+does not prove availability. A fresh owned lease is mandatory. Older Qwen and
+Gemma models are CPU smoke-only and supply no headline result here.
+No task needs `model_full_generation` or `model_load_no_generation`; if a future
+scope genuinely needs these, their floors are 60 seconds and 2 seconds.
 
-Every comparative task requires per-unit rows and separate completion/value
-scalars. Artifacts use plain top-level fields, truthful invocation counts and
-closed verdict classes. Zero promotion is an invariant, not a failed success
-gate. Original disqualified artifacts remain immutable historical evidence.
-Each reused failed scope declares experiment_id, exact prior verdict,
-addressed_by and retire_if_same_verdict=true. No operator override is invented.
-If the same verdict recurs, use the existing retirement mechanism for that
-exact scope. V646 schedule induction, retired external-text rankers and
-re-solving registry-known ARC levels are not revived.
+Every prompt requires immediate flushed progress, phase-boundary lines,
+before/after long calls, and truthful 60-second heartbeats inside long work.
+Every silence gap must stay below 600 seconds. Per-task estimates stay below
+the 4800-second hard cap. Checkpoints stay separate from terminal artifacts.
 
-Before implementation, each task must extend the existing relevant REQ-*
-capability and add meaningful failing tests. Reuse the Exp7358 scoped command
-plan and Exp7303 runner, preserving COVERAGE_FILE. Require affected unit tests,
-100% changed-module coverage, scoped Ruff/mypy and spec coverage. Execute
-numbered ARC E2E-009/010 for affected live plumbing and the specified real-model
-episodes for its scientific boundary. Isolated tasks run their entrypoint and
-independent cold artifact replay. Add applicable shared-system E2E checks when
-shared code changes; never import an older experiment main or silently require
-an unexecuted full-suite check. Run adversarial verification and strict row
-consistency before finalization. Reconcile OpenSpec, traceability and ops docs.
+Routine research uses the user's default Claude routing. The breaker uses
+Claude Opus/100 turns because it changes a shared preflight boundary. Formulaic
+span parsing uses Codex `gpt-5.6-sol`. Audits use 20–30 turns. These agents are
+execution backends; they are distinct from the experiment's local GGUF model.
 
-Planning acceptance is narrower: parse both authorities independently, compare
-all fourteen rows and gates, validate schema/prior failures/exclusions, test
-producer field declarations and actual gate behavior using private fixtures,
-and run the focused existing roadmap-consumer tests plus spec coverage. No
-GPU, scientific experiment or live-agent run occurs during planning. The active
-roadmap and conductor source remain byte-for-byte unchanged. The milestone is
-successful as an executed research program when its evidence is complete and
-honest, including valid nulls; scientific value additionally requires the
-registered calibrated-policy or causal-learning gates above.
+## Acceptance, Failure Discipline and Deferred Work
+
+- Every comparison keeps per-unit rows, planned counts, exclusions and interval
+  assumptions. No seed or repeated response inflates independent sample size.
+- Every result declares the closed verdict enum beside the free-text verdict.
+  Oracle or analytic fixture positives are `circular_positive`. A failed benefit
+  gate produces `null` when validity passes. Upstream absence is `blocked`.
+- Every reused failed scope includes the exact prior ID, verdict, changed cause
+  and `retire_if_same_verdict: true` in YAML. This includes older supervisor,
+  unavailable-audit and hardware-envelope failures, plus V651's failed scopes.
+  Exp7443 changes the blocked audit
+  into a useful canary-or-panel audit; it does not rerun the absent old producer.
+- No broad external-text ranker, finite-choice answer channel, proof-memory
+  chain, generic Ising sweep, physical GateMate retry or generator training is
+  reopened. The small calibrated-policy floor and source-span extraction have
+  their own bounded scopes. They confer no ARC control authority.
+- The 2026-09-18 large-file gate belongs inside the forbidden conductor source.
+  It remains an explicit unresolved operator task. Shards below 20 MiB and
+  external caches reduce this milestone's exposure but do not claim that fix.
+- No push, publication, live deployment, roadmap activation, live-log reset,
+  model-weight change or modification of `scripts/research_conductor.py` occurs.
+
+## Verification and Reconciliation
+
+Before this plan is delivered, parse YAML with `scripts/roadmap_schema.py`,
+compare the exact markdown/YAML contract, and run gate, exclusion and ARC-floor
+linters. Mutate the contract and run the real gate reader on private artifacts.
+Run the relevant roadmap-consumer unit tests, scoped Ruff and spec coverage.
+Planning changes no model, sampler, binding or ARC production code. Thus none of
+E2E-001–010 applies to this planning pass; its E2E is staged-plan ingestion by
+the real schema and gate consumers without activating the live conductor.
+
+During execution, specs and meaningful failing tests precede implementation.
+Affected tests use private outputs and command-local coverage files. Never run
+the known mutating full Python suite from these tasks. Each experiment runs its
+entrypoint, fresh-process artifact replay and both unchanged artifact readers.
+Run numbered E2Es only when the corresponding shared capability changes.
+
+Reconcile this proposal, capability status, `_bmad/traceability.md`,
+`ops/status.md` and `ops/changelog.md`. Keep historical results and the active
+V651 roadmap intact. The existing stale document is already preserved byte for
+byte at `openspec/change-proposals/research-roadmap-v650-preserved-20260919.md`.
+It must not be described as a valid V651 design.

@@ -171,3 +171,4 @@ of truth, not this line.)
 | 2026-09-19 | experiment_claim_audit | experiment_7403_v649_synthetic_memory.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-09-19 | qa_layer_authenticity_audit | adversarial_verify.py::_inference_substrate_text | REAL_BUG | OPEN | |
 | 2026-09-19 | qa_layer_authenticity_audit | adversarial_verify.py::_match_declared_substrate | SILENT_NON_FIRING | OPEN | |
+| 2026-09-19 | qa_layer_authenticity_audit | adversarial_verify.py::_claim_field_name | SILENT_NON_FIRING | OPEN | |

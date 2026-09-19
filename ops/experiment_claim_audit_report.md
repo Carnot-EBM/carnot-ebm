@@ -12,31 +12,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 5 |
-| NO_CLAIM | 3 |
+| NO_CLAIM | 1 |
+| SKIPPED_ALREADY_FLAGGED | 2 |
 
-## experiment_7413_v650_source_calibration.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Source-aware calibration produced no registered decision benefit.
-
-## WHAT WOULD REFUTE IT
-The claim would be refuted if all registered benefit gates passed: statistically better Brier scores against the serious logistic, response-only, and training-prevalence baselines; non-worse mean log loss; and certified coverage of at least 0.25.
-
-## WAS THAT CHECKED
-Yes. The explicit scientific-benefit reduction tested those criteria on the `final_test` partition. Brier improvements passed, demonstrating that success was possible, but non-worse log loss and minimum coverage failed; coverage was zero for every arm.
-
-## EVIDENCE
-`"honest_verdict": "complete_null_source_calibration_no_registered_decision_benefit"`; `"registered_scientific_value"`; `"observed": false`; `"passed": false`; `"calibration_value_score": 0`; `"three_simultaneous_brier_upper_bounds_below_zero": true`; `"non_worse_mean_log_loss": false`; `"certified_coverage_at_least_0_25": false`; `"coverage": 0.0`; `"full_registered_benefit_passed": false`; `"partition": "final_test"`; `"training_prevalence"`; `"l2_logistic_six_input"`; `"verifier_is_oracle": false`; `"scored": false`; `"brier_contribution": null`; `"log_loss_contribution": null`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7414_v650_selected_feedback.json
+## experiment_7426_v651_static_decisions.json
 
 **CLAIM_SUPPORTED**
 
@@ -44,21 +23,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The experiment completed validly but found insufficient online support for the adaptive method’s registered value claim.
+The completed static source-support experiment found no registered decision benefit.
 
 ## WHAT WOULD REFUTE IT
-Adequate support plus statistically significant Brier improvement over every serious comparator, without worse log loss, coverage, or action risk, would refute the null headline.
+A registered arm achieving certified official-test coverage of at least 0.25 while satisfying the registered predictive, risk, and non-inferiority checks would refute the null claim.
 
 ## WAS THAT CHECKED
-Yes. The registered multi-metric gate compared the adaptive arm with a frozen calibrated baseline, online L2 logistic regression, and a recent-frequency baseline across all 200 completed replay units. The gate failed, including against the serious frozen and logistic controls.
+Yes. The artifact evaluated registered arms and policy thresholds on separate fit, probability-calibration, policy-calibration, and official-test partitions; the benefit reduction failed specifically because certified coverage did not reach 0.25. All arms escalated every official-test row, producing zero coverage and no enabled accept or reject action.
 
 ## EVIDENCE
-`honest_verdict`: `complete_null_insufficient_online_support`; `registered_online_value`: `observed` `false`; `scientific_benefit_passed`: `false`; `online_value_score`: `0`; `support_passed`: `false`; `independent_online_groups`: `149`; `label_counts`: `0` `5`, `1` `144`; `brier_simultaneous_upper_below_zero`: `false`; `control_arm`: `frozen_calibrated_gibbs`; `control_arm`: `online_l2_logistic`; `completed`: `200`; `failed`: `0`; `censored`: `0`.
+`"honest_verdict": "complete_null_static_source_support_no_registered_decision_benefit"`; `"decision_value_score": 0`; `"passed": false`; `"certified_coverage_at_least_0_25": false`; `"coverage": 0.0`; `"escalate_count": 2675`; `"accept_count": 0`; `"reject_count": 0`; `"scientific_benefit_passed": false`; `"selection_partition": "policy_calibration"`; `"independent_test_groups": 450`; `"completed_units": 75`; `"failed_units": 0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7415_v650_decision_audit.json
+## experiment_7427_v651_randomized_feedback.json
 
 **CLAIM_SUPPORTED**
 
@@ -66,21 +45,47 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The completed independent static and online audits found no joint registered value.
+The completed replay found no registered online value.
 
 ## WHAT WOULD REFUTE IT
-Valid, complete static and online branches both satisfying their registered value criteria—or a serious no-feedback/frozen comparator losing to the adaptive method on those criteria—would refute the claim.
+All prespecified benefit clauses passing—including non-worse loss, risk, coverage, and cost, with every simultaneous upper Brier-delta bound below zero—producing an online value score of 1.
 
 ## WAS THAT CHECKED
-Yes. Both branch summaries separately report availability, validity, completion, and value; all 230 planned comparative units were completed, and the online audit included verified no-feedback and erased-update controls. The serious no-feedback comparator tied the frozen arm on the displayed metrics rather than revealing adaptive value.
+Yes. The registered reduction checked eight combinations against the serious `frozen_spline` and `online_raw_logistic` controls across both orderings and delays; the required upper-bound condition failed in every displayed check.
 
 ## EVIDENCE
-`honest_verdict` `complete_null_independent_decision_audits_no_joint_registered_value` `producer_verdict_class` `null` `valid` `true` `complete` `true` `value` `false` `planned` `230` `completed` `230` `no_feedback_control_verified` `true` `erased_update_control_verified` `true` `frozen_calibrated_gibbs` `no_feedback_adaptive_copy` `0.03528096605283069` `0.1389895006947763` `0.028288543140028287` `verifier_is_oracle` `false`
+`honest_verdict` `complete_null_no_registered_online_value` `scientific_benefit_passed` `false` `online_value_score` `0` `passed` `false` `upper_brier_deltas_below_zero` `false` `control_arm` `frozen_spline` `online_raw_logistic` `no_feedback_benefit_disappeared` `true` `attempted_units` `300` `completed_units` `300` `failed_units` `0` `censored_units` `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7416_v650_anchored_extraction.json
+## experiment_7428_v651_decision_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The completed static and online audits found no registered benefit.
+
+## WHAT WOULD REFUTE IT
+A valid, eligible branch showing a registered method’s benefit over a serious comparator—such as better static held-out performance or an online Brier improvement whose simultaneous upper bound clears the registered benefit threshold—would refute the claim.
+
+## WAS THAT CHECKED
+Yes. The static audit used separate fit, calibration, and final-test partitions and compared spline methods with logistic controls; the online audit compared adaptive methods with frozen and no-feedback spline controls using simultaneous intervals. Both branches were valid and complete, yet both recorded no value. Exact static and online comparator ties also gave the claimed added value a real opportunity to fail.
+
+## EVIDENCE
+`honest_verdict` `complete_null_static_and_online_audits_reproduce_no_registered_benefit` `branch` `static` `valid` `true` `complete` `true` `value` `false` `final_test` `fit` `policy_calibration` `probability_calibration` `dense_spline_logistic` `sparse_spline_49` `brier` `0.1686380774939802` `log_loss` `0.5101727535875094` `branch` `online` `valid` `true` `complete` `true` `value` `false` `frozen_spline` `no_feedback_spline` `full_brier` `0.19228843334343437` `full_log_loss` `0.5669878795037654` `point_delta` `-0.00029067370218418756` `upper_brier_delta` `0.002075269495644716` `verifier_is_oracle` `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7429_v651_anchored_capture.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_7430_extraction_audit.json
 
 **NO_CLAIM**
 
@@ -91,40 +96,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; the artifact reports a blocked precondition and contains no comparative or scientific result to falsify.
+Nothing; the artifact is a blocked-gate receipt and makes no substantive claim about extraction quality.
 
 ## WAS THAT CHECKED
-No; no model load, generation, rows, or acceptance-gate results occurred.
+No. The audit did not run because all three upstream gates failed.
 
 ## EVIDENCE
-`honest_verdict`: `blocked_one_owned_rtx3090_slot`; `status`: `blocked_precondition`; `verdict_class`: `blocked`; `model_invoked`: `false`; `inference_substrate`: `no_model_load`; `rows`: `[]`; `acceptance_gate_results`: `[]`; `attempted`: `0`; `completed`: `0`; `unstarted`: `96`
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"gate-unsat(final): 3 of 3 gate(s) failed"`, `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7417_extraction_audit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No substantive experimental claim exists to falsify; this is a blocked-gate receipt, not an audit result.
-
-## WAS THAT CHECKED
-No. The audit was blocked before execution at `conductor_pre_gate`.
-
-## EVIDENCE
-`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"blocked_reason": "actual=0 == expected=1"`, `"gate_check_summary": "2 of 3 gate(s) failed; first failure: exp7416-anchored-extraction.extraction_capture_complete_score (actual=0 == expected=1)"`, `"blocked_at_layer": "conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7418_v650_revision_memory.json
+## experiment_7431_v651_arc_live_sentinel.json
 
 **CLAIM_SUPPORTED**
 
@@ -132,21 +115,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The experiment completely captured memory-revision behavior but demonstrated no full-cost value.
+The live ARC sentinel run reached and recorded valid terminal dispositions for both scheduled episodes, without claiming efficacy or comparative benefit.
 
 ## WHAT WOULD REFUTE IT
-Incomplete, censored, failed, unsafe, truth-mismatched, restart-mismatched, or invalid-erasure rows would refute complete capture; a memory arm whose registered total-cost confidence bound beat the reset exact-solver baseline would refute the no-full-cost-value conclusion.
+Either scheduled episode failing to obtain a valid terminal disposition, or the model-generation/request chain failing to reach a recorded terminal state, would refute the reachability claim.
 
 ## WAS THAT CHECKED
-Yes. All 7,680 planned rows were completed without censoring or failure; safety, truth, restart, and erasure checks passed. The serious reset-exact-solver comparator was present, and both candidate memory methods failed the registered total-cost gate. Oracle circularity does not invalidate this headline because it makes no positive value claim.
+Yes. Both scheduled rows retain terminal dispositions, invocation events record attempted and completed generations, and request permits are joined to terminal outcomes. The design explicitly allowed failed, censored, or unstarted units, so failure was possible. No efficacy claim was tested; therefore the oracle and absent control do not make this limited operational claim circular.
 
 ## EVIDENCE
-`complete_memory_revision_capture_no_full_cost_value`; `verdict_class`: `null`; `memory_revision_capture_complete_score`: `1`; `memory_revision_value_score`: `0`; `planned`: `7680`; `completed`: `7680`; `censored`: `0`; `failed`: `0`; `truth_mismatches`: `0`; `cold_restart_mismatches`: `0`; `stale_proof_acceptances`: `0`; `valid_erasure_witness_count`: `792`; `cost_gate_passed`: `false`; `reset_exact_solver`; `persistent_incremental_solver`: `3.706797926244237`; `persistent_graph_reachability`: `5.180409718672519`; `registered_gate_not_met`; `promotion_score`: `0`; `verifier_is_oracle`: `true`
+`honest_verdict` = `complete_null_arc_live_sentinel_reachability_no_efficacy_claim`; `arc_sentinel_capture_complete_score` = `1`; `planned_units` = `2`; `completed_units` = `2`; `failed_units` = `0`; `censored_units` = `0`; `unstarted_units` = `0`; both episode rows have `disposition` = `complete`; `generation_calls_attempted` = `2`; `generation_calls_completed` = `2`; `permit_to_terminal_chains` = `2`; `live_efficacy_score` = `0`; `treatment_effect_claimed` = `false`; `promotion_score` = `0`; `verdict_class` = `null`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7419_v650_precision_placement.json
+## experiment_7432_v651_update_placement.json
 
 **CLAIM_SUPPORTED**
 
@@ -154,38 +137,20 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Int8 emulation provides no registered full-service benefit over float32 vectorized execution.
+Sparse/fixed-point update placement provides no registered complete-service benefit over the dense float32 baseline.
 
 ## WHAT WOULD REFUTE IT
-Quality-preserving int8 execution that beats the serious float32-vectorized baseline on total service time—specifically, a primary-batch int8/float32 ratio and confidence interval below 1 with the speed gate passing—would refute the claim.
+A registered sparse arm preserving action and proper-score quality while achieving a paired whole-service 95% confidence-interval upper bound below 1 at every tested batch size would falsify the null.
 
 ## WAS THAT CHECKED
-Yes. Paired, rotated timing blocks compared `int8_float32_accum` directly with `float32_vectorized` at three batch sizes, including the registered primary batch size of `128`; int8 was slower at every size. Precision and action parity were also checked on `final_test` rows. Although `verifier_is_oracle` is `true`, the artifact makes no positive claim about verifier value, and the independently measured timing loss is sufficient for its null full-service-benefit claim.
+Yes. The artifact compares sparse arms against the float32-dense baseline across batch sizes 1, 32, and 128 using 30 paired timing blocks per batch; the complete-service speed gate failed because every reported confidence-interval upper bound exceeded 1.
 
 ## EVIDENCE
-`honest_verdict`: `complete_null_int8_no_registered_full_service_benefit`; `verdict_class`: `null`; `scientific_benefit_passed`: `false`; `precision_value_score`: `0`; `primary_batch_size`: `128`; `estimate`: `1.0343090331264715`; `ci95`: `[1.0307835092811668, 1.0377982860931962]`; `speed_gate_passed`: `false`; `action_parity_passed`: `true`; `measured_action_flip_count`: `0`; `invalid_numeric_count`: `0`; `partition`: `final_test`; `heldout_labels_used`: `false`; `scale_partition`: `train`.
+`honest_verdict`: `complete_null_sparse_update_no_registered_complete_service_benefit`; `baseline_arm`: `float32_dense`; `batch_sizes`: `[1, 32, 128]`; `paired_timing_blocks`: `30`; `check`: `paired_whole_service_speed`; `field`: `timing_summary.ci95_upper`; `observed`: `[1.0470479326842994, 1.0659364797751325, 4.167691682605176, 1.080045472608621, 1.003538599768254, 2.435059441808669]`; `passed`: `false`; `update_placement_value_score`: `0`; `verdict_class`: `null`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7420_v650_capstone.json
+## experiment_7433_v651_capstone.json
 
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-The capstone accounts for twelve task dispositions and reports required V650 science as blocked, without claiming scientific benefit or promotion.
-
-## WHAT WOULD REFUTE IT
-Fewer than twelve unique ordered dispositions, an unavailable branch reported as scientifically complete, or required science being available while the terminal verdict remained blocked would refute the accounting claim.
-
-## WAS THAT CHECKED
-Yes. Explicit equality and availability gates could fail, and the availability gate actually failed, producing the blocked verdict. Invalid or disqualified rows were marked as not accepted for science. No comparative value claim was made for the oracle to circularly validate.
-
-## EVIDENCE
-`honest_verdict`: `complete_blocked_required_v650_science_with_twelve_dispositions`; `twelve_ordered_dispositions`; `passed`: `true`; `required_science_available`; `observed`: `false`; `passed`: `false`; `scientific_value_score`: `0`; `promotion_score`: `0`; `verdict_class`: `blocked`; `accepted_for_science`: `false`; `verdict_class`: `disqualified`; `verifier_is_oracle`: `true`
-
-## RECOMMENDATION
-KEEP
+**SKIPPED_ALREADY_FLAGGED**
