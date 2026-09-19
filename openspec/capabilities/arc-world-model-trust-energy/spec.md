@@ -13,6 +13,101 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+## V651 ARC receipt evidence boundary — 2026-09-19
+
+**Status:** Specified. This work repairs the producer boundary that caused the
+unchanged adversarial verifier to disqualify Experiment 7411. It does not erase
+the old finding or measure live-model efficacy.
+
+### REQ-ARC-WMTE-7424: Keep scripted and historical calls outside current provenance
+
+Experiment 7424 SHALL authenticate the unchanged Experiment 7411 artifact and
+its original adversarial validation receipt. It SHALL reproduce
+`INFERENCE_PROVENANCE_CONTRADICTION` and `SUBSTRATE_CLASS_MISMATCH` on a private
+copy. It SHALL identify the exact nested typed counter that caused both findings.
+Experiment 7411 SHALL remain disqualified and unchanged.
+
+The experiment SHALL use the shipped current-work receipt schema. All current
+model events SHALL come only from its owned current-event ledger. This ledger
+SHALL be empty for this CPU qualification. `MODEL_SPECS` SHALL be empty,
+`model_invoked` SHALL be false, all current invocation counts SHALL be zero,
+`inference_substrate_class` SHALL equal `no_model_load`, and `execution_venue`
+SHALL equal `host`.
+
+Complete scripted HTTP requests, scripted responses, historical counters, and
+contradictory model-shaped controls SHALL stay in typed immutable sidecars. Each
+sidecar SHALL have a byte hash and an explicit non-current scope. The terminal
+artifact SHALL contain opaque sidecar references and request-budget rows only.
+It SHALL not contain a nonzero typed model invocation counter outside a sidecar.
+Removing or changing sidecar bytes SHALL fail receipt validation.
+
+The experiment SHALL drive primary, refinement, repair, exception, and
+cancellation responses through the actual `make_carnot_agent`, `E3AgentPolicy`,
+HTTP request builder, and shared request-budget boundary. A two-request budget
+SHALL refuse a third request before HTTP dispatch. The panel SHALL retain each
+permit decision, attempted callback, remaining capacity, cancellation, and
+terminal result. It SHALL also prove restart identity ownership, release an
+owned interrupted fixture child, and finish with completed, failed, and
+cancelled attempt dispositions and zero in-flight attempts.
+
+The experiment SHALL preserve a negative control whose current invocation
+counter contradicts a no-model declaration. The unchanged adversarial verifier
+SHALL reject that control. The same verifier SHALL accept the clean terminal
+candidate. No scripted request SHALL be relabeled as current inference.
+
+The affected-file manifest SHALL be frozen before checks. It SHALL use the
+Experiment 7358 plan and Experiment 7303 runner. It SHALL run worktree imports,
+focused pytest, separate 100 percent changed-module coverage, scoped Ruff,
+changed-module mypy, and exact-test spec coverage. It SHALL also run E2E-009,
+E2E-010, and the private induction-disabled `e3`/`r11l` 12-action smoke.
+
+The terminal artifact SHALL use run date `20260919` and milestone
+`2026.09.651`. It SHALL contain measured UTC and monotonic timing, phase spans,
+raw request-budget rows, an independent reduction, exact validation receipts,
+field principles, and zero live-efficacy and promotion scores.
+`arc_receipt_boundary_ready_score` SHALL equal one only when the current receipt,
+sidecars, callback limits, restart and child-release controls, affected checks,
+applicable end-to-end checks, cold replay, unchanged adversarial verification,
+and strict row lint all pass. Publication SHALL be atomic.
+
+#### SCENARIO-ARC-WMTE-7424-ORIGINAL-DISQUALIFICATION
+
+- GIVEN the unchanged Experiment 7411 artifact and its original validation receipt
+- WHEN the unchanged adversarial verifier reads a private copy
+- THEN both original critical findings recur from `overflow_diagnosis.generation_calls_attempted`
+- AND the original artifact, findings, and disqualified verdict remain unchanged.
+
+#### SCENARIO-ARC-WMTE-7424-CURRENT-WORK-BOUNDARY
+
+- GIVEN historical counters and complete scripted request events in typed sidecars
+- WHEN the shipped current-work receipt reduces its empty owned ledger
+- THEN all current model counters are zero and the clean candidate passes the unchanged verifier
+- AND a changed, missing, or unhashed sidecar fails closed.
+
+#### SCENARIO-ARC-WMTE-7424-CALLBACK-LIFECYCLE
+
+- GIVEN actual E3 primary, refinement, repair, exception, and cancellation callbacks
+- WHEN each callback shares a two-request episode budget
+- THEN a third callback is refused before dispatch and all attempts become terminal
+- AND restart ownership and owned interrupted-child release preserve exact accounting.
+
+#### SCENARIO-ARC-WMTE-7424-CONTRADICTION-CONTROL
+
+- GIVEN a no-model receipt with a nonzero current generation attempt
+- WHEN the unchanged adversarial verifier reads the private control
+- THEN it reports a critical current-provenance contradiction
+- AND the failed control cannot supply readiness or scientific value.
+
+#### SCENARIO-ARC-WMTE-7424-TERMINAL
+
+- GIVEN the independent reduction, affected checks, E2E checks, and terminal readers
+- WHEN the producer publishes the final artifact
+- THEN `arc_receipt_boundary_ready_score=1` requires every current check to pass
+- AND `live_efficacy_score=0` and `promotion_score=0` forbid an ARC solve or rollout claim.
+
+Implementation status: specified 2026-09-19. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V650 live ARC episode request budget — 2026-09-19
 
 **Status:** Specified. This work hardens request accounting at the live

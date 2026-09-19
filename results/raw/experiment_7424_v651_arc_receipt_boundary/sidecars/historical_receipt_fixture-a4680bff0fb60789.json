@@ -1,0 +1,69 @@
+{
+  "payload": {
+    "counts_as_current_model_event": false,
+    "evidence_scope": "historical_model_receipts",
+    "original_findings": [
+      "INFERENCE_PROVENANCE_CONTRADICTION",
+      "SUBSTRATE_CLASS_MISMATCH",
+      "METHODOLOGY_MISSING"
+    ],
+    "original_flags": {
+      "flagged_adversarial": true,
+      "status": "complete_disqualified_required_evidence",
+      "verdict_class": "disqualified"
+    },
+    "original_validation_receipt": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7411-6i7b81gu/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7411-6i7b81gu/candidate.json"
+      ],
+      "duration_s": 0.5585174071602523,
+      "ended_at_utc": "2026-09-19T08:45:05.382924+00:00",
+      "environment": {},
+      "exit_code": 1,
+      "log_path": "/tmp/carnot-exp7411-6i7b81gu/logs/terminal/01_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:17f36fb6e5ab475de042d06e6c3cf017c5c92bff45fbce722a2b5d6442fd635c",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[CRITICAL] expexp7411-arc-call-budget () -- 3 flag(s)\n  - CRITICAL INFERENCE_PROVENANCE_CONTRADICTION Current-task inference provenance is contradictory: conflicting_typed_invocation_evidence; substrate='Host CPU scripted HTTP transport, atomic request accounting, public offline environment actions, JSON reduction, and small Gibbs receipt construction.', live_evidence_count=1, negative_evidence_count=8. The duration check fails closed until the invocation scope agrees.\n  - CRITICAL SUBSTRATE_CLASS_MISMATCH       inference_substrate_class=no_model_load says no model was loaded, but typed invocation evidence says one ran (['generation_calls_attempted']). Contradictory.\n  - WARN     METHODOLOGY_MISSING            Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.\n\n",
+      "passed": false,
+      "scope": "unchanged adversarial verifier",
+      "started_at_utc": "2026-09-19T08:45:04.824062+00:00",
+      "timed_out": false
+    },
+    "private_replay_receipt": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7424-bunb1xkb/controls/experiment_7411.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7424-bunb1xkb/controls/experiment_7411.json"
+      ],
+      "control_passed": true,
+      "duration_s": 0.5649863081052899,
+      "ended_at_utc": "2026-09-19T16:01:58.412234+00:00",
+      "environment": {},
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/original_replay/00_exp7411_original_adversarial_replay/00_exp7411_original_adversarial_replay.log",
+      "log_sha256": "sha256:17f36fb6e5ab475de042d06e6c3cf017c5c92bff45fbce722a2b5d6442fd635c",
+      "name": "exp7411_original_adversarial_replay",
+      "output_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[CRITICAL] expexp7411-arc-call-budget () -- 3 flag(s)\n  - CRITICAL INFERENCE_PROVENANCE_CONTRADICTION Current-task inference provenance is contradictory: conflicting_typed_invocation_evidence; substrate='Host CPU scripted HTTP transport, atomic request accounting, public offline environment actions, JSON reduction, and small Gibbs receipt construction.', live_evidence_count=1, negative_evidence_count=8. The duration check fails closed until the invocation scope agrees.\n  - CRITICAL SUBSTRATE_CLASS_MISMATCH       inference_substrate_class=no_model_load says no model was loaded, but typed invocation evidence says one ran (['generation_calls_attempted']). Contradictory.\n  - WARN     METHODOLOGY_MISSING            Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.\n\n",
+      "passed": true,
+      "scope": "unchanged adversarial verifier negative control",
+      "started_at_utc": "2026-09-19T16:01:57.846831+00:00",
+      "timed_out": false
+    },
+    "typed_counter_paths": [
+      {
+        "field": "generation_calls_attempted",
+        "path": "$.overflow_diagnosis.generation_calls_attempted",
+        "value": 35
+      }
+    ]
+  },
+  "schema": "carnot.current_work_receipt.sidecar.v1",
+  "scope": "historical_model_receipts"
+}

@@ -1,0 +1,193 @@
+{
+  "payload": {
+    "contradiction_control": {
+      "MODEL_SPECS": [],
+      "arc_receipt_boundary_ready_score": 0,
+      "duration_s": 1.0,
+      "execution_venue": "host",
+      "experiment_id": "exp7424-current-invocation-contradiction-control",
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_disqualified_control",
+      "inference_substrate": "host CPU no-model contradiction control",
+      "inference_substrate_class": "no_model_load",
+      "invocation_counts": {
+        "generation_calls_attempted": 1,
+        "generation_calls_cancelled": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 0,
+        "model_loads_cancelled": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0
+      },
+      "model_invoked": false,
+      "promotion_score": 0,
+      "random_seed": 7424651,
+      "reproducibility_checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "schema": "carnot.exp7424.current_invocation_contradiction.v1",
+      "status": "complete_disqualified_control",
+      "verdict_class": "disqualified"
+    },
+    "contradiction_control_receipt": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7424-bunb1xkb/controls/current_contradiction.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7424-bunb1xkb/controls/current_contradiction.json"
+      ],
+      "control_passed": true,
+      "duration_s": 0.5496215182356536,
+      "ended_at_utc": "2026-09-19T16:02:00.599888+00:00",
+      "environment": {},
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/contradiction_control/00_current_invocation_contradiction_control/00_current_invocation_contradiction_control.log",
+      "log_sha256": "sha256:01d5fbde0d15a3ec6bec08c764576baf4513d8df308e6c4f1790207509257b5a",
+      "name": "current_invocation_contradiction_control",
+      "output_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[CRITICAL] expexp7424-current-invocation-contradiction-control () -- 4 flag(s)\n  - CRITICAL INFERENCE_PROVENANCE_CONTRADICTION Current-task inference provenance is contradictory: conflicting_typed_invocation_evidence; substrate='host CPU no-model contradiction control', live_evidence_count=1, negative_evidence_count=4. The duration check fails closed until the invocation scope agrees.\n  - CRITICAL DURATION_TOO_SHORT             duration_s=1.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.\n  - CRITICAL SUBSTRATE_CLASS_MISMATCH       inference_substrate_class=no_model_load says no model was loaded, but typed invocation evidence says one ran (['generation_calls_attempted']). Contradictory.\n  - WARN     METHODOLOGY_MISSING            Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.\n\n",
+      "passed": true,
+      "scope": "unchanged adversarial verifier negative control",
+      "started_at_utc": "2026-09-19T16:02:00.049899+00:00",
+      "timed_out": false
+    },
+    "counts_as_current_model_event": false,
+    "evidence_scope": "simulated_transport_events",
+    "scripted_events": [
+      {
+        "branch": "primary",
+        "counts_as_current_model_event": false,
+        "event_type": "scripted_http_exchange",
+        "request": {
+          "cache_prompt": true,
+          "max_tokens": 256,
+          "messages": [],
+          "temperature": 0.2,
+          "thinking_budget_tokens": 3072
+        },
+        "request_id": "limit-primary",
+        "response": {
+          "choices": [
+            {
+              "message": {
+                "content": "primary-response"
+              }
+            }
+          ]
+        },
+        "timeout_s": 1
+      },
+      {
+        "branch": "refinement",
+        "counts_as_current_model_event": false,
+        "event_type": "scripted_http_exchange",
+        "request": {
+          "cache_prompt": true,
+          "max_tokens": 256,
+          "messages": [],
+          "temperature": 0.2,
+          "thinking_budget_tokens": 3072
+        },
+        "request_id": "limit-refinement",
+        "response": {
+          "choices": [
+            {
+              "message": {
+                "content": "refinement-response"
+              }
+            }
+          ]
+        },
+        "timeout_s": 1
+      },
+      {
+        "branch": "repair",
+        "counts_as_current_model_event": false,
+        "event_type": "scripted_http_exception",
+        "exception": "RuntimeError: scripted transport exception",
+        "request": {
+          "cache_prompt": true,
+          "max_tokens": 256,
+          "messages": [],
+          "temperature": 0.2,
+          "thinking_budget_tokens": 3072
+        },
+        "request_id": "exception-repair",
+        "timeout_s": 1
+      },
+      {
+        "branch": "refinement",
+        "counts_as_current_model_event": false,
+        "event_type": "scripted_http_exchange",
+        "request": {
+          "cache_prompt": true,
+          "max_tokens": 256,
+          "messages": [],
+          "temperature": 0.2,
+          "thinking_budget_tokens": 3072
+        },
+        "request_id": "cancellation-refinement",
+        "response": {
+          "choices": [
+            {
+              "message": {
+                "content": "scripted"
+              }
+            }
+          ]
+        },
+        "timeout_s": 1
+      },
+      {
+        "branch": "primary",
+        "counts_as_current_model_event": false,
+        "event_type": "scripted_http_exchange",
+        "request": {
+          "cache_prompt": true,
+          "max_tokens": 256,
+          "messages": [],
+          "temperature": 0.2,
+          "thinking_budget_tokens": 3072
+        },
+        "request_id": "restart-primary",
+        "response": {
+          "choices": [
+            {
+              "message": {
+                "content": "scripted"
+              }
+            }
+          ]
+        },
+        "timeout_s": 1
+      },
+      {
+        "branch": "repair",
+        "counts_as_current_model_event": false,
+        "event_type": "scripted_http_exchange",
+        "request": {
+          "cache_prompt": true,
+          "max_tokens": 256,
+          "messages": [],
+          "temperature": 0.2,
+          "thinking_budget_tokens": 3072
+        },
+        "request_id": "restart-repair",
+        "response": {
+          "choices": [
+            {
+              "message": {
+                "content": "scripted"
+              }
+            }
+          ]
+        },
+        "timeout_s": 1
+      }
+    ]
+  },
+  "schema": "carnot.current_work_receipt.sidecar.v1",
+  "scope": "simulated_transport_events"
+}

@@ -1,0 +1,1367 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "artifact_field": "all_branch_local_inputs_authenticated",
+      "category": "precondition",
+      "check": "preconditions",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Unavailable branch-local evidence never promotes readiness.",
+      "upstream": "preconditions_checked"
+    },
+    {
+      "artifact_field": "original_status_findings_and_typed_counter_location",
+      "category": "historical_preservation",
+      "check": "original_disqualification",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "A producer repair must not erase the original disqualification.",
+      "upstream": "results/experiment_7411_v650_arc_call_budget.json"
+    },
+    {
+      "artifact_field": "owned_current_event_ledger",
+      "category": "provenance",
+      "check": "current_work_receipt",
+      "expected": [],
+      "observed": [],
+      "operator": "==",
+      "passed": true,
+      "principle": "Only owned current events can change current invocation counts.",
+      "upstream": "carnot.reporting.current_work_receipt"
+    },
+    {
+      "artifact_field": "typed_hash_bound_non_current_sidecars",
+      "category": "provenance",
+      "check": "scripted_sidecar_boundary",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Scripted and historical model-shaped bytes stay opaque to current provenance.",
+      "upstream": "scripted_evidence_manifest"
+    },
+    {
+      "artifact_field": "permits_attempts_capacity_and_terminal_results",
+      "category": "safety",
+      "check": "callback_lifecycle",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "A permit is consumed before dispatch and every attempt becomes terminal.",
+      "upstream": "request_budget_rows"
+    },
+    {
+      "artifact_field": "recovered_request_identity",
+      "category": "safety",
+      "check": "restart_ownership",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "A restart cannot replay a completed request as new work.",
+      "upstream": "request_budget_rows"
+    },
+    {
+      "artifact_field": "owned_fixture_child_release",
+      "category": "safety",
+      "check": "interrupted_child_release",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Cancellation releases only the fixture child owned by this control.",
+      "upstream": "request_budget_rows"
+    },
+    {
+      "artifact_field": "affected_e2e_negative_and_terminal_checks",
+      "category": "required_validation",
+      "check": "required_validation",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Readiness requires every scoped check and unchanged terminal reader.",
+      "upstream": "validation_receipts"
+    },
+    {
+      "artifact_field": "promotion_score",
+      "category": "promotion",
+      "check": "automatic_promotion",
+      "expected": 0,
+      "observed": 0,
+      "operator": "==",
+      "passed": true,
+      "principle": "CPU qualification cannot update weights, roll out, or publish externally.",
+      "upstream": "protocol"
+    }
+  ],
+  "affected_file_validation_manifest": {
+    "changed_modules": [
+      "python/carnot/experiment_7424_v651_arc_receipt_boundary.py"
+    ],
+    "experiment_id": "exp7424-arc-receipt-boundary",
+    "frozen_before_checks": true,
+    "manifest_sha256": "sha256:6ff5a6eb0b10819a086e841a5892c35b4522398cba0ffda755a2dceb209d069c",
+    "static_paths": [
+      "scripts/experiments/experiment_7424_v651_arc_receipt_boundary.py"
+    ],
+    "test_paths": [
+      "tests/python/test_experiment_7424_v651_arc_receipt_boundary.py",
+      "tests/python/test_current_work_receipt.py",
+      "tests/python/test_arc_request_budget.py"
+    ]
+  },
+  "arc_receipt_boundary_ready_score": 1,
+  "current_invocation_events": [],
+  "current_owner_pid": 4066051,
+  "current_run_id": "exp7424-arc-receipt-boundary",
+  "duration_breakdown_s": {
+    "cold_start_s": 2.1492404267191887,
+    "measurement_s": 1.6369359563104808,
+    "model_s": 0.0,
+    "other_s": 0.007417101878672838,
+    "validation_s": 42.299688077997416
+  },
+  "duration_s": 46.100492109,
+  "ended_at_utc": "2026-09-19T16:02:01.638988+00:00",
+  "ended_monotonic_ns": 2125421873989608,
+  "event_count": 0,
+  "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "execution_venue": "host",
+  "experiment_id": "exp7424-arc-receipt-boundary",
+  "field_principles": {
+    "MODEL_SPECS": "An empty list states that this run used no current LLM.",
+    "acceptance_gate_results": "Each check states category, operator, expected, observed, pass, and principle.",
+    "affected_file_validation_manifest": "The affected_file_validation_manifest field retains directly auditable experiment evidence.",
+    "arc_receipt_boundary_ready_score": "One requires current isolation, real callback limits, and all affected checks.",
+    "current_invocation_events": "The current_invocation_events field retains directly auditable experiment evidence.",
+    "current_owner_pid": "The current_owner_pid field retains directly auditable experiment evidence.",
+    "current_run_id": "The current_run_id field retains directly auditable experiment evidence.",
+    "duration_breakdown_s": "The duration_breakdown_s field retains directly auditable experiment evidence.",
+    "duration_s": "Monotonic current work is measured, with validation and cold-start costs separated.",
+    "ended_at_utc": "The ended_at_utc field retains directly auditable experiment evidence.",
+    "ended_monotonic_ns": "The ended_monotonic_ns field retains directly auditable experiment evidence.",
+    "event_count": "The event_count field retains directly auditable experiment evidence.",
+    "event_sha256": "The event_sha256 field retains directly auditable experiment evidence.",
+    "execution_venue": "The closed host value is separate from CPU and platform details.",
+    "experiment_id": "The experiment_id field retains directly auditable experiment evidence.",
+    "field_principles": "The field_principles field retains directly auditable experiment evidence.",
+    "flagged_adversarial": "A critical current candidate finding prevents readiness.",
+    "gate_check_summary": "Each failed gate retains its upstream path, check, field, expected, and observed value.",
+    "generator_weights_changed": "The generator_weights_changed field retains directly auditable experiment evidence.",
+    "honest_verdict": "A complete verdict limits the finding to receipt-boundary readiness.",
+    "inference_substrate": "A plain string describes the current CPU qualification work.",
+    "inference_substrate_class": "The no-model class cannot be inferred from padding or historical calls.",
+    "inference_substrate_details": "The inference_substrate_details field retains directly auditable experiment evidence.",
+    "invocation_counts": "Only owned current events contribute to load and generation counters.",
+    "live_efficacy_score": "Zero marks this CPU qualification as plumbing, not a live ARC claim.",
+    "milestone": "The milestone field retains directly auditable experiment evidence.",
+    "model_invoked": "False excludes archived and scripted transport bytes from current model use.",
+    "original_disqualification_preserved": "The original_disqualification_preserved field retains directly auditable experiment evidence.",
+    "phase_spans": "Real phase times retain completed units and resumable evidence references.",
+    "preconditions_checked": "Exact resource, path, identity, and observed values precede dependent work.",
+    "production_defaults_changed": "The production_defaults_changed field retains directly auditable experiment evidence.",
+    "promotion_score": "Zero forbids rollout, publication, or generator-weight updates.",
+    "random_seed": "The fixed seed identifies deterministic fixture and reduction choices.",
+    "raw_reduction": "The raw_reduction field retains directly auditable experiment evidence.",
+    "receipt_sidecars": "The receipt_sidecars field retains directly auditable experiment evidence.",
+    "reproducibility_checksum": "The checksum binds code, protocol, inputs, raw rows, and validation scope.",
+    "request_budget_rows": "Each callback shows its permit, attempt, cancellation, capacity, and terminal result.",
+    "research_conductor_changed": "The research_conductor_changed field retains directly auditable experiment evidence.",
+    "rows": "Every request permit, attempt, refusal, cancellation, and terminal result remains visible.",
+    "run_date": "The requested date is separate from measured UTC start and end times.",
+    "sample_size_budget": "Planned, attempted, complete, failed, censored, and unstarted units stay separate.",
+    "schema": "A versioned top-level schema binds experiment identity, milestone, and terminal status.",
+    "scripted_evidence_manifest": "Typed hash-bound sidecars keep fixtures outside current model events.",
+    "small_ebm_training": "The small_ebm_training field retains directly auditable experiment evidence.",
+    "solve_credit": "The solve_credit field retains directly auditable experiment evidence.",
+    "solve_provenance": "The solve_provenance field retains directly auditable experiment evidence.",
+    "source_artifact_hashes": "Exact input hashes retain the original Exp7411 determination flags.",
+    "started_at_utc": "The started_at_utc field retains directly auditable experiment evidence.",
+    "started_monotonic_ns": "The started_monotonic_ns field retains directly auditable experiment evidence.",
+    "status": "The status field retains directly auditable experiment evidence.",
+    "validation_receipts": "Exact scoped arguments, environments, exits, durations, and hashed logs remain auditable.",
+    "verdict_class": "Null states that no live-model benefit or ARC efficacy was measured.",
+    "verifier_is_oracle": "True states that verifier behavior defines this qualification, not ARC correctness."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "all_passed": true,
+    "failed_checks": [],
+    "failed_count": 0,
+    "first_failure": null
+  },
+  "generator_weights_changed": false,
+  "honest_verdict": "complete_null_arc_receipt_boundary_ready_no_live_efficacy_claim",
+  "inference_substrate": "deterministic_runtime_receipt_validation_no_llm",
+  "inference_substrate_class": "no_model_load",
+  "inference_substrate_details": {
+    "claim_scope": "CPU plumbing only; no ARC solve or live-model claim",
+    "current_llm_calls": 0,
+    "host": "icbfl1",
+    "python": "3.12.13",
+    "scripted_transport": true
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "live_efficacy_score": 0,
+  "milestone": "2026.09.651",
+  "model_invoked": false,
+  "original_disqualification_preserved": {
+    "artifact_path": "results/experiment_7411_v650_arc_call_budget.json",
+    "artifact_sha256": "sha256:d70d0d0cc589d959fa1e1a164a37bf363cbf90156a88c82e8570236e200fcfa0",
+    "finding_kinds": [
+      "INFERENCE_PROVENANCE_CONTRADICTION",
+      "SUBSTRATE_CLASS_MISMATCH"
+    ],
+    "flagged_adversarial": true,
+    "status": "complete_disqualified_required_evidence",
+    "typed_counter_locations": [
+      "$.overflow_diagnosis.generation_calls_attempted"
+    ],
+    "verdict_class": "disqualified"
+  },
+  "phase_spans": [
+    {
+      "checkpoint_reference": "results/raw/experiment_7424_v651_arc_receipt_boundary/preconditions",
+      "completed_units": 24,
+      "end_s": 0.007450183853507042,
+      "phase": "preconditions",
+      "start_s": 3.308197483420372e-05
+    },
+    {
+      "checkpoint_reference": "results/raw/experiment_7424_v651_arc_receipt_boundary/affected_validation",
+      "completed_units": 8,
+      "end_s": 17.893784876912832,
+      "phase": "affected_validation",
+      "start_s": 0.00835882080718875
+    },
+    {
+      "checkpoint_reference": "results/raw/experiment_7424_v651_arc_receipt_boundary/e2e",
+      "completed_units": 3,
+      "end_s": 42.308101350907236,
+      "phase": "e2e",
+      "start_s": 17.893839329015464
+    },
+    {
+      "checkpoint_reference": "results/raw/experiment_7424_v651_arc_receipt_boundary/original_replay",
+      "completed_units": 1,
+      "end_s": 42.87377849686891,
+      "phase": "original_replay",
+      "start_s": 42.308298450894654
+    },
+    {
+      "checkpoint_reference": "results/raw/experiment_7424_v651_arc_receipt_boundary/measurement",
+      "completed_units": 8,
+      "end_s": 44.51072519412264,
+      "phase": "measurement",
+      "start_s": 42.87378923781216
+    },
+    {
+      "checkpoint_reference": "results/raw/experiment_7424_v651_arc_receipt_boundary/contradiction_control",
+      "completed_units": 1,
+      "end_s": 45.06142666004598,
+      "phase": "contradiction_control",
+      "start_s": 44.51133933709934
+    },
+    {
+      "checkpoint_reference": "results/raw/experiment_7424_v651_arc_receipt_boundary/terminal_readers",
+      "completed_units": 3,
+      "end_s": 46.10046955477446,
+      "phase": "terminal_readers",
+      "start_s": 45.06679649697617
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/reporting/current_work_receipt.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7411_v650_arc_call_budget.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "python/carnot/experiment_7411_v650_arc_call_budget.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/agentic/arc_request_budget.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "python/carnot/agentic/arc_request_budget.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/agentic/arc_inference_boundary.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "python/carnot/agentic/arc_inference_boundary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/agentic/arc_competition_agent.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/experiment_7411_v650_arc_call_budget.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "results/experiment_7411_v650_arc_call_budget.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7424_v651_arc_receipt_boundary.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "python/carnot/experiment_7424_v651_arc_receipt_boundary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiments/experiment_7424_v651_arc_receipt_boundary.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "scripts/experiments/experiment_7424_v651_arc_receipt_boundary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:tests/python/test_experiment_7424_v651_arc_receipt_boundary.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "tests/python/test_experiment_7424_v651_arc_receipt_boundary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:tests/python/test_current_work_receipt.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "tests/python/test_current_work_receipt.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:tests/python/test_arc_request_budget.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "principle": "Dependent work starts only after exact source bytes are available.",
+      "upstream": "tests/python/test_arc_request_budget.py"
+    },
+    {
+      "artifact_field": "REQ-ARC-WMTE-7424",
+      "category": "precondition",
+      "check": "driving_requirement",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "The implementation follows a named requirement and scenarios.",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "artifact_field": "status_verdict_findings_and_nested_counter",
+      "category": "precondition",
+      "check": "original_disqualification_available",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "The correction begins from the exact old failure, not a rewritten copy.",
+      "upstream": "results/experiment_7411_v650_arc_call_budget.json"
+    },
+    {
+      "artifact_field": "exp7424-arc-receipt-boundary",
+      "category": "precondition",
+      "check": "new_boundary_not_retired_rerun",
+      "expected": false,
+      "observed": false,
+      "operator": "==",
+      "passed": true,
+      "principle": "A retired unchanged mechanism cannot be promoted as new work.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "random_seed": 7424651,
+  "raw_reduction": {
+    "accounting_valid": true,
+    "all_attempts_terminal": true,
+    "attempted": 7,
+    "budget_violations": 0,
+    "cancelled": 2,
+    "completed": 4,
+    "dispatched": 6,
+    "failed": 1,
+    "in_flight": 0,
+    "permit_granted": 7,
+    "rejected_before_dispatch": 1
+  },
+  "receipt_sidecars": [
+    {
+      "path": "results/raw/experiment_7424_v651_arc_receipt_boundary/sidecars/historical_receipt_fixture-a4680bff0fb60789.json",
+      "scope": "historical_model_receipts",
+      "sha256": "sha256:d7153838b21406724cd50c30fabc4dfb1b8491002fc4331c434d6cdb780138d5"
+    },
+    {
+      "path": "results/raw/experiment_7424_v651_arc_receipt_boundary/sidecars/scripted_request_fixture-588390100423f2a5.json",
+      "scope": "simulated_transport_events",
+      "sha256": "sha256:8ad3a1652ba746793d7afcfb76b28ef13892d274d678d8265653538050e99d26"
+    }
+  ],
+  "reproducibility_checksum": "sha256:60c40b0299a0ea6dcbbebbee35e49d0ee06d2762e218c67e9093c64b22d733a9",
+  "request_budget_rows": [
+    {
+      "attempted": true,
+      "branch": "primary",
+      "cancelled": false,
+      "control_id": "limit",
+      "dispatched": true,
+      "episode_id": "limit",
+      "permit_granted": true,
+      "recovered_after_restart": false,
+      "remaining_capacity": 1,
+      "request_id": "limit-primary",
+      "terminal_result": "completed"
+    },
+    {
+      "attempted": true,
+      "branch": "refinement",
+      "cancelled": false,
+      "control_id": "limit",
+      "dispatched": true,
+      "episode_id": "limit",
+      "permit_granted": true,
+      "recovered_after_restart": false,
+      "remaining_capacity": 0,
+      "request_id": "limit-refinement",
+      "terminal_result": "completed"
+    },
+    {
+      "attempted": true,
+      "branch": "repair",
+      "cancelled": false,
+      "control_id": "exception",
+      "dispatched": true,
+      "episode_id": "exception",
+      "permit_granted": true,
+      "recovered_after_restart": false,
+      "remaining_capacity": 1,
+      "request_id": "exception-repair",
+      "terminal_result": "failed"
+    },
+    {
+      "attempted": true,
+      "branch": "refinement",
+      "cancelled": true,
+      "control_id": "cancellation",
+      "dispatched": true,
+      "episode_id": "cancellation",
+      "permit_granted": true,
+      "recovered_after_restart": false,
+      "remaining_capacity": 1,
+      "request_id": "cancellation-refinement",
+      "terminal_result": "cancelled"
+    },
+    {
+      "attempted": true,
+      "branch": "primary",
+      "cancelled": false,
+      "control_id": "restart",
+      "dispatched": true,
+      "episode_id": "restart",
+      "permit_granted": true,
+      "recovered_after_restart": true,
+      "remaining_capacity": 1,
+      "request_id": "restart-primary",
+      "terminal_result": "completed"
+    },
+    {
+      "attempted": true,
+      "branch": "repair",
+      "cancelled": false,
+      "control_id": "restart",
+      "dispatched": true,
+      "episode_id": "restart",
+      "permit_granted": true,
+      "recovered_after_restart": false,
+      "remaining_capacity": 0,
+      "request_id": "restart-repair",
+      "terminal_result": "completed"
+    },
+    {
+      "attempted": true,
+      "branch": "refinement",
+      "cancelled": true,
+      "control_id": "interrupted_child_release",
+      "dispatched": false,
+      "episode_id": "child",
+      "permit_granted": true,
+      "recovered_after_restart": false,
+      "remaining_capacity": 1,
+      "request_id": "interrupted-child",
+      "terminal_result": "cancelled"
+    },
+    {
+      "attempted": false,
+      "branch": "repair",
+      "cancelled": false,
+      "control_id": "limit",
+      "dispatched": false,
+      "episode_id": "limit",
+      "permit_granted": false,
+      "recovered_after_restart": false,
+      "remaining_capacity": 0,
+      "request_id": "limit-repair-refused",
+      "terminal_result": "rejected_before_dispatch"
+    }
+  ],
+  "research_conductor_changed": false,
+  "rows": [
+    {
+      "attempted": true,
+      "branch": "primary",
+      "cancelled": false,
+      "control_id": "limit",
+      "dispatched": true,
+      "episode_id": "limit",
+      "permit_granted": true,
+      "recovered_after_restart": false,
+      "remaining_capacity": 1,
+      "request_id": "limit-primary",
+      "row_type": "request_budget_callback",
+      "terminal_result": "completed"
+    },
+    {
+      "attempted": true,
+      "branch": "refinement",
+      "cancelled": false,
+      "control_id": "limit",
+      "dispatched": true,
+      "episode_id": "limit",
+      "permit_granted": true,
+      "recovered_after_restart": false,
+      "remaining_capacity": 0,
+      "request_id": "limit-refinement",
+      "row_type": "request_budget_callback",
+      "terminal_result": "completed"
+    },
+    {
+      "attempted": true,
+      "branch": "repair",
+      "cancelled": false,
+      "control_id": "exception",
+      "dispatched": true,
+      "episode_id": "exception",
+      "permit_granted": true,
+      "recovered_after_restart": false,
+      "remaining_capacity": 1,
+      "request_id": "exception-repair",
+      "row_type": "request_budget_callback",
+      "terminal_result": "failed"
+    },
+    {
+      "attempted": true,
+      "branch": "refinement",
+      "cancelled": true,
+      "control_id": "cancellation",
+      "dispatched": true,
+      "episode_id": "cancellation",
+      "permit_granted": true,
+      "recovered_after_restart": false,
+      "remaining_capacity": 1,
+      "request_id": "cancellation-refinement",
+      "row_type": "request_budget_callback",
+      "terminal_result": "cancelled"
+    },
+    {
+      "attempted": true,
+      "branch": "primary",
+      "cancelled": false,
+      "control_id": "restart",
+      "dispatched": true,
+      "episode_id": "restart",
+      "permit_granted": true,
+      "recovered_after_restart": true,
+      "remaining_capacity": 1,
+      "request_id": "restart-primary",
+      "row_type": "request_budget_callback",
+      "terminal_result": "completed"
+    },
+    {
+      "attempted": true,
+      "branch": "repair",
+      "cancelled": false,
+      "control_id": "restart",
+      "dispatched": true,
+      "episode_id": "restart",
+      "permit_granted": true,
+      "recovered_after_restart": false,
+      "remaining_capacity": 0,
+      "request_id": "restart-repair",
+      "row_type": "request_budget_callback",
+      "terminal_result": "completed"
+    },
+    {
+      "attempted": true,
+      "branch": "refinement",
+      "cancelled": true,
+      "control_id": "interrupted_child_release",
+      "dispatched": false,
+      "episode_id": "child",
+      "permit_granted": true,
+      "recovered_after_restart": false,
+      "remaining_capacity": 1,
+      "request_id": "interrupted-child",
+      "row_type": "request_budget_callback",
+      "terminal_result": "cancelled"
+    },
+    {
+      "attempted": false,
+      "branch": "repair",
+      "cancelled": false,
+      "control_id": "limit",
+      "dispatched": false,
+      "episode_id": "limit",
+      "permit_granted": false,
+      "recovered_after_restart": false,
+      "remaining_capacity": 0,
+      "request_id": "limit-repair-refused",
+      "row_type": "request_budget_callback",
+      "terminal_result": "rejected_before_dispatch"
+    }
+  ],
+  "run_date": "20260919",
+  "sample_size_budget": {
+    "attempted_units": 5,
+    "censored_units": 0,
+    "completed_units": 5,
+    "failed_units": 0,
+    "independent_groups": [
+      "dispatch_limit",
+      "transport_exception",
+      "late_cancellation",
+      "cold_restart",
+      "owned_child_release"
+    ],
+    "planned_units": 5,
+    "request_limit_per_episode": 2,
+    "stopping_rule": "Run each frozen CPU control once and stop after terminal accounting.",
+    "unstarted_units": 0
+  },
+  "schema": "carnot.exp7424.v651.arc_receipt_boundary.v1",
+  "scripted_evidence_manifest": {
+    "historical_receipt_fixture": {
+      "counts_as_current_model_event": false,
+      "evidence_type": "frozen_historical_model_shaped_evidence",
+      "immutable": true,
+      "path": "results/raw/experiment_7424_v651_arc_receipt_boundary/sidecars/historical_receipt_fixture-a4680bff0fb60789.json",
+      "scope": "historical_model_receipts",
+      "sha256": "sha256:d7153838b21406724cd50c30fabc4dfb1b8491002fc4331c434d6cdb780138d5"
+    },
+    "scripted_request_fixture": {
+      "counts_as_current_model_event": false,
+      "evidence_type": "complete_scripted_http_and_contradiction_evidence",
+      "immutable": true,
+      "path": "results/raw/experiment_7424_v651_arc_receipt_boundary/sidecars/scripted_request_fixture-588390100423f2a5.json",
+      "scope": "simulated_transport_events",
+      "sha256": "sha256:8ad3a1652ba746793d7afcfb76b28ef13892d274d678d8265653538050e99d26"
+    }
+  },
+  "small_ebm_training": {
+    "current_llm_counts_affected": false,
+    "performed": false,
+    "reason": "receipt isolation and request-budget controls require no fitted energy head",
+    "receipt_class": "small_ebm_training"
+  },
+  "solve_credit": 0,
+  "solve_provenance": "no_game_solve_cpu_transport_fixture",
+  "source_artifact_hashes": {
+    "AGENTS.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "role": "current_input",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CLAUDE.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "role": "current_input",
+      "sha256": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b"
+    },
+    "CODEX.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "role": "current_input",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "role": "current_input",
+      "sha256": "sha256:d95bb1a09fafd31af64a5287534ae99a5770114cbc710e7268dc9ff1573d275b"
+    },
+    "ops/e2e-test-plan.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "role": "current_input",
+      "sha256": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "role": "current_input",
+      "sha256": "sha256:fdab7b9ef47aa3f8be8902e30d96cd096f361d1abbe7c6de7624101383bf968e"
+    },
+    "python/carnot/agentic/arc_competition_agent.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
+      "role": "current_input",
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "python/carnot/agentic/arc_inference_boundary.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_inference_boundary.py",
+      "role": "current_input",
+      "sha256": "sha256:7cac0f85c68bd61d15b302d463cc6cf4878ba927d0a325158d7928bf4fcd7d7f"
+    },
+    "python/carnot/agentic/arc_request_budget.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_request_budget.py",
+      "role": "current_input",
+      "sha256": "sha256:117591f345b7cb1c4902769d1a5ed1f1b6bc9bfd3f0dbf7ec2670db5689f2a57"
+    },
+    "python/carnot/experiment_7358_v646_validation_contract.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7358_v646_validation_contract.py",
+      "role": "current_input",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c"
+    },
+    "python/carnot/experiment_7411_v650_arc_call_budget.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7411_v650_arc_call_budget.py",
+      "role": "current_input",
+      "sha256": "sha256:c30c7b9741cfe6e646484fd4376a9778e453227ae3b5d4e9567a4e70a21ec714"
+    },
+    "python/carnot/experiment_7424_v651_arc_receipt_boundary.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7424_v651_arc_receipt_boundary.py",
+      "role": "current_input",
+      "sha256": "sha256:f0a79b8279d3987123d3cd435223f0a464a6053dea6d465f842119ab9ca67665"
+    },
+    "python/carnot/reporting/current_work_receipt.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+      "role": "current_input",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    "python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7303_validation_scope.py",
+      "role": "current_input",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead"
+    },
+    "research-program.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "role": "current_input",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "results/experiment_7411_v650_arc_call_budget.json": {
+      "original_flags": {
+        "flagged_adversarial": true,
+        "status": "complete_disqualified_required_evidence",
+        "verdict_class": "disqualified"
+      },
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7411_v650_arc_call_budget.json",
+      "role": "historical_disqualified_input",
+      "sha256": "sha256:d70d0d0cc589d959fa1e1a164a37bf363cbf90156a88c82e8570236e200fcfa0"
+    },
+    "scripts/experiment_template.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "role": "current_input",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    "scripts/experiments/experiment_7424_v651_arc_receipt_boundary.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7424_v651_arc_receipt_boundary.py",
+      "role": "current_input",
+      "sha256": "sha256:d2b814b1506db9babb27f1739fd5816aebf4dd026a0f4e1aad190117b7541120"
+    },
+    "tests/python/test_arc_request_budget.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_arc_request_budget.py",
+      "role": "current_input",
+      "sha256": "sha256:c563e2858e65058559020deef652f4947c11c2b5168ad9aa661f620e17d9fa61"
+    },
+    "tests/python/test_current_work_receipt.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_current_work_receipt.py",
+      "role": "current_input",
+      "sha256": "sha256:238540f72284baa1c8ed6a5543e0fd3c49db4842dd1945c271a9f827774f8120"
+    },
+    "tests/python/test_experiment_7424_v651_arc_receipt_boundary.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7424_v651_arc_receipt_boundary.py",
+      "role": "current_input",
+      "sha256": "sha256:508dd0a91905c8eb12e7a0302116f91ed9dba5474fdcc82b09f4836a6b01b546"
+    }
+  },
+  "started_at_utc": "2026-09-19T16:01:15.538502+00:00",
+  "started_monotonic_ns": 2125375773497499,
+  "status": "complete_null_arc_receipt_boundary_ready",
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7424_v651_arc_receipt_boundary",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7424_v651_arc_receipt_boundary"
+      ],
+      "duration_s": 0.5068920012563467,
+      "ended_at_utc": "2026-09-19T16:01:16.054166+00:00",
+      "environment": {},
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:8d4fee073bd78e433d09469e69688b5688605568cbf75bddbc7a9b0d91101b65",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7424_v651_arc_receipt_boundary\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7424_v651_arc_receipt_boundary.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7424_v651_arc_receipt_boundary": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7424_v651_arc_receipt_boundary.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T16:01:15.546872+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7424-bunb1xkb/affected/basetemp/focused tests/python/test_experiment_7424_v651_arc_receipt_boundary.py tests/python/test_current_work_receipt.py tests/python/test_arc_request_budget.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7424-bunb1xkb/affected/basetemp/focused",
+        "tests/python/test_experiment_7424_v651_arc_receipt_boundary.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_arc_request_budget.py",
+        "-q"
+      ],
+      "duration_s": 6.346071980893612,
+      "ended_at_utc": "2026-09-19T16:01:22.400570+00:00",
+      "environment": {},
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:f3b555996a62e1f6f92f9ed635ac21f26d0d0c4724aee1a3598e396b4b8dc8bf",
+      "name": "focused_pytest",
+      "output_tail": "....................................                                     [100%]\n36 passed in 3.99s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T16:01:16.054192+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7424-bunb1xkb/affected/coverage/.coverage '--include=*/experiment_7424_v651_arc_receipt_boundary.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7424-bunb1xkb/affected/basetemp/coverage tests/python/test_experiment_7424_v651_arc_receipt_boundary.py tests/python/test_current_work_receipt.py tests/python/test_arc_request_budget.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7424-bunb1xkb/affected/coverage/.coverage",
+        "--include=*/experiment_7424_v651_arc_receipt_boundary.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7424-bunb1xkb/affected/basetemp/coverage",
+        "tests/python/test_experiment_7424_v651_arc_receipt_boundary.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_arc_request_budget.py",
+        "-q"
+      ],
+      "duration_s": 10.75545664690435,
+      "ended_at_utc": "2026-09-19T16:01:33.156265+00:00",
+      "environment": {},
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:81dd7157f329423f423b8c1a748929ba6119f0de4d2eaa1c5c8a200367b1bba5",
+      "name": "changed_module_coverage",
+      "output_tail": "....................................                                     [100%]\n36 passed in 7.36s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-19T16:01:22.400587+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7424_v651_arc_receipt_boundary.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7424_v651_arc_receipt_boundary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.0706999721005559,
+      "ended_at_utc": "2026-09-19T16:01:33.227289+00:00",
+      "environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7424-bunb1xkb/affected/coverage/.coverage"
+      },
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:286399245a07d08aaa3e01ca8374ae73ac1b191b40bf1ceea58b5871fffb04b4",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                         Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------------------\npython/carnot/experiment_7424_v651_arc_receipt_boundary.py     396      0   100%\n------------------------------------------------------------------------------------------\nTOTAL                                                          396      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T16:01:33.156283+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7424_v651_arc_receipt_boundary.py scripts/experiments/experiment_7424_v651_arc_receipt_boundary.py tests/python/test_experiment_7424_v651_arc_receipt_boundary.py tests/python/test_current_work_receipt.py tests/python/test_arc_request_budget.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7424_v651_arc_receipt_boundary.py",
+        "scripts/experiments/experiment_7424_v651_arc_receipt_boundary.py",
+        "tests/python/test_experiment_7424_v651_arc_receipt_boundary.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_arc_request_budget.py"
+      ],
+      "duration_s": 0.016166045796126127,
+      "ended_at_utc": "2026-09-19T16:01:33.243656+00:00",
+      "environment": {},
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T16:01:33.227307+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7424_v651_arc_receipt_boundary.py scripts/experiments/experiment_7424_v651_arc_receipt_boundary.py tests/python/test_experiment_7424_v651_arc_receipt_boundary.py tests/python/test_current_work_receipt.py tests/python/test_arc_request_budget.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7424_v651_arc_receipt_boundary.py",
+        "scripts/experiments/experiment_7424_v651_arc_receipt_boundary.py",
+        "tests/python/test_experiment_7424_v651_arc_receipt_boundary.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_arc_request_budget.py"
+      ],
+      "duration_s": 0.014719719998538494,
+      "ended_at_utc": "2026-09-19T16:01:33.258642+00:00",
+      "environment": {},
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1",
+      "name": "ruff_format",
+      "output_tail": "5 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-19T16:01:33.243669+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7424_v651_arc_receipt_boundary.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7424_v651_arc_receipt_boundary.py"
+      ],
+      "duration_s": 0.14501192001625896,
+      "ended_at_utc": "2026-09-19T16:01:33.403953+00:00",
+      "environment": {},
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-19T16:01:33.258664+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7424_v651_arc_receipt_boundary.py tests/python/test_current_work_receipt.py tests/python/test_arc_request_budget.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7424_v651_arc_receipt_boundary.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_arc_request_budget.py"
+      ],
+      "duration_s": 0.0281008742749691,
+      "ended_at_utc": "2026-09-19T16:01:33.432268+00:00",
+      "environment": {},
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-19T16:01:33.403971+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7424-bunb1xkb/e2e/e2e009 tests/python/test_arc_induction_state_persistence.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7424-bunb1xkb/e2e/e2e009",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "-q"
+      ],
+      "duration_s": 11.333768079988658,
+      "ended_at_utc": "2026-09-19T16:01:44.766473+00:00",
+      "environment": {},
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/e2e/00_e2e_009/00_e2e_009.log",
+      "log_sha256": "sha256:dad9f7cbaac009fbb59056d3b39637bfc34f632c36a1849e5a57a84a43dc9473",
+      "name": "e2e_009",
+      "output_tail": "........................................                                 [100%]\n40 passed in 8.25s\n",
+      "passed": true,
+      "scope": "E2E-009 scripted scored-policy persistence",
+      "started_at_utc": "2026-09-19T16:01:33.432346+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7424-bunb1xkb/e2e/e2e010 tests/python/test_arc_tool_grammar_transport.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7424-bunb1xkb/e2e/e2e010",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "-q"
+      ],
+      "duration_s": 9.989195356145501,
+      "ended_at_utc": "2026-09-19T16:01:54.756195+00:00",
+      "environment": {},
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/e2e/01_e2e_010/00_e2e_010.log",
+      "log_sha256": "sha256:d9bb2b642c27e22fc7094a7dcce10a02d3e75cedeba37c5b2cde8ccbd1067217",
+      "name": "e2e_010",
+      "output_tail": "..................................................                       [100%]\n50 passed in 6.87s\n",
+      "passed": true,
+      "scope": "E2E-010 scripted grammar transport",
+      "started_at_utc": "2026-09-19T16:01:44.766499+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/carnot-exp7424-bunb1xkb/e2e/r11l-twelve-action-smoke.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/arc_loop_solve.py",
+        "--mechanism",
+        "e3",
+        "--game",
+        "r11l",
+        "--max-actions",
+        "12",
+        "--output",
+        "/tmp/carnot-exp7424-bunb1xkb/e2e/r11l-twelve-action-smoke.json"
+      ],
+      "duration_s": 3.0899129025638103,
+      "ended_at_utc": "2026-09-19T16:01:57.846577+00:00",
+      "environment": {
+        "CARNOT_ARC_DISABLE_INDUCTION": "1"
+      },
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/e2e/02_e2e_offline_smoke/00_e2e_offline_smoke.log",
+      "log_sha256": "sha256:2eb73c9dcd82a00105dc82d59f0ed063d3caf05f5e332d0832aedf6dd43a4230",
+      "name": "e2e_offline_smoke",
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-19 12:01:56 | INFO | Created new scorecard: bb911de5-9964-473f-806d-634c20fe266f\n2026-09-19 12:01:56 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-19 12:01:57 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/carnot-exp7424-bunb1xkb/e2e/r11l-twelve-action-smoke.json\n",
+      "passed": true,
+      "scope": "E2E-009 LLM-off twelve-action environment smoke",
+      "started_at_utc": "2026-09-19T16:01:54.756225+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7424-bunb1xkb/controls/experiment_7411.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7424-bunb1xkb/controls/experiment_7411.json"
+      ],
+      "control_passed": true,
+      "duration_s": 0.5649863081052899,
+      "ended_at_utc": "2026-09-19T16:01:58.412234+00:00",
+      "environment": {},
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/original_replay/00_exp7411_original_adversarial_replay/00_exp7411_original_adversarial_replay.log",
+      "log_sha256": "sha256:17f36fb6e5ab475de042d06e6c3cf017c5c92bff45fbce722a2b5d6442fd635c",
+      "name": "exp7411_original_adversarial_replay",
+      "output_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[CRITICAL] expexp7411-arc-call-budget () -- 3 flag(s)\n  - CRITICAL INFERENCE_PROVENANCE_CONTRADICTION Current-task inference provenance is contradictory: conflicting_typed_invocation_evidence; substrate='Host CPU scripted HTTP transport, atomic request accounting, public offline environment actions, JSON reduction, and small Gibbs receipt construction.', live_evidence_count=1, negative_evidence_count=8. The duration check fails closed until the invocation scope agrees.\n  - CRITICAL SUBSTRATE_CLASS_MISMATCH       inference_substrate_class=no_model_load says no model was loaded, but typed invocation evidence says one ran (['generation_calls_attempted']). Contradictory.\n  - WARN     METHODOLOGY_MISSING            Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.\n\n",
+      "passed": true,
+      "scope": "unchanged adversarial verifier negative control",
+      "started_at_utc": "2026-09-19T16:01:57.846831+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7424-bunb1xkb/controls/current_contradiction.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7424-bunb1xkb/controls/current_contradiction.json"
+      ],
+      "control_passed": true,
+      "duration_s": 0.5496215182356536,
+      "ended_at_utc": "2026-09-19T16:02:00.599888+00:00",
+      "environment": {},
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/contradiction_control/00_current_invocation_contradiction_control/00_current_invocation_contradiction_control.log",
+      "log_sha256": "sha256:01d5fbde0d15a3ec6bec08c764576baf4513d8df308e6c4f1790207509257b5a",
+      "name": "current_invocation_contradiction_control",
+      "output_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[CRITICAL] expexp7424-current-invocation-contradiction-control () -- 4 flag(s)\n  - CRITICAL INFERENCE_PROVENANCE_CONTRADICTION Current-task inference provenance is contradictory: conflicting_typed_invocation_evidence; substrate='host CPU no-model contradiction control', live_evidence_count=1, negative_evidence_count=4. The duration check fails closed until the invocation scope agrees.\n  - CRITICAL DURATION_TOO_SHORT             duration_s=1.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.\n  - CRITICAL SUBSTRATE_CLASS_MISMATCH       inference_substrate_class=no_model_load says no model was loaded, but typed invocation evidence says one ran (['generation_calls_attempted']). Contradictory.\n  - WARN     METHODOLOGY_MISSING            Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.\n\n",
+      "passed": true,
+      "scope": "unchanged adversarial verifier negative control",
+      "started_at_utc": "2026-09-19T16:02:00.049899+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,sys; from pathlib import Path; from carnot.experiment_7424_v651_arc_receipt_boundary import independent_reduce_file,validate_artifact; p=Path(sys.argv[1]); r=independent_reduce_file(p); e=validate_artifact(p); print(json.dumps({'\"'\"'reduction'\"'\"':r,'\"'\"'errors'\"'\"':e},sort_keys=True)); raise SystemExit(0 if r['\"'\"'matches_declared'\"'\"'] and not e else 1)' /tmp/carnot-exp7424-bunb1xkb/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,sys; from pathlib import Path; from carnot.experiment_7424_v651_arc_receipt_boundary import independent_reduce_file,validate_artifact; p=Path(sys.argv[1]); r=independent_reduce_file(p); e=validate_artifact(p); print(json.dumps({'reduction':r,'errors':e},sort_keys=True)); raise SystemExit(0 if r['matches_declared'] and not e else 1)",
+        "/tmp/carnot-exp7424-bunb1xkb/candidate.json"
+      ],
+      "duration_s": 0.4612847459502518,
+      "ended_at_utc": "2026-09-19T16:02:01.067126+00:00",
+      "environment": {},
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/terminal_preflight/00_fresh_process_replay/00_fresh_process_replay.log",
+      "log_sha256": "sha256:beec387af35d7dfb02b457390b8400d0bbc3014604c508943b058a73908097f8",
+      "name": "fresh_process_replay",
+      "output_tail": "{\"errors\": [], \"reduction\": {\"accounting_valid\": true, \"all_attempts_terminal\": true, \"attempted\": 7, \"budget_violations\": 0, \"cancelled\": 2, \"completed\": 4, \"current_invocation_isolated\": true, \"declared_ready\": 1, \"dispatched\": 6, \"failed\": 1, \"in_flight\": 0, \"matches_declared\": true, \"nonzero_typed_invocation_paths\": [], \"permit_granted\": 7, \"rejected_before_dispatch\": 1}}\n",
+      "passed": true,
+      "scope": "fresh-process cold artifact replay",
+      "started_at_utc": "2026-09-19T16:02:00.605369+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7424-bunb1xkb/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7424-bunb1xkb/candidate.json"
+      ],
+      "duration_s": 0.5426587490364909,
+      "ended_at_utc": "2026-09-19T16:02:01.610137+00:00",
+      "environment": {},
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/terminal_preflight/01_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "unchanged adversarial verifier",
+      "started_at_utc": "2026-09-19T16:02:01.067143+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7424-bunb1xkb/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7424-bunb1xkb/candidate.json"
+      ],
+      "duration_s": 0.028499362990260124,
+      "ended_at_utc": "2026-09-19T16:02:01.638947+00:00",
+      "environment": {},
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7424-bunb1xkb/logs/terminal_preflight/02_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "strict verdict-row consistency",
+      "started_at_utc": "2026-09-19T16:02:01.610153+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": true
+}
