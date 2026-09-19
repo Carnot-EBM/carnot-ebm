@@ -18195,3 +18195,4 @@ code |
 | 2026-09-19 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7377_v647_ising_law.json age-week 0: OPEN 1 days: CLAIM_OVERSTATED on |
 | 2026-09-19 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_null_delta_descriptor age-week 0: OPEN 1 days:  |
 | 2026-09-19 00:06 UTC | Capture the sealed Qwen3.8 implication-query panel | OK | 100 passed, 1 warning in 10.33s |
+| 2026-09-19 00:37 UTC | Measure certified memory independently on sealed s | OK | 110 passed, 1 warning in 45.67s |
