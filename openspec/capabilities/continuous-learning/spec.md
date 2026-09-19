@@ -17857,3 +17857,110 @@ terminal publication.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7399 and SCENARIO-CL-7399-* | Planned: Exp7399 online trial module, thin entrypoint, numeric checkpoints, and terminal artifact. | Planned: spec-linked tests, 100 percent changed-module coverage, scoped affected checks, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test specification coverage. |
+
+## REQ-CL-7403: Source-Certified Synthetic Proof-Memory Cohort
+
+Carnot SHALL execute the deterministic synthetic half of the sealed Exp7371
+protocol as a separate Tier 2 memory measurement. Before dependent work, the
+experiment SHALL authenticate the exact Exp7371 terminal artifact, the V647
+manifest, the sealed evaluation fixture, and the source modules that define
+proof authority. Exp7371 SHALL be complete, non-adversarial, and proof-boundary
+ready. A failed structured gate SHALL publish a row-free terminal `blocked_*`
+artifact whose `gate_check_summary` names the upstream path, check, field,
+expected value, and observed value.
+
+The cohort SHALL use the original 32 streams and 24 ordered requests per stream.
+One reusable replay runner SHALL execute five equal-input arms: reset exact
+solver, persistent incremental exact solver, persistent source-graph
+reachability cache, proof memory, and matched-size non-applicable proof memory.
+Both persistent controls SHALL retain state across same-version queries. The
+protocol and acceptance thresholds SHALL be sealed before timing starts.
+
+Proof memory SHALL read the prior committed snapshot before it predicts. It
+SHALL add only source-checked paths after exact feedback. Memory SHALL retain at
+most 128 paths and 65,536 serialized bytes, accept at most eight paths per
+event, and limit each path to `2n` original implication edges. Every edge SHALL
+name an original clause identifier and match the formula version and source
+hash. A proof of contradiction SHALL not certify a satisfying assignment.
+Every satisfying assignment SHALL be checked against the original clauses.
+
+Rows SHALL cover later distinct queries, recurrence, restart, version changes,
+and individual-path erasure. They SHALL retain stale, forged, and missing-proof
+controls. A recurrence cache hit SHALL remain distinct from cross-query proof
+reuse. Every request-arm row SHALL record full service costs, failed or censored
+disposition, and the earlier verified feedback that could change its decision.
+
+The frozen value gate SHALL require zero unsafe decisions, no exact coverage or
+utility loss, at least eight individual erasure witnesses across at least four
+streams, and paired block-bootstrap bounds against both persistent controls.
+The paid-query-ratio 95 percent upper bound SHALL be below `0.90`. The full-cost
+ratio 95 percent upper bound SHALL be at most `1.0`. Resampling SHALL use 10,000
+stream-and-family block draws with seed `7371307`. Costs SHALL include discovery,
+checking, updates, verification, serialization, and orchestration.
+
+`synthetic_memory_capture_complete_score` SHALL equal one when all planned rows,
+controls, witnesses, and required validations are complete and valid. It SHALL
+not depend on efficacy. `synthetic_memory_value_score` SHALL equal one only when
+all frozen value gates pass. Because the exact verifier defines correctness,
+any successful value verdict SHALL use `verdict_class=circular_positive`.
+`proof_safety_ready_score` MAY equal one when safety passes even if value is
+null. `promotion_score` SHALL remain zero. The artifact SHALL not establish
+live-model benefit or revive a disqualified historical capture.
+
+The artifact SHALL use milestone `2026.09.649`, phase 3, and run date `20260919`.
+It SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, zero current LLM invocation
+counts, `inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. `inference_substrate` SHALL be a truthful string.
+Device and software details SHALL remain in `inference_substrate_details`.
+Historical invocation receipts SHALL remain in hash-bound sidecars only.
+
+The affected check plan SHALL come from Exp7358 and run through Exp7303. It
+SHALL use worktree imports, focused serial pytest with cleared addopts and no
+coverage, separate 100 percent changed-module coverage, scoped Ruff check and
+format, changed-module mypy, and exact-test specification coverage. It SHALL
+use command-local `COVERAGE_FILE`, a private existing base-temp parent, and no
+full-suite receipt. The declared entrypoint and a fresh-process cold replay
+SHALL serve as the capability E2E. The unchanged adversarial verifier and strict
+row-consistency reader SHALL inspect the exact candidate before atomic terminal
+publication. No numbered E2E test applies.
+
+### SCENARIO-CL-7403-GATE: Exact Exp7371 evidence fails closed
+
+- GIVEN missing, changed, blocked, disqualified, partial, or adversarial Exp7371 evidence
+- WHEN Exp7403 checks the structured prerequisites and byte identities
+- THEN no cohort replay starts
+- AND the blocked artifact records the exact failed field and observed value.
+
+### SCENARIO-CL-7403-REPLAY: Five arms preserve equal input and persistent controls
+
+- GIVEN the sealed 32 streams of 24 requests
+- WHEN the reusable replay runner executes every request
+- THEN each arm receives identical clauses and assumptions in the frozen order
+- AND both persistent controls retain same-version state across queries.
+
+### SCENARIO-CL-7403-AUTHORITY: Only earlier source-checked feedback can transfer
+
+- GIVEN a proof-memory decision on a later distinct request
+- WHEN its retained path is inspected or individually erased
+- THEN original clause identifiers, version, source hash, and earlier feedback are visible
+- AND erasure changes exact work without granting authority to stale or forged paths.
+
+### SCENARIO-CL-7403-GATES: Completion, safety, and circular value stay separate
+
+- GIVEN a complete safe replay whose registered comparative gate passes or fails
+- WHEN the independent reducer recomputes terminal scores
+- THEN completion and proof-safety scores do not depend on benefit
+- AND successful oracle-defined value uses `circular_positive`, while failed value uses `null`.
+
+### SCENARIO-CL-7403-ARTIFACT: Fresh readers control atomic publication
+
+- GIVEN raw rows, witnesses, attacks, exact hashes, and scoped receipts
+- WHEN a fresh process recomputes rows and strict readers inspect the candidate
+- THEN changed rows, gates, hashes, scores, or validation scope fail closed
+- AND only a valid terminal artifact is written atomically.
+
+## Implementation Status (REQ-CL-7403)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7403 and SCENARIO-CL-7403-* | Implemented: `python/carnot/experiment_7403_v649_synthetic_memory.py`, thin entrypoint, reusable replay runner, raw replay evidence, and terminal artifact. | Verified: 29 focused tests, 100 percent changed-module coverage, all eight scoped affected checks, entrypoint E2E, fresh-process cold replay, adversarial verification, strict row consistency, and exact-test specification coverage. |
