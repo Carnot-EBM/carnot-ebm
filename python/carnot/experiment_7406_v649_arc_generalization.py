@@ -110,6 +110,7 @@ REQUIRED_TERMINAL_NAMES = (
 ZERO_INVOCATION_COUNTS = deepcopy(live_base.ZERO_INVOCATION_COUNTS)
 CheckpointIntegrityError = checkpoint_base.CheckpointIntegrityError
 HASH_RE = re.compile(r"sha256:[0-9a-f]{64}")
+_SHIPPED_SESSION_ENVIRONMENT = live_base.session_environment
 
 INPUT_PATHS = (
     Path("AGENTS.md"),
@@ -378,7 +379,7 @@ def session_environment(
         first_id = next(iter(_LIVE_STATE.schedule))
         if episode_id not in {first_id, "bootstrap"}:
             raise SentinelAbort("sentinel failed before later episode start")
-    env = live_base.session_environment(
+    env = _SHIPPED_SESSION_ENVIRONMENT(
         base_env,
         arm=arm,
         episode_dir=episode_dir,

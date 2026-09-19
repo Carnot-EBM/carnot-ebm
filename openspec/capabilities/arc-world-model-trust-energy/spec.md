@@ -41,6 +41,9 @@ CUDA llama.cpp runtime. Each episode SHALL have at most 128 environment
 actions, two generation requests, 256 requested output tokens per request, and
 240 seconds of episode work. Total episode work SHALL stop at 1800 seconds.
 The context window SHALL remain independent of the output-token limit.
+Runtime composition SHALL retain a stable reference to the shipped session
+environment builder. A temporary runtime override SHALL not recurse through
+its own wrapper before model load.
 
 The first scheduled episode SHALL be the sentinel. Before later episodes can
 start, its durable journal SHALL contain a scored-policy entry, a generation
@@ -107,6 +110,13 @@ or promotion score.
 - WHEN its durable events lack policy entry, request attempt, or first action
 - THEN that episode is censored and the remaining five episodes are unstarted
 - AND no later policy or environment begins.
+
+#### SCENARIO-ARC-WMTE-7406-RUNTIME-COMPOSITION
+
+- GIVEN the bounded experiment temporarily installs its session environment wrapper
+- WHEN the owned live runner asks that wrapper to build one episode environment
+- THEN the wrapper calls the shipped base builder exactly once
+- AND it returns the fixed live limits without recursive self-dispatch.
 
 #### SCENARIO-ARC-WMTE-7406-DURABLE-PANEL
 

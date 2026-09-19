@@ -725,6 +725,23 @@ def test_req_7406_session_environment_keeps_fixed_policy_and_output_budgets(tmp_
         )
 
 
+def test_scenario_7406_runtime_composition_keeps_base_environment_callable(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-ARC-WMTE-7406-RUNTIME-COMPOSITION: the wrapper does not recurse."""
+
+    with exp._configured_runtime():
+        env = exp.live_base.session_environment(
+            {},
+            arm="curated_supervisor",
+            episode_dir=tmp_path / f"bp35__seed-{exp.EPISODE_SEEDS[0]}",
+            gpu_index=0,
+            port=8080,
+        )
+    assert env["CARNOT_7406_EPISODE_ID"].startswith("bp35:")
+    assert env["CARNOT_ARC_INDUCE_MAX_TOKENS"] == "256"
+
+
 def test_scenario_7406_session_environment_enforces_failed_sentinel_stop(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
