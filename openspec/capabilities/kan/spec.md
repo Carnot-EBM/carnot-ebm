@@ -2968,3 +2968,101 @@ receipts, reports at least two nondegenerate switch cases before declaring a
 critical duration or emits a bounded no-crossing null, records zero exact-gate
 unsafe false accepts, sets `lazy_identity_guard_passed=true`, and uses
 `inference_substrate="exact_constraint_stream_active_spline_kan_no_llm"`.
+
+## REQ-KAN-7425: Additive Cubic-Spline Energy Prototype
+
+The KAN capability MUST provide a reusable six-input additive cubic B-spline
+classifier. Each input MUST have eight coefficients and the classifier MUST
+have one bias, for 49 trainable parameters. The conditional energy MUST be
+`E(x, 0) = 0` and `E(x, 1) = -f(x)`. Its exact two-state normalizer MUST give
+`p(y=1|x) = sigmoid(f(x))`. This construction is logistic regression on a
+fixed spline basis. The prototype MUST make that equivalence explicit and MUST
+not claim real-data efficacy from analytic fixtures.
+
+The knot vectors MUST come only from training-feature quantiles. Repeated
+quantiles MUST receive a deterministic repair. Prediction MUST clamp values
+outside the training support and count each clamped feature. Inputs, labels,
+knots, coefficients, and checkpoints MUST reject nonfinite values.
+
+One Bernoulli-log-loss SGD update MUST use learning rate `0.01`, no global
+weight decay, and a gradient-norm cap of `1.0`. A sparse update MUST touch no
+more than four coefficients per input plus the bias. A dense fixed-basis
+logistic reference MUST use identical weights, loss, clipping, and float64
+arithmetic. Probability and parameter disagreement MUST be at most `1e-10`.
+A disagreement is a defect and MUST NOT count as a learning benefit.
+
+Feedback MUST have an immutable event ID, source version, and reveal time.
+Prediction reads MUST remain separate from committed writes. Duplicate,
+early, malformed, and revoked feedback MUST not silently change weights.
+Numeric checkpoints MUST be atomic, cold-restartable, hash-bound, and no more
+than 64 KiB for this prototype. An interrupted replacement MUST leave the last
+committed checkpoint readable.
+
+The experiment MUST declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate_class="no_model_load"`,
+and `execution_venue="host"`. Tiny spline-head fitting MUST appear only in an
+explicit `small_ebm_training` receipt. The artifact MUST measure active
+coefficient count, coefficient write bytes, and bounded arithmetic. It MAY
+describe local coefficient storage as a hardware route. It MUST NOT claim a
+100x speedup.
+
+The experiment MUST write
+`results/experiment_7425_v651_spline_prototype.json` only after scoped
+validation, a fresh-process cold replay, independent raw-row reduction,
+`scripts/adversarial_verify.py`, and strict verdict-row consistency checks all
+pass. Analytic examples MUST be labeled as fixtures, not corpus rows.
+`spline_prototype_ready_score` MAY equal one only when basis, gradient, sparse
+support, feedback, checkpoint, and dense-reference parity checks pass.
+`promotion_score` MUST remain zero.
+
+### SCENARIO-KAN-7425-01: Quantile Basis Is Local And Normalized
+
+Given finite six-column training fixtures, including duplicate quantiles,
+when the prototype freezes cubic knot vectors and evaluates endpoints and
+out-of-range inputs, then every basis sums to one, no input activates more
+than four coefficients, repeated knots are deterministic, and clamp counts
+are explicit.
+
+### SCENARIO-KAN-7425-02: Energy Is Fixed-Basis Logistic Regression
+
+Given any finite fixture and coefficient state, when both conditional energies
+are normalized, then `E(x,0)=0`, `E(x,1)=-f(x)`, and the class-one probability
+equals the fixed-basis logistic probability in float64 arithmetic.
+
+### SCENARIO-KAN-7425-03: Sparse And Dense Updates Agree
+
+Given identical spline and dense-reference states, when one visible binary
+feedback event is committed, then both paths use the same log loss and clipped
+gradient, sparse writes touch at most 25 float64 parameters, and probability
+and parameter disagreement are at most `1e-10`.
+
+### SCENARIO-KAN-7425-04: Gradients Match Finite Differences
+
+Given an interior analytic fixture, when coefficient and bias derivatives are
+checked by centered finite differences, then the analytic Bernoulli-log-loss
+gradient matches within the registered tolerance.
+
+### SCENARIO-KAN-7425-05: Feedback Admission Is Immutable
+
+Given a feedback event with an ID, source version, reveal time, feature vector,
+and label, when it is early, duplicated, revoked, or changed under the same ID,
+then no inadmissible write changes the committed predictor state.
+
+### SCENARIO-KAN-7425-06: Checkpoints Survive Cold And Interrupted Restart
+
+Given a committed numeric checkpoint, when a fresh reader restores it or an
+interrupted temporary replacement remains beside it, then the committed hash
+and predictions are unchanged and the checkpoint stays below 64 KiB.
+
+### SCENARIO-KAN-7425-07: Artifact Reduction Fails Closed
+
+Given analytic parity rows and validation receipts, when a fresh process
+recomputes readiness, then it derives the score only from raw checks. Changed
+rows, hashes, invocation claims, or readiness scores make validation fail.
+
+### SCENARIO-KAN-7425-08: Scoped Execution Publishes Terminal Evidence
+
+Given the frozen affected-file manifest, when the thin entrypoint runs for
+`20260919`, then it streams scoped checks and terminal readers, records actual
+UTC and monotonic durations, and atomically publishes a complete artifact with
+no model load, no promotion, and no real-data efficacy claim.
