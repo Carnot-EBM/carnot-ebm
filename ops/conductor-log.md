@@ -18231,3 +18231,4 @@ code |
 | 2026-09-19 16:48 UTC | Measure calibrated Gibbs and spline decisions on h | OK | 96 passed, 1 warning in 7.65s |
 | 2026-09-19 17:35 UTC | Measure continuous local learning under randomized | OK | 92 passed, 1 warning in 22.03s |
 | 2026-09-19 18:12 UTC | Independently test source-label leakage and learni | OK | 89 passed, 1 warning in 8.28s |
+| 2026-09-19 18:34 UTC | Capture the sealed Qwen span comparison after leas | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, DURATION_TOO_SHORT, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 95 passed, 1 warning in 8.60s |
