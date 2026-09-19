@@ -5600,6 +5600,56 @@ energy.
 **Then** the returned record also contains a `verifier_auroc` entry equal to
 `measure_default_weight_energy()`, not an absent key.
 
+### REQ-AUTO-026: Scope the rejection circuit breaker to one loop invocation
+
+Each real autoresearch loop invocation SHALL save the append position of its
+experiment log before it evaluates a hypothesis. Every circuit-breaker check in
+that invocation SHALL count only the consecutive rejected entries at or after
+that position. Persisted rejections before the saved position SHALL remain in
+the log and in the rejected-ID registry, but SHALL NOT stop a later invocation
+before its first proposal or evaluation.
+
+The configured `max_consecutive_failures` threshold SHALL remain unchanged. A
+rejected sandbox execution SHALL count as a rejection. An accepted or
+pending-review entry SHALL break the local rejection streak. Empty logs and
+invocations with no new entries SHALL have a local count of zero. The existing
+all-time `consecutive_failures()` query SHALL retain its historical behavior for
+callers that do not supply an invocation boundary.
+
+The bounded conductor round SHALL use the same invocation-local boundary as the
+three shared loop entrypoints. It SHALL preserve the original bytes of all old
+log records, timeout and error handling, review outcomes, and rejected-ID
+deduplication. Recovery means that a later round reaches proposal and evaluation;
+it does not turn a scientific rejection into an acceptance.
+
+#### SCENARIO-AUTO-026-A: Historical rejections do not lock a new invocation
+
+**Given** a persisted log whose tail contains ten valid rejected entries
+**When** a new loop invocation starts with a threshold of ten
+**Then** its first proposal reaches evaluation
+**And** the ten historical entries remain byte-identical.
+
+#### SCENARIO-AUTO-026-B: Fresh rejections still stop a stuck invocation
+
+**Given** a new invocation with a rejection threshold of ten
+**When** that invocation appends ten consecutive rejected evaluations
+**Then** its circuit breaker trips before an eleventh evaluation.
+
+#### SCENARIO-AUTO-026-C: A non-rejection breaks only the local streak
+
+**Given** a new invocation that records rejections followed by an accepted or
+pending-review result
+**When** later rejections are counted
+**Then** only the trailing rejections after that result contribute to the
+invocation-local circuit breaker.
+
+#### SCENARIO-AUTO-026-D: Successive invocations have independent budgets
+
+**Given** two loop invocations that append to the same persisted history
+**When** the first invocation exhausts its consecutive-rejection budget
+**Then** the second invocation can still propose and evaluate
+**And** every rejection from both invocations remains recorded.
+
 ### REQ-AUTO-016: Headroom Gate Corpus for Grid Tasks
 The system MUST generate a difficulty-stratified grid corpus (n >= 50) and measure matched-compute AR greedy, AR+SC32, and oracle solve rates. It must compute the headroom band (oracle - AR+SC32).
 If AR+SC32 > 0.75, it must ABORT as ceiling-polluted. If AR_greedy ~ 0.20 and AR_SC32 < 0.50 and oracle materially > AR+SC32, it must set headroom_confirmed = true and CONFIRM.

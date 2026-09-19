@@ -884,6 +884,7 @@ def run_round(
     baselines = load_baselines(baseline_cache)
     experiment_log = load_experiment_log(log_cache)
     before_count = len(experiment_log.entries)
+    breaker_historical_tail = experiment_log.consecutive_failures()
     energy_before = {name: metrics.final_energy for name, metrics in baselines.benchmarks.items()}
 
     fable_fallback_iterations: list[int] = []
@@ -988,6 +989,11 @@ def run_round(
         f"- rejected: {result.rejected}",
         f"- pending_review: {result.pending_review}",
         f"- circuit_breaker_tripped: {result.circuit_breaker_tripped}",
+        f"- breaker_invocation_start_position: {before_count}",
+        f"- breaker_historical_tail_at_start: {breaker_historical_tail}",
+        "- breaker_invocation_local_tail_at_start: 0",
+        f"- breaker_invocation_local_tail_at_end: "
+        f"{experiment_log.consecutive_failures_since(before_count)}",
         f"- generator_exhausted: {result.generator_exhausted}",
         f"- fable_fallback_iterations: {fable_fallback_iterations or 'none'}",
         "",

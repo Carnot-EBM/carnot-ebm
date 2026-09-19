@@ -235,6 +235,7 @@ def run_loop(
         config = AutoresearchConfig()
     if experiment_log is None:
         experiment_log = ExperimentLog()
+    invocation_start_position = len(experiment_log)
 
     result = LoopResult(
         final_baselines=baselines,
@@ -251,7 +252,10 @@ def run_loop(
             break
 
         # --- Circuit breaker (REQ-AUTO-009) ---
-        if experiment_log.consecutive_failures() >= config.max_consecutive_failures:
+        if (
+            experiment_log.consecutive_failures_since(invocation_start_position)
+            >= config.max_consecutive_failures
+        ):
             logger.warning(
                 "Circuit breaker: %d consecutive failures. Halting for human review.",
                 config.max_consecutive_failures,
@@ -392,6 +396,7 @@ def run_loop_with_generator(
         config = AutoresearchConfig()
     if experiment_log is None:
         experiment_log = ExperimentLog()
+    invocation_start_position = len(experiment_log)
 
     result = LoopResult(
         final_baselines=baselines,
@@ -404,7 +409,10 @@ def run_loop_with_generator(
 
     while iteration < config.max_iterations:
         # --- Circuit breaker (REQ-AUTO-009) ---
-        if experiment_log.consecutive_failures() >= config.max_consecutive_failures:
+        if (
+            experiment_log.consecutive_failures_since(invocation_start_position)
+            >= config.max_consecutive_failures
+        ):
             logger.warning(
                 "Circuit breaker: %d consecutive failures. Halting for human review.",
                 config.max_consecutive_failures,
@@ -461,7 +469,10 @@ def run_loop_with_generator(
         for desc, code in hypotheses:
             if result.iterations >= config.max_iterations:
                 break
-            if experiment_log.consecutive_failures() >= config.max_consecutive_failures:
+            if (
+                experiment_log.consecutive_failures_since(invocation_start_position)
+                >= config.max_consecutive_failures
+            ):
                 result.circuit_breaker_tripped = True
                 break
 
@@ -609,6 +620,7 @@ def run_loop_with_skills(
         config = AutoresearchConfig()
     if experiment_log is None:
         experiment_log = ExperimentLog()
+    invocation_start_position = len(experiment_log)
 
     # Initialize skill directory
     if skill_directory is None and config.skill_directory_path is not None:
@@ -635,7 +647,10 @@ def run_loop_with_skills(
 
     while iteration < config.max_iterations:
         # --- Circuit breaker (REQ-AUTO-009) ---
-        if experiment_log.consecutive_failures() >= config.max_consecutive_failures:
+        if (
+            experiment_log.consecutive_failures_since(invocation_start_position)
+            >= config.max_consecutive_failures
+        ):
             logger.warning(
                 "Circuit breaker: %d consecutive failures. Halting.",
                 config.max_consecutive_failures,
@@ -705,7 +720,10 @@ def run_loop_with_skills(
         for desc, code in hypotheses:
             if result.iterations >= config.max_iterations:
                 break
-            if experiment_log.consecutive_failures() >= config.max_consecutive_failures:
+            if (
+                experiment_log.consecutive_failures_since(invocation_start_position)
+                >= config.max_consecutive_failures
+            ):
                 result.circuit_breaker_tripped = True
                 break
 

@@ -9925,6 +9925,16 @@ history, or (c) both. This is a `python/carnot/autoresearch/experiment_log.py` +
 outer-loop hot-fix — queued here as a hard pickup, same "convert the lesson into
 a check that fires" principle as the GitHub pack-size entry below.
 
+**ADDRESSED 2026-09-19 (Exp7435, milestone 2026.09.652 phase 1).** The three
+shared loop entrypoints now save their log position at invocation start. Every
+breaker check counts only rejected entries added at or after that position. The
+legacy all-time query remains available, and the conductor receipt records both
+the historical tail and the invocation-local tail. Private persisted-log tests
+retain every old rejection, preserve rejected-ID deduplication, recover a second
+invocation, and still stop ten fresh rejections in one invocation. A deterministic
+compact Gibbs-head proposal also crossed the real conductor sandbox and fresh-
+process recompute path without a synthesis LLM or a scientific acceptance.
+
 ### NEW 2026-09-18: GITHUB PACK-SIZE INCIDENT — HISTORY REWRITTEN, CONDUCTOR-SIDE SIZE GATE STILL NEEDED
 
 **What happened.** GitHub push had been silently failing since 2026-08-30 (19 days,

@@ -148,13 +148,26 @@ class ExperimentLog:
 
         Spec: REQ-AUTO-009
         """
+        return self.consecutive_failures_since(0)
+
+    def consecutive_failures_since(self, start_position: int) -> int:
+        """Count the trailing rejected entries added after one saved position.
+
+        A loop invocation saves ``len(log)`` before it starts. This method then
+        gives that invocation its own failure budget without deleting valid old
+        rejections. ``consecutive_failures()`` remains the explicit all-time
+        query for legacy callers.
+
+        Spec: REQ-AUTO-026
+        """
+        if not 0 <= start_position <= len(self.entries):
+            raise ValueError("start_position must identify an existing log boundary")
         count = 0
-        # Walk backwards from the most recent entry
-        for entry in reversed(self.entries):
+        for entry in reversed(self.entries[start_position:]):
             if entry.outcome == "rejected":
                 count += 1
             else:
-                break  # streak broken by a non-rejection
+                break
         return count
 
     def save(self, path: Path) -> None:
