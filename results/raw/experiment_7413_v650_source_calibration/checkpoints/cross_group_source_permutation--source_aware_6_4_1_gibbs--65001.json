@@ -1,0 +1,90 @@
+{
+  "affine": {
+    "intercept": 0.14262274040481074,
+    "slope": 1.0567240658439634
+  },
+  "architecture": [
+    6,
+    4,
+    1
+  ],
+  "arm": "source_aware_6_4_1_gibbs",
+  "condition": "cross_group_source_permutation",
+  "input_hashes": {
+    "calibration": "sha256:ae2db4c3a2ac1d4684e65ca00cded8849338c1d8c74c921abebf846537d62047",
+    "policy": "sha256:e06e2bda97ad2e1d5e3ef952d25c4c9b3f10770e1641288c845bfb78d4cb86c6",
+    "training": "sha256:3d1fc766eea1635dcd025e5063160f69afc634d89c2453c83d907a13a222ad8c"
+  },
+  "optimizer_work": {
+    "affine_updates": 500,
+    "calibration_duration_s": 0.014999162871390581,
+    "final_loss": 0.18934337301222615,
+    "fit_duration_s": 0.042145371437072754,
+    "initial_loss": 0.6982625230606845,
+    "maximum_steps": 500,
+    "name": "adam",
+    "weight_updates": 500
+  },
+  "schema": "carnot.exp7413.numeric_checkpoint.v1",
+  "score_direction": "higher_probability_means_machine_annotation_incorrect",
+  "seed": 65001,
+  "selected_policy": {
+    "accept_enabled": false,
+    "accept_threshold": 0.01,
+    "reject_enabled": false,
+    "reject_threshold": 0.9,
+    "representative_groups": 92,
+    "selection_partition": "policy_calibration",
+    "selection_rule": "coverage_then_utility_then_registered_order",
+    "threshold_index": 0
+  },
+  "weights": {
+    "b1": [
+      1.1280632895732625,
+      -0.8081809749794353,
+      -0.8244085345624611,
+      1.1479405650219474
+    ],
+    "b_out": 0.6496116703052262,
+    "w1": [
+      [
+        1.0162503759630823,
+        -2.15242847485634e-12,
+        0.18358423079648983,
+        0.15226031010321617,
+        0.15213037572810076,
+        5.370528564378299e-13
+      ],
+      [
+        -0.060441996532193475,
+        -1.0950341734059105e-13,
+        -0.01312707315026314,
+        -0.010984347094734465,
+        -0.010989175423192605,
+        -1.3633036368806157e-12
+      ],
+      [
+        -0.05411026138441476,
+        -6.765411846556506e-13,
+        -0.012136321309735633,
+        -0.010625224434067415,
+        -0.010422530465638017,
+        1.6710243953738986e-11
+      ],
+      [
+        0.9804768039587427,
+        -4.731139498882827e-13,
+        0.19152901609739761,
+        0.1589010707140984,
+        0.15886982003075997,
+        -1.4581418665615674e-12
+      ]
+    ],
+    "w_out": [
+      1.0100358543022665,
+      -0.5546281122644492,
+      -0.5434986461975029,
+      1.047949981978916
+    ]
+  }
+}

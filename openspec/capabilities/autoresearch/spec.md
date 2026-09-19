@@ -709,6 +709,147 @@ shapes, extra keys, booleans, or executable values,
 **and** no lexical feature, span, or constructed fixture is reported as
 entailment or external accuracy evidence.
 
+### REQ-AUTO-7413: Measure source-grounded calibration against matched controls
+
+Exp7413 SHALL authenticate the exact Exp7410 corpus manifest and Exp7412
+artifact, protocol manifest, and feature rows before dependent work. It SHALL
+require `source_feature_protocol_ready_score=1`, an allowed `verdict_class`,
+and `flagged_adversarial=false`. A failed prerequisite SHALL produce a terminal
+blocked artifact naming the exact upstream, path, check, field, expected value,
+and observed value.
+
+The experiment SHALL train exactly four registered arms for seeds 65001 through
+65005: training prevalence, L2 logistic on the six fixed source features,
+response-only 2-4-1 Gibbs, and source-aware 6-4-1 Gibbs. Weight fitting SHALL
+use scored training groups only. A two-parameter affine probability transform
+SHALL use scored probability-calibration groups only. Policy thresholds SHALL
+be selected on scored policy-calibration groups only. Feature vectors SHALL not
+contain a source ID, article ID, teacher score, gold triple, label, or evaluator
+field. Numeric checkpoints SHALL record architecture, optimizer work, byte
+size, score direction, partition identity, and input hashes. Small-head fitting
+SHALL be reported as `small_ebm_training`, not as a current LLM invocation.
+
+Every eligible official-test row SHALL be scored once by every arm and seed.
+Official rows without a machine label SHALL remain explicit unscored rows for
+every arm and seed. The paired metric ledger SHALL retain row key, connected
+group, arm, seed, probability, machine label, typed action, Brier and log-loss
+contributions, and measured service cost. It SHALL report Brier score, log
+loss, AUROC, incorrect-class PR-AUC, correct-class PR-AUC, macro-F1, typed-action
+risk and coverage, and decision changes. Seeds SHALL be averaged within each
+row before resampling article-connected groups. The paired bootstrap SHALL use
+10,000 draws and seed 6501307. The upper Brier interval SHALL be simultaneous
+across the three source-Gibbs contrasts against prevalence, logistic, and
+response-only Gibbs by taking the per-draw maximum centered contrast.
+
+Policy certification SHALL use one label-blind row-key representative per
+connected policy group and the nine thresholds frozen by Exp7412. An empty or
+uncertified action SHALL be disabled. Scientific value SHALL require all three
+source-Gibbs Brier-delta upper simultaneous 95-percent bounds below zero,
+source-Gibbs mean log loss no worse than each control, certified official-test
+coverage of at least 0.25, and no source-Gibbs coverage loss versus logistic
+under their selected policies and the same annotation-risk budgets. Too little
+support SHALL disable the action and produce a valid null. Ranking improvement
+without certified decision coverage SHALL remain diagnostic only.
+
+The experiment SHALL also run two frozen source ablations. Source removal SHALL
+replace the four overlap or novelty source values with zero, set the
+missing-source indicator to one, and retain the row's response-only
+falsifiability value.
+Cross-group source permutation SHALL replace each row's context with the next
+lexicographically ordered group's representative context inside the same
+partition, wrapping once, before recomputing all six source features. The
+source-aware Gibbs arm SHALL be retrained on training data for both conditions
+with the same five seeds and unchanged 500-step fitting and calibration budgets.
+Neither ablation SHALL tune on official-test labels. Ablation rows SHALL report
+proper scores and whether an observed full-condition benefit depends on source
+information; a failed ablation SHALL stay recorded without adding a feature.
+
+`calibration_capture_complete_score` SHALL equal one when preconditions,
+registered fitting, complete paired scoring including unscored preservation,
+ablations, affected validation, cold replay, independent metric recomputation,
+adversarial verification, and strict row consistency all pass. A complete null
+MAY receive this score. `calibration_value_score` SHALL equal one only when the
+registered scientific conjunction passes. `promotion_score` SHALL remain zero.
+`label_authority` SHALL be `machine_annotation`, and `verifier_is_oracle` SHALL
+be false because agreement with held-out teacher labels is not general semantic
+correctness.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate=no_model_load`,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`. The
+workflow SHALL freeze the Exp7358 affected manifest before using the Exp7303
+runner. It SHALL run worktree imports, affected pytest without distributed or
+coverage add-ons, isolated changed-module coverage at 100 percent, scoped Ruff
+check and format, changed-module mypy, exact-test spec coverage, the declared
+entrypoint, fresh-process cold replay, independent reduction,
+`scripts/adversarial_verify.py`, and strict verdict-row consistency. No numbered
+E2E scenario applies because shared training, sampling, serialization, and PyO3
+behavior do not change.
+
+The required ordinary fields SHALL include `schema`, `experiment_id`,
+`milestone`, `status`, `run_date`, `preconditions_checked`, `MODEL_SPECS`,
+`model_invoked`, `invocation_counts`, `inference_substrate`,
+`inference_substrate_details`, `inference_substrate_class`, `execution_venue`,
+`duration_s`, `phase_spans`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `rows`, `sample_size_budget`,
+`acceptance_gate_results`, `gate_check_summary`, `verifier_is_oracle`,
+`honest_verdict`, `verdict_class`, `flagged_adversarial`,
+`validation_receipts`, `field_principles`, `promotion_score`,
+`calibration_capture_complete_score`, `calibration_value_score`,
+`checkpoint_manifest`, `paired_metric_rows`, `source_ablation_rows`, and
+`label_authority`.
+
+#### SCENARIO-AUTO-7413-01: Partitions remain disjoint and features stay label-blind
+
+**Given** the authenticated Exp7410 labels and Exp7412 feature rows,
+**when** the four arms fit, calibrate, and select policies,
+**then** each operation uses only its registered partition
+**and** no prohibited identity or evaluator value enters a feature vector.
+
+#### SCENARIO-AUTO-7413-02: Paired scoring preserves every official unit
+
+**Given** scored and unscored official-test rows,
+**when** all arm-seed units are evaluated,
+**then** every official row appears once for every arm and seed
+**and** unscored rows remain present without invented labels or metrics.
+
+#### SCENARIO-AUTO-7413-03: Metrics and simultaneous intervals are reproducible
+
+**Given** the paired scored ledger,
+**when** metrics and 10,000 connected-group bootstrap draws are reduced,
+**then** both class PR-AUCs, proper scores, macro-F1, actions, and decision
+changes reproduce
+**and** the three primary Brier contrasts use one simultaneous upper bound.
+
+#### SCENARIO-AUTO-7413-04: Unsupported actions fail to safe escalation
+
+**Given** the frozen thresholds and annotation-risk budgets,
+**when** policy-calibration support cannot certify accept or reject,
+**then** that action is disabled and official decisions escalate
+**and** ranking-only evidence cannot pass the scientific value gate.
+
+#### SCENARIO-AUTO-7413-05: Source ablations retrain without test tuning
+
+**Given** the full source condition, fixed source removal, and cross-group
+source permutation,
+**when** source-aware Gibbs is retrained under matched seeds and budgets,
+**then** all three conditions retain their own checkpoints and scored rows
+**and** no official-test label changes a fit, affine transform, or threshold.
+
+#### SCENARIO-AUTO-7413-06: Completion stays independent of scientific benefit
+
+**Given** complete fitting, scoring, ablation, and validation evidence,
+**when** one or more registered benefit gates fail,
+**then** calibration capture can complete with a valid null
+**and** calibration value remains zero with promotion disabled.
+
+#### SCENARIO-AUTO-7413-07: Cold readers reject material evidence drift
+
+**Given** a terminal candidate and its hash-bound inputs and checkpoints,
+**when** a fresh process reloads and independently reduces it,
+**then** changed rows, metrics, gates, source hashes, counters, or checksums fail
+**and** the final JSON is published atomically only after all readers pass.
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the

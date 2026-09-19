@@ -1,0 +1,90 @@
+{
+  "affine": {
+    "intercept": -0.4613800548411454,
+    "slope": 1.2948984610446985
+  },
+  "architecture": [
+    6,
+    4,
+    1
+  ],
+  "arm": "source_aware_6_4_1_gibbs",
+  "condition": "full_source",
+  "input_hashes": {
+    "calibration": "sha256:29db47a99fea89ddc96e029223fa1287a599fd861dd3883a873f149800339695",
+    "policy": "sha256:84414a5e68e0d97f3e36fbcb84911528761d39a81f5aff9837b2e8eb2ad7b42d",
+    "training": "sha256:8ac81a1da50d35c4330026a5f2b37baa5489670be98b94a5697bdf095d7f490a"
+  },
+  "optimizer_work": {
+    "affine_updates": 500,
+    "calibration_duration_s": 0.014901960268616676,
+    "final_loss": 0.15647682185012957,
+    "fit_duration_s": 0.039459575433284044,
+    "initial_loss": 0.6984408319303245,
+    "maximum_steps": 500,
+    "name": "adam",
+    "weight_updates": 500
+  },
+  "schema": "carnot.exp7413.numeric_checkpoint.v1",
+  "score_direction": "higher_probability_means_machine_annotation_incorrect",
+  "seed": 65004,
+  "selected_policy": {
+    "accept_enabled": false,
+    "accept_threshold": 0.01,
+    "reject_enabled": false,
+    "reject_threshold": 0.9,
+    "representative_groups": 92,
+    "selection_partition": "policy_calibration",
+    "selection_rule": "coverage_then_utility_then_registered_order",
+    "threshold_index": 0
+  },
+  "weights": {
+    "b1": [
+      1.0168485472047026,
+      1.0572631047671452,
+      1.2473808951116492,
+      1.4462584476038158
+    ],
+    "b_out": 0.5179115305279507,
+    "w1": [
+      [
+        0.48324287863371085,
+        -2.985723088535012e-13,
+        0.23364174784417552,
+        -0.7220707930706275,
+        -0.7005018961393563,
+        1.3898219122835322e-12
+      ],
+      [
+        0.5220493306241107,
+        -1.5023738330237596e-12,
+        0.25345524011822185,
+        -0.7139722136911758,
+        -0.7754130983750295,
+        2.3935130808249034e-12
+      ],
+      [
+        0.6971426589035041,
+        -1.758905725085324e-13,
+        0.35908154774333484,
+        -0.8577140641955555,
+        -0.9431832384534683,
+        3.2057729049114863e-12
+      ],
+      [
+        0.894621002364848,
+        2.8416215223263595e-13,
+        0.4750716308142297,
+        -0.9823923495268035,
+        -1.1166680343936337,
+        -1.8091802955929182e-12
+      ]
+    ],
+    "w_out": [
+      0.8021423496066675,
+      0.8567797381448887,
+      1.1366859304603456,
+      1.4211108437114635
+    ]
+  }
+}

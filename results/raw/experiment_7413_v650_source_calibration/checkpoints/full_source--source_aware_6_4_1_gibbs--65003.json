@@ -1,0 +1,90 @@
+{
+  "affine": {
+    "intercept": -0.1607159837914679,
+    "slope": 1.2056245245835389
+  },
+  "architecture": [
+    6,
+    4,
+    1
+  ],
+  "arm": "source_aware_6_4_1_gibbs",
+  "condition": "full_source",
+  "input_hashes": {
+    "calibration": "sha256:29db47a99fea89ddc96e029223fa1287a599fd861dd3883a873f149800339695",
+    "policy": "sha256:84414a5e68e0d97f3e36fbcb84911528761d39a81f5aff9837b2e8eb2ad7b42d",
+    "training": "sha256:8ac81a1da50d35c4330026a5f2b37baa5489670be98b94a5697bdf095d7f490a"
+  },
+  "optimizer_work": {
+    "affine_updates": 500,
+    "calibration_duration_s": 0.014924081042408943,
+    "final_loss": 0.15490901622162845,
+    "fit_duration_s": 0.04220581520348787,
+    "initial_loss": 0.6976062489942247,
+    "maximum_steps": 500,
+    "name": "adam",
+    "weight_updates": 500
+  },
+  "schema": "carnot.exp7413.numeric_checkpoint.v1",
+  "score_direction": "higher_probability_means_machine_annotation_incorrect",
+  "seed": 65003,
+  "selected_policy": {
+    "accept_enabled": false,
+    "accept_threshold": 0.01,
+    "reject_enabled": false,
+    "reject_threshold": 0.9,
+    "representative_groups": 92,
+    "selection_partition": "policy_calibration",
+    "selection_rule": "coverage_then_utility_then_registered_order",
+    "threshold_index": 0
+  },
+  "weights": {
+    "b1": [
+      1.2745719140004688,
+      -0.32087081566572073,
+      1.3246271094842899,
+      1.4404808412956127
+    ],
+    "b_out": 0.5653292136589488,
+    "w1": [
+      [
+        0.7285787936868028,
+        2.806081111657651e-12,
+        0.34095522760002217,
+        -0.8484713026137038,
+        -0.7289214192626223,
+        -7.425731537840138e-13
+      ],
+      [
+        -0.2842213017961449,
+        1.0878141986435431e-11,
+        -0.15016780319683545,
+        1.1168338154888626,
+        1.1174105085861046,
+        -1.276755900567881e-11
+      ],
+      [
+        0.7670535651317375,
+        -1.0122370118845183e-12,
+        0.36671161647277595,
+        -0.829383292288145,
+        -0.8204279308379623,
+        9.272414712223716e-13
+      ],
+      [
+        0.8041509893521837,
+        1.2022941072715838e-13,
+        0.43968033961227043,
+        -0.9549472254569545,
+        -0.8807681886970566,
+        -1.5007841746773707e-13
+      ]
+    ],
+    "w_out": [
+      1.0932151606820606,
+      -0.8172696757174905,
+      1.1609205252155432,
+      1.3605096986182699
+    ]
+  }
+}

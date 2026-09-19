@@ -1,0 +1,90 @@
+{
+  "affine": {
+    "intercept": 0.07223791274725996,
+    "slope": 1.0831691405191646
+  },
+  "architecture": [
+    6,
+    4,
+    1
+  ],
+  "arm": "source_aware_6_4_1_gibbs",
+  "condition": "cross_group_source_permutation",
+  "input_hashes": {
+    "calibration": "sha256:ae2db4c3a2ac1d4684e65ca00cded8849338c1d8c74c921abebf846537d62047",
+    "policy": "sha256:e06e2bda97ad2e1d5e3ef952d25c4c9b3f10770e1641288c845bfb78d4cb86c6",
+    "training": "sha256:3d1fc766eea1635dcd025e5063160f69afc634d89c2453c83d907a13a222ad8c"
+  },
+  "optimizer_work": {
+    "affine_updates": 500,
+    "calibration_duration_s": 0.014939800836145878,
+    "final_loss": 0.19001879990042825,
+    "fit_duration_s": 0.04192681098356843,
+    "initial_loss": 0.697809750345029,
+    "maximum_steps": 500,
+    "name": "adam",
+    "weight_updates": 500
+  },
+  "schema": "carnot.exp7413.numeric_checkpoint.v1",
+  "score_direction": "higher_probability_means_machine_annotation_incorrect",
+  "seed": 65005,
+  "selected_policy": {
+    "accept_enabled": false,
+    "accept_threshold": 0.01,
+    "reject_enabled": false,
+    "reject_threshold": 0.9,
+    "representative_groups": 92,
+    "selection_partition": "policy_calibration",
+    "selection_rule": "coverage_then_utility_then_registered_order",
+    "threshold_index": 0
+  },
+  "weights": {
+    "b1": [
+      -0.9033918484157385,
+      -0.9213335668939906,
+      -0.9030427727326268,
+      1.3820596307871031
+    ],
+    "b_out": 0.735573719907602,
+    "w1": [
+      [
+        -0.05903800214376535,
+        1.4333384727827607e-12,
+        -0.012319924525348596,
+        -0.010444356185462364,
+        -0.010445111215571666,
+        1.2529459342754467e-12
+      ],
+      [
+        -0.053168105158547474,
+        -4.205819362377749e-13,
+        -0.011327521537563223,
+        -0.009660515476280537,
+        -0.009624825500703215,
+        -5.041531795871064e-11
+      ],
+      [
+        -0.059427516163963065,
+        7.635428394077538e-13,
+        -0.012673148616245819,
+        -0.010697233123938166,
+        -0.010528926251428984,
+        -1.996383630885643e-12
+      ],
+      [
+        1.447154254590348,
+        7.552015692160313e-13,
+        0.25679774253670046,
+        0.21185481023632866,
+        0.21138751217771784,
+        -1.6250443551786547e-12
+      ]
+    ],
+    "w_out": [
+      -0.6792843893172221,
+      -0.6613266835178414,
+      -0.6832502898504196,
+      1.300758978196677
+    ]
+  }
+}

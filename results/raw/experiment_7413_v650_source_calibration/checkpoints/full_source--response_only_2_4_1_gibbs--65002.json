@@ -1,0 +1,74 @@
+{
+  "affine": {
+    "intercept": 0.7117275254052544,
+    "slope": 0.8712453386666209
+  },
+  "architecture": [
+    2,
+    4,
+    1
+  ],
+  "arm": "response_only_2_4_1_gibbs",
+  "condition": "full_source",
+  "input_hashes": {
+    "calibration": "sha256:29db47a99fea89ddc96e029223fa1287a599fd861dd3883a873f149800339695",
+    "policy": "sha256:84414a5e68e0d97f3e36fbcb84911528761d39a81f5aff9837b2e8eb2ad7b42d",
+    "training": "sha256:8ac81a1da50d35c4330026a5f2b37baa5489670be98b94a5697bdf095d7f490a"
+  },
+  "optimizer_work": {
+    "affine_updates": 500,
+    "calibration_duration_s": 0.014970660209655762,
+    "final_loss": 0.19858912718538407,
+    "fit_duration_s": 0.04094408266246319,
+    "initial_loss": 0.6954446753613133,
+    "maximum_steps": 500,
+    "name": "adam",
+    "weight_updates": 500
+  },
+  "schema": "carnot.exp7413.numeric_checkpoint.v1",
+  "score_direction": "higher_probability_means_machine_annotation_incorrect",
+  "seed": 65002,
+  "selected_policy": {
+    "accept_enabled": false,
+    "accept_threshold": 0.01,
+    "reject_enabled": false,
+    "reject_threshold": 0.9,
+    "representative_groups": 92,
+    "selection_partition": "policy_calibration",
+    "selection_rule": "coverage_then_utility_then_registered_order",
+    "threshold_index": 0
+  },
+  "weights": {
+    "b1": [
+      1.537280979858011,
+      -0.9814747876517536,
+      -0.9815991828507684,
+      -0.9827002549520314
+    ],
+    "b_out": 0.7846956531208684,
+    "w1": [
+      [
+        0.5010369132599012,
+        8.927248999071872e-13
+      ],
+      [
+        -0.021750770594449978,
+        -1.3292211125897862e-12
+      ],
+      [
+        -0.021670765430917817,
+        -2.852930262968403e-11
+      ],
+      [
+        -0.021803728820209502,
+        -5.910863169773012e-11
+      ]
+    ],
+    "w_out": [
+      1.1724272164882532,
+      -0.7587727017739121,
+      -0.7578412436360606,
+      -0.7597264721575295
+    ]
+  }
+}

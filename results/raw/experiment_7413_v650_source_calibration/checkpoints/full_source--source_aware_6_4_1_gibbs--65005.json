@@ -1,0 +1,90 @@
+{
+  "affine": {
+    "intercept": -0.12974090065490973,
+    "slope": 1.2105302514589595
+  },
+  "architecture": [
+    6,
+    4,
+    1
+  ],
+  "arm": "source_aware_6_4_1_gibbs",
+  "condition": "full_source",
+  "input_hashes": {
+    "calibration": "sha256:29db47a99fea89ddc96e029223fa1287a599fd861dd3883a873f149800339695",
+    "policy": "sha256:84414a5e68e0d97f3e36fbcb84911528761d39a81f5aff9837b2e8eb2ad7b42d",
+    "training": "sha256:8ac81a1da50d35c4330026a5f2b37baa5489670be98b94a5697bdf095d7f490a"
+  },
+  "optimizer_work": {
+    "affine_updates": 500,
+    "calibration_duration_s": 0.015024520922452211,
+    "final_loss": 0.15445660414769774,
+    "fit_duration_s": 0.042553126346319914,
+    "initial_loss": 0.697809750345029,
+    "maximum_steps": 500,
+    "name": "adam",
+    "weight_updates": 500
+  },
+  "schema": "carnot.exp7413.numeric_checkpoint.v1",
+  "score_direction": "higher_probability_means_machine_annotation_incorrect",
+  "seed": 65005,
+  "selected_policy": {
+    "accept_enabled": false,
+    "accept_threshold": 0.01,
+    "reject_enabled": false,
+    "reject_threshold": 0.9,
+    "representative_groups": 92,
+    "selection_partition": "policy_calibration",
+    "selection_rule": "coverage_then_utility_then_registered_order",
+    "threshold_index": 0
+  },
+  "weights": {
+    "b1": [
+      -1.013563995068547,
+      -0.3150654155247048,
+      1.9580986055020344,
+      -1.2482389797574078
+    ],
+    "b_out": 0.7089065462612183,
+    "w1": [
+      [
+        -0.04130884156592969,
+        1.4333384727827607e-12,
+        -0.018781950843616495,
+        0.1361239980558089,
+        0.13545213542739543,
+        1.2529459342754467e-12
+      ],
+      [
+        -0.4087739763543575,
+        -4.205819362377749e-13,
+        -0.21570955445862014,
+        1.36133090007731,
+        1.3758535580582059,
+        -5.041531795871064e-11
+      ],
+      [
+        1.3085635334740684,
+        7.635428394077538e-13,
+        0.6355693138165749,
+        -1.134807716929658,
+        -1.2631685597848825,
+        -1.996383630885643e-12
+      ],
+      [
+        0.001920191621564961,
+        7.552015692160313e-13,
+        -0.0013701568437748338,
+        -0.0007008659865261071,
+        0.0016222252374099616,
+        -1.6250443551786547e-12
+      ]
+    ],
+    "w_out": [
+      -0.6440265322768687,
+      -1.0374205847362645,
+      1.8797924343410906,
+      -0.6729226043475208
+    ]
+  }
+}

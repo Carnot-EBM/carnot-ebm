@@ -1,0 +1,90 @@
+{
+  "affine": {
+    "intercept": 1.3815570580775072,
+    "slope": 0.6355795104332662
+  },
+  "architecture": [
+    6,
+    4,
+    1
+  ],
+  "arm": "source_aware_6_4_1_gibbs",
+  "condition": "source_removed",
+  "input_hashes": {
+    "calibration": "sha256:29db47a99fea89ddc96e029223fa1287a599fd861dd3883a873f149800339695",
+    "policy": "sha256:84414a5e68e0d97f3e36fbcb84911528761d39a81f5aff9837b2e8eb2ad7b42d",
+    "training": "sha256:8ac81a1da50d35c4330026a5f2b37baa5489670be98b94a5697bdf095d7f490a"
+  },
+  "optimizer_work": {
+    "affine_updates": 500,
+    "calibration_duration_s": 0.01490001566708088,
+    "final_loss": 0.19928536611775263,
+    "fit_duration_s": 0.041482096537947655,
+    "initial_loss": 0.697934977200787,
+    "maximum_steps": 500,
+    "name": "adam",
+    "weight_updates": 500
+  },
+  "schema": "carnot.exp7413.numeric_checkpoint.v1",
+  "score_direction": "higher_probability_means_machine_annotation_incorrect",
+  "seed": 65002,
+  "selected_policy": {
+    "accept_enabled": false,
+    "accept_threshold": 0.01,
+    "reject_enabled": false,
+    "reject_threshold": 0.9,
+    "representative_groups": 92,
+    "selection_partition": "policy_calibration",
+    "selection_rule": "coverage_then_utility_then_registered_order",
+    "threshold_index": 0
+  },
+  "weights": {
+    "b1": [
+      -0.6779556796152487,
+      -0.6230984098415935,
+      1.1419484710816523,
+      -0.7387802381337234
+    ],
+    "b_out": 0.6355696370596959,
+    "w1": [
+      [
+        2.5431322376833185e-11,
+        4.643173230743385e-13,
+        9.909923386943169e-13,
+        9.261795486134952e-13,
+        1.1454915230586655e-12,
+        -0.055669939841398806
+      ],
+      [
+        -2.8938246328317195e-14,
+        -2.1310148444696285e-12,
+        1.2452423368263854e-12,
+        -2.8617673412619083e-12,
+        2.6007898895709787e-11,
+        -0.10472126906912708
+      ],
+      [
+        5.424959728771369e-13,
+        3.868382331480452e-11,
+        3.8346319756309395e-14,
+        3.1382324628801616e-12,
+        -5.765905626744911e-12,
+        1.0733164165778153
+      ],
+      [
+        4.802986680219211e-14,
+        -1.0078931360398563e-11,
+        -2.2660465763760582e-12,
+        -3.14084623871741e-13,
+        4.1672242102634685e-12,
+        -0.04564294274001154
+      ]
+    ],
+    "w_out": [
+      -0.5246136120619749,
+      -0.5523344705611086,
+      0.9609332073929083,
+      -0.5178164372870071
+    ]
+  }
+}

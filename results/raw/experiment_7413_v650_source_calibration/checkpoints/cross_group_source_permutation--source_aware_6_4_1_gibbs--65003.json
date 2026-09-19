@@ -1,0 +1,90 @@
+{
+  "affine": {
+    "intercept": 0.14886563454132312,
+    "slope": 1.0537044178031216
+  },
+  "architecture": [
+    6,
+    4,
+    1
+  ],
+  "arm": "source_aware_6_4_1_gibbs",
+  "condition": "cross_group_source_permutation",
+  "input_hashes": {
+    "calibration": "sha256:ae2db4c3a2ac1d4684e65ca00cded8849338c1d8c74c921abebf846537d62047",
+    "policy": "sha256:e06e2bda97ad2e1d5e3ef952d25c4c9b3f10770e1641288c845bfb78d4cb86c6",
+    "training": "sha256:3d1fc766eea1635dcd025e5063160f69afc634d89c2453c83d907a13a222ad8c"
+  },
+  "optimizer_work": {
+    "affine_updates": 500,
+    "calibration_duration_s": 0.014953415840864182,
+    "final_loss": 0.18910511135278735,
+    "fit_duration_s": 0.041797107085585594,
+    "initial_loss": 0.6976062489942247,
+    "maximum_steps": 500,
+    "name": "adam",
+    "weight_updates": 500
+  },
+  "schema": "carnot.exp7413.numeric_checkpoint.v1",
+  "score_direction": "higher_probability_means_machine_annotation_incorrect",
+  "seed": 65003,
+  "selected_policy": {
+    "accept_enabled": false,
+    "accept_threshold": 0.01,
+    "reject_enabled": false,
+    "reject_threshold": 0.9,
+    "representative_groups": 92,
+    "selection_partition": "policy_calibration",
+    "selection_rule": "coverage_then_utility_then_registered_order",
+    "threshold_index": 0
+  },
+  "weights": {
+    "b1": [
+      1.0181329751024726,
+      1.0336020557166823,
+      1.0200314428058623,
+      -0.7670607385958451
+    ],
+    "b_out": 0.607263162980886,
+    "w1": [
+      [
+        0.8130738480299153,
+        2.806081111657651e-12,
+        0.1512248792037469,
+        0.12510050577810375,
+        0.12509057631735854,
+        -7.425731537840138e-13
+      ],
+      [
+        0.8091987009513638,
+        1.0878141986435431e-11,
+        0.1573288702997356,
+        0.13025600815665397,
+        0.13027074224191318,
+        -1.276755900567881e-11
+      ],
+      [
+        0.8163221885290954,
+        -1.0122370118845183e-12,
+        0.15213540282008967,
+        0.1258389276222493,
+        0.1258377983981779,
+        9.272414712223716e-13
+      ],
+      [
+        -0.05733045656147049,
+        1.2022941072715838e-13,
+        -0.012781574070967501,
+        -0.010695426311471778,
+        -0.010886873869681912,
+        -1.5007841746773707e-13
+      ]
+    ],
+    "w_out": [
+      0.8618096038494858,
+      0.8917385219665416,
+      0.8663698957699263,
+      -0.4877920617304367
+    ]
+  }
+}
